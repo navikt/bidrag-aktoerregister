@@ -1,8 +1,15 @@
 package no.nav.bidrag.aktoerregister.domene;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "En hendelse signaliserer at enten adresse eller kontonummer for en aktør er oppdatert. Hendelsen inneholder ikke selve oppdateringen.")
 public class Hendelse implements Comparable<Hendelse>{
+    
+    @Schema(description = "Hendelsens sekvensnummer. Sekvensnummeret vil alltid øke i nyere hendelser.")
     private int sekvensnummer;
-    private AktoerId kundeId;
+    
+    @Schema(description = "Aktøren som er oppdatert.")
+    private AktoerId aktoerId;
 
     public int getSekvensnummer() {
     	return sekvensnummer;
@@ -12,12 +19,12 @@ public class Hendelse implements Comparable<Hendelse>{
     	this.sekvensnummer = sekvensnummer;
     }
 
-    public AktoerId getKundeId() {
-        return kundeId;
+    public AktoerId getAktoerId() {
+        return aktoerId;
     }
 
-    public void setKundeId(AktoerId kundeId) {
-        this.kundeId = kundeId;
+    public void setAktoerId(AktoerId aktoerId) {
+        this.aktoerId = aktoerId;
     }
 
     @Override

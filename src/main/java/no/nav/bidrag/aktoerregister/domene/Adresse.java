@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 // TODO: Kvalitetssikre beskrivelse av adresse-felter.
-@Schema(description = "Representerer en oppdatering av navn og/eller adresse for kunde. TODO: Beskrivelse av felter må kvalitetssikres.")
+@Schema(description = "Representerer navn og/eller adresse for en bidragsaktør. TODO: Beskrivelse av felter må kvalitetssikres.")
 @JsonInclude(Include.NON_NULL)
 public class Adresse {
     

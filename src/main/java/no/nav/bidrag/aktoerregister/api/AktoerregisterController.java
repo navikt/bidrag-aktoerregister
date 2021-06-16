@@ -30,9 +30,9 @@ public class AktoerregisterController {
     private final AktoerregisterService aktoerregisterService;
 
     @Autowired
-    public AktoerregisterController(HendelseService hendelseService, AktoerregisterService kunderegisterService) {
+    public AktoerregisterController(HendelseService hendelseService, AktoerregisterService aktoerregisterService) {
         this.hendelseService = hendelseService;
-        this.aktoerregisterService = kunderegisterService;
+        this.aktoerregisterService = aktoerregisterService;
     }
 
     @Operation(summary = "Hent informasjon om gitt aktør.", description = "For personer returneres kun kontonummer. "
@@ -40,7 +40,7 @@ public class AktoerregisterController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Aktøren ble funnet."),
             @ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = @Content()),
-            @ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content=@Content())
+            @ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content = @Content())
     })
     @GetMapping("/aktoer/{identtype}/{ident}")
     public ResponseEntity<Aktoer> hentAktoerinformasjon(
@@ -52,20 +52,29 @@ public class AktoerregisterController {
                     + "For personer vil dette være FNR eller DNR. "
                     + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident) {
 
-        Aktoer kunde = aktoerregisterService.hentAktoer(new AktoerId(ident, identtype));
+        Aktoer aktoer = aktoerregisterService.hentAktoer(new AktoerId(ident, identtype));
 
-        if (kunde == null) {
+        if (aktoer == null) {
             return ResponseEntity
                     .notFound()
                     .build();
         }
 
-        return ResponseEntity.ok(kunde);
+        return ResponseEntity.ok(aktoer);
     }
 
+    @Operation(summary = "Tilbyr en liste over aktøroppdateringer.", description = "Ingen informasjon om aktøren leveres av denne tjenesten utover aktørId'n. Hendelsene legges inn med stigende sekvensnummer."
+            + "Klienten må selv ta vare på hvilke sekvensnummer som sist er behandlet, og be om å få hendelser fra det neste sekvensnummeret ved neste kall."
+            + "Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall."
+            + "\n\n"
+            + "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser. Det kan forekomme hull i sekvensnummer-rekken. Laveste mulig sekvensnummer er 1."
+            + "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres.")
     @GetMapping("/hendelser")
     public ResponseEntity<List<Hendelse>> hentKontonummerHendelser(
+            @Parameter(description = "Angir første sekvensnummer som ønskes hentet. Ved første kall skal dette settes til 1. Deretter benyttes siste sekvensnummer + 1.")
             @RequestParam(name = "fraSekvensnummer", defaultValue = "1") Integer fraSekvensnummer,
+            
+            @Parameter(description="Maksimalt antall hendelser som ønskes hentet. Default-verdi er 10000.")
             @RequestParam(name = "antall", defaultValue = "10000") Integer antall) {
 
         List<Hendelse> hendelser = hendelseService

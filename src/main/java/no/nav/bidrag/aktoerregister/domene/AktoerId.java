@@ -7,8 +7,8 @@ public class AktoerId {
     public AktoerId() {
     }
 
-    public AktoerId(String kundeId, Identtype identtype) {
-        this.aktoerId = kundeId;
+    public AktoerId(String aktoerId, Identtype identtype) {
+        this.aktoerId = aktoerId;
         this.identtype = identtype;
     }
 

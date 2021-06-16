@@ -6,9 +6,9 @@ import no.nav.bidrag.aktoerregister.domene.AktoerId;
 import no.nav.bidrag.aktoerregister.domene.Kontonummer;
 
 public interface AktoerregisterService {
-    void oppdaterAdresse(AktoerId kunde, Adresse nyAdresse);
+    void oppdaterAdresse(AktoerId aktoerId, Adresse nyAdresse);
     
-    void oppdaterKonto(AktoerId kunde, Kontonummer nyKonto);
+    void oppdaterKonto(AktoerId aktoerId, Kontonummer nyKonto);
     
-    Aktoer hentAktoer(AktoerId kundeId);
+    Aktoer hentAktoer(AktoerId aktoerId);
 }

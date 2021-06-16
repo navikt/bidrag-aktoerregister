@@ -22,14 +22,4 @@ public class StubHelper {
         return sannsynlighet <= Math.random();
     }
     
-    public static AktoerId randomKunde(Identtype ...identtyper) {
-        switch(random(identtyper)) {
-        case AKTOERNUMMER:
-            return new AktoerId("989-"+random(0,999), Identtype.AKTOERNUMMER);
-            
-        case PERSONNUMMER:
-            return new AktoerId(random(10,28)+ "0" + random(1,9)+random(80, 99)+"12345", Identtype.PERSONNUMMER);
-        }
-        return null;
-    }
 }

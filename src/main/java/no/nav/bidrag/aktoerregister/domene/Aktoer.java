@@ -1,12 +1,23 @@
 package no.nav.bidrag.aktoerregister.domene;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@JsonInclude(Include.NON_NULL)
 public class Aktoer {
-    private final AktoerId aktoer;
+    @Schema(description = "Id for aktøren")
+    private final AktoerId aktoerId;
+
+    @Schema(description = "Aktørens adresse. Angis ikke for personer.")
     private Adresse adresse;
+
+    @Schema(description = "Aktørens kontonummer.")
     private Kontonummer kontonummer;
 
     public Aktoer(AktoerId aktoer) {
-        this.aktoer = aktoer;
+        this.aktoerId = aktoer;
     }
 
     public Adresse getAdresse() {
@@ -25,8 +36,8 @@ public class Aktoer {
         this.kontonummer = kontonummer;
     }
 
-    public AktoerId getKunde() {
-        return aktoer;
+    public AktoerId getAktoerId() {
+        return aktoerId;
     }
 
 }

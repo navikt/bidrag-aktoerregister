@@ -41,12 +41,12 @@ public class AktoerregisterServiceStub implements AktoerregisterService {
     }
 
     private synchronized Aktoer finnEllerOpprettAktoer(AktoerId aktoerId) {
-        Aktoer kunde = aktoerregister.get(aktoerId);
-        if (kunde == null) {
-            kunde = new Aktoer(aktoerId);
-            aktoerregister.put(aktoerId, kunde);
+        Aktoer aktoer = aktoerregister.get(aktoerId);
+        if (aktoer == null) {
+            aktoer = new Aktoer(aktoerId);
+            aktoerregister.put(aktoerId, aktoer);
         }
-        return kunde;
+        return aktoer;
     }
 
     @Override

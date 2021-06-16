@@ -9,6 +9,6 @@ public interface HendelseService {
 
     List<Hendelse> hentHendelser(int fraSekvensnummer, int antallHendelser);
 
-    void registrerHendelse(AktoerId kundeId);
+    void registrerHendelse(AktoerId aktoerId);
 
 }

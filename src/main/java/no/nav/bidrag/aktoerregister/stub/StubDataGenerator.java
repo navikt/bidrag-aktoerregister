@@ -13,7 +13,7 @@ public class StubDataGenerator extends StubHelper {
     private static final List<String> GATER = List.of("Ibsens gate", "Storgata", "Kongens gate");
     private static final List<String> POSTSTEDER = List.of("Oslo", "Lislefjødd", "Hamar");
     
-    public static AktoerId randomKunde(Identtype ...identtyper) {
+    public static AktoerId randomAktoer(Identtype ...identtyper) {
         switch(random(identtyper)) {
         case AKTOERNUMMER:
             return new AktoerId("8"+random(0,99999)+random(0,99999), Identtype.AKTOERNUMMER);

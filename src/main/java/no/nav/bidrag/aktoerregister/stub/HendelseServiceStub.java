@@ -14,9 +14,9 @@ import no.nav.bidrag.aktoerregister.service.HendelseService;
 public class HendelseServiceStub implements HendelseService {
     private final List<Hendelse> hendelser = new ArrayList<>();
 
-    public void registrerHendelse(AktoerId kundeId) {
+    public void registrerHendelse(AktoerId aktoerId) {
         Hendelse hendelse = new Hendelse();
-        hendelse.setKundeId(kundeId);
+        hendelse.setAktoerId(aktoerId);
         hendelse.setSekvensnummer(hendelser.size() + 1);
         hendelser.add(hendelse);
     }

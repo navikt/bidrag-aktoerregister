@@ -2,7 +2,7 @@ package no.nav.bidrag.aktoerregister.stub;
 
 import static no.nav.bidrag.aktoerregister.stub.StubDataGenerator.nyAresse;
 import static no.nav.bidrag.aktoerregister.stub.StubDataGenerator.nyttKontonummer;
-import static no.nav.bidrag.aktoerregister.stub.StubDataGenerator.randomKunde;
+import static no.nav.bidrag.aktoerregister.stub.StubDataGenerator.randomAktoer;
 import static no.nav.bidrag.aktoerregister.stub.StubHelper.random;
 import static no.nav.bidrag.aktoerregister.stub.StubHelper.randomSannsynlighet;
 
@@ -23,7 +23,7 @@ public class StubRunner implements CommandLineRunner {
     @Autowired
     private AktoerregisterService service;
 
-    private final List<AktoerId> registrerteKunder = new ArrayList<>();
+    private final List<AktoerId> registrerteAktoerer = new ArrayList<>();
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,31 +37,31 @@ public class StubRunner implements CommandLineRunner {
     }
 
     private void registrerHendelse() {
-        if (randomSannsynlighet(.1) || registrerteKunder.isEmpty()) {
-            registrerNyKunde();
+        if (randomSannsynlighet(.1) || registrerteAktoerer.isEmpty()) {
+            registrerNyAktoer();
 
         } else {
-            oppdaterKunde(random(registrerteKunder));
+            oppdaterAktoer(random(registrerteAktoerer));
 
         }
     }
 
-    private void registrerNyKunde() {
-        AktoerId kundeId = randomKunde(Identtype.AKTOERNUMMER, Identtype.PERSONNUMMER);
-        registrerteKunder.add(kundeId);
-        if (Identtype.AKTOERNUMMER.equals(kundeId.getIdenttype())) {
-            service.oppdaterAdresse(kundeId, nyAresse());
+    private void registrerNyAktoer() {
+        AktoerId aktoerId = randomAktoer(Identtype.AKTOERNUMMER, Identtype.PERSONNUMMER);
+        registrerteAktoerer.add(aktoerId);
+        if (Identtype.AKTOERNUMMER.equals(aktoerId.getIdenttype())) {
+            service.oppdaterAdresse(aktoerId, nyAresse());
         }
-        service.oppdaterKonto(kundeId, nyttKontonummer());
+        service.oppdaterKonto(aktoerId, nyttKontonummer());
     }
 
-    private void oppdaterKunde(AktoerId kundeId) {
+    private void oppdaterAktoer(AktoerId aktoerId) {
         // Det er kun adresser som registreres
-        if (Identtype.PERSONNUMMER.equals(kundeId.getIdenttype()) || randomSannsynlighet(.3)) {
-            service.oppdaterKonto(kundeId, nyttKontonummer());
+        if (Identtype.PERSONNUMMER.equals(aktoerId.getIdenttype()) || randomSannsynlighet(.3)) {
+            service.oppdaterKonto(aktoerId, nyttKontonummer());
 
         } else {
-            service.oppdaterAdresse(kundeId, nyAresse());
+            service.oppdaterAdresse(aktoerId, nyAresse());
 
         }
     }
