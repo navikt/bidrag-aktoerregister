@@ -90,9 +90,7 @@ public class MQServiceImpl implements MQService {
       // Create a connection factory
       JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
       JmsConnectionFactory cf = ff.createConnectionFactory();
-
-      logger.info("MQProperties: {}", JsonUtil.objectToJsonString(mqProperties));
-
+      
       // Set the properties
       cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, mqProperties.getHost());
       cf.setIntProperty(WMQConstants.WMQ_PORT, mqProperties.getPort());
