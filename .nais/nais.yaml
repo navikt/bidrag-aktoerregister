@@ -1,0 +1,30 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: {{ name }}
+  namespace: bidrag
+  labels:
+    team: bidrag
+spec:
+  image: {{ image }}
+  liveness:
+    path: /bidrag-aktoerregister/actuator/health
+    initialDelay: 20
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /bidrag-aktoerregister/actuator/health
+    initialDelay: 20
+    timeout: 1
+  envFrom:
+    - secret: bidrag-aktoerregister-mqpassword
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
+  env:
+  {{#each env}}
+     - name: {{this.name}}
+       value: "{{this.value}}"
+  {{/each}}
