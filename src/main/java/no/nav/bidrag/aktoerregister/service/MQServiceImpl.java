@@ -90,14 +90,14 @@ public class MQServiceImpl implements MQService {
       // Create a connection factory
       JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
       JmsConnectionFactory cf = ff.createConnectionFactory();
-      
+
       // Set the properties
       cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, mqProperties.getHost());
       cf.setIntProperty(WMQConstants.WMQ_PORT, mqProperties.getPort());
       cf.setStringProperty(WMQConstants.WMQ_CHANNEL, mqProperties.getChannel());
       cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT);
       cf.setStringProperty(WMQConstants.WMQ_QUEUE_MANAGER, mqProperties.getQueueManager());
-      cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, "JmsPutGet (JMS)");
+      cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, mqProperties.getApplicationName());
       cf.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, true);
       cf.setStringProperty(WMQConstants.USERID, mqProperties.getUsername());
       cf.setStringProperty(WMQConstants.PASSWORD, mqProperties.getPassword());

@@ -13,6 +13,7 @@ public class MQProperties {
   private String password;
   private String queueName;
   private int timeout;
+  private String applicationName;
 
   public String getHost() {
     return host;
@@ -76,5 +77,14 @@ public class MQProperties {
 
   public void setTimeout(int timeout) {
     this.timeout = timeout;
+  }
+
+
+  public String getApplicationName() {
+    return applicationName;
+  }
+
+  public void setApplicationName(String applicationName) {
+    this.applicationName = applicationName;
   }
 }
