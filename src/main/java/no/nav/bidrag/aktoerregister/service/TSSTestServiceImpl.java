@@ -19,6 +19,7 @@ import no.rtv.namespacetss.TServicerutiner;
 import no.rtv.namespacetss.TidOFF1;
 import no.rtv.namespacetss.TssSamhandlerData;
 import no.rtv.namespacetss.TssSamhandlerData.TssInputData;
+import no.rtv.namespacetss.TypeOD910;
 import no.rtv.namespacetss.TypeSamhAdr;
 import no.rtv.namespacetss.TypeSamhKonto;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class TSSTestServiceImpl implements TSSTestService{
     }
     samhandlerIDataB910.setHistorikk("N");
     samhandlerIDataB910.setBrukerID("HMB2990");
-    servicerutiner.setSamhandlerIDataB960(samhandlerIDataB910);
+    servicerutiner.setSamhandlerIDataB910(samhandlerIDataB910);
 
     TssInputData tssInputData = objectFactory.createTssSamhandlerDataTssInputData();
     tssInputData.setTssServiceRutine(servicerutiner);
@@ -82,13 +83,16 @@ public class TSSTestServiceImpl implements TSSTestService{
 
   private Aktoer mapToAktoer(TssSamhandlerData tssSamhandlerData, AktoerId aktoerId) {
     Aktoer aktoer = new Aktoer(aktoerId);
-    aktoer.setAdresse(mapToAdresse(tssSamhandlerData));
-    aktoer.setKontonummer(mapToKontonummer(tssSamhandlerData));
+    TypeOD910 samhandlerODataB910 = tssSamhandlerData.getTssOutputData().getSamhandlerODataB910();
+    if (samhandlerODataB910 != null) {
+      aktoer.setAdresse(mapToAdresse(samhandlerODataB910));
+      aktoer.setKontonummer(mapToKontonummer(samhandlerODataB910));
+    }
     return aktoer;
   }
 
-  private Adresse mapToAdresse(TssSamhandlerData tssSamhandlerData) {
-    List<Samhandler> samhandlerListe = tssSamhandlerData.getTssOutputData().getSamhandlerODataB910().getEnkeltSamhandler();
+  private Adresse mapToAdresse(TypeOD910 samhandlerODataB910) {
+    List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
     if (samhandlerListe.size() > 0) {
       TypeSamhAdr typeSamhAdr = samhandlerListe.get(0).getAdresse130();
       if (Integer.parseInt(typeSamhAdr.getAntAdresse()) > 0) {
@@ -113,8 +117,8 @@ public class TSSTestServiceImpl implements TSSTestService{
     return null;
   }
 
-  private Kontonummer mapToKontonummer(TssSamhandlerData tssSamhandlerData) {
-    List<Samhandler> samhandlerListe = tssSamhandlerData.getTssOutputData().getSamhandlerODataB910().getEnkeltSamhandler();
+  private Kontonummer mapToKontonummer(TypeOD910 samhandlerODataB910) {
+    List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
     if (samhandlerListe.size() > 0) {
       TypeSamhKonto typeSamhKonto = samhandlerListe.get(0).getKonto140();
       if (Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
