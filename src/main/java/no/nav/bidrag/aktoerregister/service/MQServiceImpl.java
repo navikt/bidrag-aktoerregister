@@ -18,7 +18,6 @@ import javax.jms.JMSProducer;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
-import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class MQServiceImpl implements MQService {
 
-  @Autowired
-  private MQProperties mqProperties;
+  private final MQProperties mqProperties;
 
   private static final Logger logger = LoggerFactory.getLogger(MQService.class);
+
+  @Autowired
+  public MQServiceImpl(MQProperties mqProperties) {
+    this.mqProperties = mqProperties;
+  }
 
   @Override
   public <Request, Response> Response performRequestResponse(String queue, Request request, Class<Request> requestClass, Class<Response> responseClass)

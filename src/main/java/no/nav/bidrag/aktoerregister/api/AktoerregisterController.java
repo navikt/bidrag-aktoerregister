@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.api;
 
 import java.util.List;
 
+import no.nav.security.token.support.core.api.Unprotected;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import no.nav.bidrag.aktoerregister.service.HendelseService;
 
 @RestController
 @RequestMapping("/bidrag-aktorer")
+@Unprotected
 public class AktoerregisterController {
 
     private final HendelseService hendelseService;

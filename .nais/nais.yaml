@@ -17,6 +17,21 @@ spec:
     path: /bidrag-aktoerregister/actuator/health
     initialDelay: 20
     timeout: 1
+  maskinporten:
+    enabled: true
+    scopes:
+      exposes:
+        - name: "aktoerregister.read"
+          enabled: true
+          product: "bidrag"
+          allowedIntegrations:
+            - maskinporten
+          atMaxAge: 120
+          consumers:
+            - name: "NAV"
+              orgno: "889640782"
+            - name: "Skatteetaten"
+              orgno: "974761076"
   envFrom:
     - secret: bidrag-aktoerregister-mqpassword
   ingresses:

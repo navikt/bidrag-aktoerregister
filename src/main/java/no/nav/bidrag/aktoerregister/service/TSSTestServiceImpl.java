@@ -9,7 +9,6 @@ import no.nav.bidrag.aktoerregister.domene.AktoerId;
 import no.nav.bidrag.aktoerregister.domene.Identtype;
 import no.nav.bidrag.aktoerregister.domene.Kontonummer;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
-import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import no.rtv.namespacetss.AdresseSamhType;
 import no.rtv.namespacetss.KontoType;
 import no.rtv.namespacetss.ObjectFactory;
@@ -22,38 +21,33 @@ import no.rtv.namespacetss.TssSamhandlerData.TssInputData;
 import no.rtv.namespacetss.TypeOD910;
 import no.rtv.namespacetss.TypeSamhAdr;
 import no.rtv.namespacetss.TypeSamhKonto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TSSTestServiceImpl implements TSSTestService{
 
-  @Autowired
-  private MQService mqService;
+  private final MQService mqService;
+
+  private final MQProperties mqProperties;
 
   @Autowired
-  private MQProperties mqProperties;
-
-  private static final Logger logger = LoggerFactory.getLogger(MQService.class);
+  public TSSTestServiceImpl(MQService mqService, MQProperties mqProperties) {
+    this.mqService = mqService;
+    this.mqProperties = mqProperties;
+  }
 
   @Override
   public Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
-    logger.info("Created TSS-request: {}", JsonUtil.objectToJsonString(request));
     TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getQueueName(), request, TssSamhandlerData.class, TssSamhandlerData.class);
-    logger.info("TSS-response: {}", JsonUtil.objectToJsonString(response));
     return mapToAktoer(response, aktoerId);
   }
 
   @Override
   public TssSamhandlerData hentTssSamhandler(AktoerId aktoerId) throws JAXBException, JMSException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
-    logger.info("Created TSS-request: {}", JsonUtil.objectToJsonString(request));
-    TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getQueueName(), request, TssSamhandlerData.class, TssSamhandlerData.class);
-    logger.info("TSS-response: {}", JsonUtil.objectToJsonString(response));
-    return response;
+    return mqService.performRequestResponse(mqProperties.getQueueName(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }
 
   private TssSamhandlerData createTssSamhandlerRequest(AktoerId aktoerId) {
