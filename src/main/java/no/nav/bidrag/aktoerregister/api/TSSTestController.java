@@ -6,8 +6,10 @@ import javax.jms.JMSException;
 import no.nav.bidrag.aktoerregister.domene.Aktoer;
 import no.nav.bidrag.aktoerregister.domene.AktoerId;
 import no.nav.bidrag.aktoerregister.domene.Identtype;
+import no.nav.bidrag.aktoerregister.service.TPSTestService;
 import no.nav.bidrag.aktoerregister.service.TSSTestService;
 import no.nav.security.token.support.core.api.Unprotected;
+import no.rtv.namespacetps.TpsPersonData;
 import no.rtv.namespacetss.TssSamhandlerData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +26,12 @@ public class TSSTestController {
 
   private final TSSTestService tssTestService;
 
+  private final TPSTestService tpsTestService;
+
   @Autowired
-  public TSSTestController(TSSTestService tssTestService) {
+  public TSSTestController(TSSTestService tssTestService, TPSTestService tpsTestService) {
     this.tssTestService = tssTestService;
+    this.tpsTestService = tpsTestService;
   }
 
   @GetMapping("/aktoer/{identtype}/{ident}")
@@ -58,6 +63,21 @@ public class TSSTestController {
     AktoerId aktoerId = new AktoerId(ident, identtype);
     TssSamhandlerData tssSamhandlerData = tssTestService.hentTssSamhandler(aktoerId);
     return ResponseEntity.ok(tssSamhandlerData);
+  }
+
+  @GetMapping("/persondata/{identtype}/{ident}")
+  public ResponseEntity<TpsPersonData> getTpsPersonData(
+      @Parameter(description = "Angir hvilken type ident som er angitt i forespørselen. "
+          + "For personer vil dette være FNR eller DNR, som angis med PERSONNUMMER. "
+          + "Utover dette benyttes AKTOERNUMMER.") @PathVariable(name = "identtype") Identtype identtype,
+
+      @Parameter(description = "Identen for aktøren som skal hentes. "
+          + "For personer vil dette være FNR eller DNR. "
+          + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
+      throws JAXBException, JMSException {
+    AktoerId aktoerId = new AktoerId(ident, identtype);
+    TpsPersonData tpsPersonData = tpsTestService.hentKontoInfo(aktoerId);
+    return ResponseEntity.ok(tpsPersonData);
   }
 
 }

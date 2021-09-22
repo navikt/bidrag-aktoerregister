@@ -40,14 +40,14 @@ public class TSSTestServiceImpl implements TSSTestService{
   @Override
   public Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
-    TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getQueueName(), request, TssSamhandlerData.class, TssSamhandlerData.class);
+    TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
     return mapToAktoer(response, aktoerId);
   }
 
   @Override
   public TssSamhandlerData hentTssSamhandler(AktoerId aktoerId) throws JAXBException, JMSException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
-    return mqService.performRequestResponse(mqProperties.getQueueName(), request, TssSamhandlerData.class, TssSamhandlerData.class);
+    return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }
 
   private TssSamhandlerData createTssSamhandlerRequest(AktoerId aktoerId) {

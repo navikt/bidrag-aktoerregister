@@ -11,7 +11,8 @@ public class MQProperties {
   private String queueManager;
   private String username;
   private String password;
-  private String queueName;
+  private String tssRequestQueue;
+  private String tpsRequestQueue;
   private int timeout;
   private String applicationName;
 
@@ -63,12 +64,20 @@ public class MQProperties {
     this.password = password;
   }
 
-  public String getQueueName() {
-    return queueName;
+  public String getTssRequestQueue() {
+    return tssRequestQueue;
   }
 
-  public void setQueueName(String queueName) {
-    this.queueName = queueName;
+  public void setTssRequestQueue(String tssRequestQueue) {
+    this.tssRequestQueue = tssRequestQueue;
+  }
+
+  public String getTpsRequestQueue() {
+    return tpsRequestQueue;
+  }
+
+  public void setTpsRequestQueue(String tpsRequestQueue) {
+    this.tpsRequestQueue = tpsRequestQueue;
   }
 
   public int getTimeout() {
