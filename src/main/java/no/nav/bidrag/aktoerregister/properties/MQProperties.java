@@ -13,6 +13,7 @@ public class MQProperties {
   private String password;
   private String tssRequestQueue;
   private String tpsRequestQueue;
+  private String tpsEventQueue;
   private int timeout;
   private String applicationName;
 
@@ -78,6 +79,14 @@ public class MQProperties {
 
   public void setTpsRequestQueue(String tpsRequestQueue) {
     this.tpsRequestQueue = tpsRequestQueue;
+  }
+
+  public String getTpsEventQueue() {
+    return tpsEventQueue;
+  }
+
+  public void setTpsEventQueue(String tpsEventQueue) {
+    this.tpsEventQueue = tpsEventQueue;
   }
 
   public int getTimeout() {

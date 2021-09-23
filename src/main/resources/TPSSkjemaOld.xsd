@@ -1,1045 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Dette er en kombinasjon av XSD for TPS distribusjonsmeldinger og TPS Request-Response MQ typer-->
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by XMLSpy 2009 Enterprise Ed., Installed for 30 users (with SMP from 2009-06-19 to 2010-06-20) (NAV ØKONOMITJENESTER) -->
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by Trygdeetaten (Rikstrygdeverket) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.rtv.no/NamespaceTPS" targetNamespace="http://www.rtv.no/NamespaceTPS" elementFormDefault="qualified" attributeFormDefault="unqualified">
-  <xs:element name="distribusjonsMelding">
-    <xs:annotation>
-      <xs:documentation>Dette skjema er basert på ny distribusjonsløsning fra TPS/SFE</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="meldingsIdent" type="TmeldingsIdent"/>
-        <xs:choice>
-          <xs:element name="fodselsMelding" type="Tfødselsmelding"/>
-          <xs:element name="annullertFodselsMelding" type="TAfødselsmelding"/>
-          <xs:element name="dodsMelding" type="Tdødsmelding"/>
-          <xs:element name="annullertDodsMelding" type="TAnnullering"/>
-          <xs:element name="sivilstandsEndring" type="Tsivilstatusendring"/>
-          <xs:element name="adresseEndring" type="Tadresseendring"/>
-          <xs:element name="opphortAdresse" type="TAOpphor"/>
-          <xs:element name="utvandring" type="Tutvandring"/>
-          <xs:element name="annullertUtvandring" type="TSAnnulering"/>
-          <xs:element name="innvandring" type="Tinnvandring"/>
-          <xs:element name="annullertInnvandring" type="TSAnnulering"/>
-          <xs:element name="oppholdsTillatelse" type="Topptil"/>
-          <xs:element name="arbeidsTillatelse" type="Tarbtil"/>
-          <xs:element name="statsborgerskap" type="Tstatsb"/>
-          <xs:element name="umyndiggjoring" type="Tumyndig"/>
-          <xs:element name="navneEndring" type="Tnavneendring"/>
-          <xs:element name="adresseEndringPostUtl" type="TadrlinjeP"/>
-          <xs:element name="opphortPostUtl" type="TAOpphor"/>
-          <xs:element name="adresseEndringUtlAdr" type="Tadrlinje"/>
-          <xs:element name="annullertUtlAdr" type="TAnnullering"/>
-          <xs:element name="opphortUtlAdr" type="TAOpphor"/>
-          <xs:element name="adresseEndringPostNor" type="TadrlinjePN"/>
-          <xs:element name="opphortPostNor" type="TAOpphor"/>
-          <xs:element name="adresseEndringTilNor" type="TadrlinjePN"/>
-          <xs:element name="annullertTilNor" type="TAnnullering"/>
-          <xs:element name="opphortTilNor" type="TAOpphor"/>
-          <xs:element name="tildelingEndringDnr" type="Ttilddnr"/>
-          <xs:element name="linkingDnrFnr" type="Tdnrfnr"/>
-          <xs:element name="linkingDnrDnr" type="Tdnrdnr"/>
-          <xs:element name="linkingFnrFnr" type="Tfnrfnr"/>
-          <xs:element name="tildelingFnr" type="Ttildelingfnr"/>
-          <xs:element name="giroNrNorge" type="Tgironorsk"/>
-          <xs:element name="annullertGiroNrNorge" type="TAnnullering"/>
-          <xs:element name="opphortGiroNrNorge" type="TGOpphorN"/>
-          <xs:element name="giroNrUtland" type="Tgiroutl"/>
-          <xs:element name="annullertGiroNrUtland" type="TAnnullering"/>
-          <xs:element name="opphortGiroNrUtland" type="TGOpphor"/>
-          <xs:element name="sprak" type="Tspraak"/>
-          <xs:element name="epost" type="Tepost"/>
-          <xs:element name="samboerEndring" type="Tsamboerendring"/>
-          <xs:element name="annullertSamboerskap" type="TAnnullering"/>
-          <xs:element name="relasjoner" type="Trelasjon"/>
-          <xs:element name="endretSpesregType" type="Tspesregtype"/>
-          <xs:element name="annullertTilgang" type="TAnnullering"/>
-          <xs:element name="personstatusEndring" type="Tpersonstatusendring"/>
-          <xs:element name="tknrEndring" type="Ttknrendring"/>
-          <xs:element name="endretBrukerPrioritertAdresse" type="Tbrukerprioadr"/>
-          <xs:element name="endretBrukerspesifikasjon" type="Tbrukerspes"/>
-          <xs:element name="endretBrukerbehov" type="Tbrukerbehov"/>
-          <xs:element name="annullertBrukerprioritertAdr" type="TAnnullering"/>
-          <xs:element name="annullertBrukerspesifikasjon" type="TAnnullering"/>
-          <xs:element name="annullertBrukerbehov" type="TAbrukerbehov"/>
-          <xs:element name="opphortBrukerprioritertAdr" type="TAnnullering"/>
-          <xs:element name="nyEpost" type="TendretEpost"/>
-          <xs:element name="opphorEpost" type="TopphortEpost"/>
-          <xs:element name="nyTelefon" type="TendretTelefon"/>
-          <xs:element name="opphorTelefon" type="TopphortTelefon"/>
-          <xs:element name="opprettetSikkerhetstiltak" type="TopprettetSikkerhetstiltak"/>
-          <xs:element name="opphortSikkerhetstiltak" type="TopphortSikkerhetstiltak"/>
-        </xs:choice>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:complexType name="Tspraak">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="sprakKode" type="Tsprakkode_N"/>
-      <xs:element name="datoSprakKode" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tepost">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="epostAdresse" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TendretEpost">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="typeEpost" type="TepostTyper"/>
-      <xs:element name="epostAdresse" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="Tsprakkode_N">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver mulige spraktyper</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value=" ||[A-Z]{2}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TepostTyper">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver mulige eposttyper</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="EPS1"/>
-      <xs:enumeration value="EPS2"/>
-      <xs:enumeration value="EPS3"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Ttknr">
-    <xs:annotation>
-      <xs:documentation>Beskriver valideringskriteriene for tknr.</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value="\d{4}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Ttknr_N">
-    <xs:annotation>
-      <xs:documentation>Beskriver valideringskriteriene for tknr.</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||[0-9][0-9][0-9][0-9]"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="TopprettetSikkerhetstiltak">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="typeSikkerhetstiltak" type="xs:string"/>
-      <xs:element name="beskrSikkerhetstiltak" type="xs:string"/>
-      <xs:element name="sikrFom" type="DBdate"/>
-      <xs:element name="sikrTom" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TopphortEpost">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="typeEpost" type="TepostTyper"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TendretTelefon">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="typeTelefon" type="TtypeTelefon"/>
-      <xs:element name="telefonLandkode" type="xs:string"/>
-      <xs:element name="telefonNr" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TopphortTelefon">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="typeTelefon" type="TtypeTelefon"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="TtypeTelefon">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver mulige telefontyper</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value="HJET"/>
-      <xs:enumeration value="MOBI"/>
-      <xs:enumeration value="ARBT"/>
-      <xs:enumeration value="ROBI"/>
-      <xs:enumeration value="KONT"/>
-      <xs:enumeration value=" "/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="TopphortSikkerhetstiltak">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TAOpphor">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="opphorsDato" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TGOpphor">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="giroNr" type="xs:string"/>
-      <xs:element name="opphorsDato" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TGOpphorN">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="giroNr" type="xs:string"/>
-      <xs:element name="opphorsdato" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Trelasjon">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="typeRelasjon" type="Ttrelasjon"/>
-      <xs:element name="relasjonFnr1" type="Tfnr_N"/>
-      <xs:element name="relasjonFnr2" type="Tfnr_N"/>
-      <xs:element name="fomRelasjon" type="DBdate"/>
-      <xs:element name="tomRelasjon" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="Ttrelasjon">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver de forskjellige relasjoner personer kan ha seg i mellom som BARN, EKTE, MORA, FARA, ....</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:enumeration value=""/>
-      <xs:enumeration value="MORA"/>
-      <xs:enumeration value="FARA"/>
-      <xs:enumeration value="BARN"/>
-      <xs:enumeration value="FOMO"/>
-      <xs:enumeration value="FOFA"/>
-      <xs:enumeration value="FOBA"/>
-      <xs:enumeration value="EKTE"/>
-      <xs:enumeration value="ENKE"/>
-      <xs:enumeration value="SKIL"/>
-      <xs:enumeration value="SEPR"/>
-      <xs:enumeration value="REPA"/>
-      <xs:enumeration value="SEPA"/>
-      <xs:enumeration value="SKPA"/>
-      <xs:enumeration value="GJPA"/>
-      <xs:enumeration value="GLAD"/>
-      <xs:enumeration value="SAMB"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TpersonStatus">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver personstatus som bosatt, død, utvandret</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:enumeration value=""/>
-      <xs:enumeration value="ABNR"/>
-      <xs:enumeration value="ADNR"/>
-      <xs:enumeration value="BOSA"/>
-      <xs:enumeration value="DØD"/>
-      <xs:enumeration value="DØDD"/>
-      <xs:enumeration value="FØDR"/>
-      <xs:enumeration value="FOSV"/>
-      <xs:enumeration value="UREG"/>
-      <xs:enumeration value="UTPE"/>
-      <xs:enumeration value="UTAN"/>
-      <xs:enumeration value="UFUL"/>
-      <xs:enumeration value="UTVA"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TtypeSpesReg">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver forskjellige speregtyper som SPFO (sperret adresse fortrolig) SPSF (Sperret adresse strengt fortrolig), VABO (vanlig bosatt),....</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="VABO"/>
-      <xs:enumeration value="URIK"/>
-      <xs:enumeration value="MILI"/>
-      <xs:enumeration value="KLIE"/>
-      <xs:enumeration value="UFB"/>
-      <xs:enumeration value="SPSF"/>
-      <xs:enumeration value="SPFO"/>
-      <xs:enumeration value="PEND"/>
-      <xs:enumeration value="SVAL"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="Tspesregtype">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="nySpesregType" type="TtypeSpesReg"/>
-      <xs:element name="tidligereSpesregType" type="TtypeSpesReg"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tgiroutl">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="datoReg" type="DBdate"/>
-      <xs:element name="giroNr">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="bankNavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="bankAdr1">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="bankAdr2">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="bankAdr3">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="swiftKode">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="bankKode">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="valutaKode">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="landKode" type="Tland_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Ttknrendring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="tknr" type="Ttknr_N"/>
-      <xs:element name="datoTknr" type="DBdate"/>
-      <xs:element name="forrigeTknr" type="Ttknr_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tbrukerprioadr">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="brukerprioritetAdresse" type="TbrukerprioritertAdr"/>
-      <xs:element name="bpFom" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tbrukerspes">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="tilsendtDok" type="xs:string"/>
-      <xs:element name="varsling" type="Tvarsling"/>
-      <xs:element name="varslingsKanal" type="Tkanal"/>
-      <xs:element name="bpFom" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="Tvarsling">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver forskjellige varsling</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="JA"/>
-      <xs:enumeration value="NEI"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TbrukerprioritertAdr">
-    <xs:annotation>
-      <xs:documentation>Type for brukerprioriterte adresser</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="BOAD"/>
-      <xs:enumeration value="POST"/>
-      <xs:enumeration value="PUTL"/>
-      <xs:enumeration value="TIAD"/>
-      <xs:enumeration value="UTAD"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TopphTillatelse">
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="BOSE"/>
-      <xs:enumeration value="MNGL"/>
-      <xs:enumeration value="OPAR"/>
-      <xs:enumeration value="OPEU"/>
-      <xs:enumeration value="OPUT"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TarbTillatelse">
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="AROP"/>
-      <xs:enumeration value="ARUT"/>
-      <xs:enumeration value="MNGL"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tkanal">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver forskjellige varslingskanaler</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="EPST"/>
-      <xs:enumeration value="SMS"/>
-      <xs:enumeration value="MISI"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tsivilstandkode">
-    <xs:annotation>
-      <xs:documentation>Denne typen beskriver format og sjekker på sivilstandskoden som UGIFT, GIFT, SKILT,.... </xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:enumeration value=""/>
-      <xs:enumeration value="NULL"/>
-      <xs:enumeration value="GIFT"/>
-      <xs:enumeration value="ENKE"/>
-      <xs:enumeration value="SKIL"/>
-      <xs:enumeration value="SEPR"/>
-      <xs:enumeration value="REPA"/>
-      <xs:enumeration value="SEPA"/>
-      <xs:enumeration value="SKPA"/>
-      <xs:enumeration value="GJPA"/>
-      <xs:enumeration value="SAMB"/>
-      <xs:enumeration value="GLAD"/>
-      <xs:enumeration value="UGIF"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="Tbrukerbehov">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesBehov" type="TtbrukerBehov"/>
-      <xs:element name="bhFom" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="TtbrukerBehov">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver forskjellige brukerbehov</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="KOMU"/>
-      <xs:enumeration value="KOSK"/>
-      <xs:enumeration value="LESA"/>
-      <xs:enumeration value="TOHJ"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TtadresseType">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver forskjellige boadressetyper</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="OFFA"/>
-      <xs:enumeration value="MATR"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="TAbrukerbehov">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesBehov" type="TtbrukerBehov"/>
-      <xs:element name="bhFom" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tgironorsk">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="giroNr" type="Tfnr_N"/>
-      <xs:element name="datoReg" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Ttildelingfnr">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="fnrNytt" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tfnrfnr">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="nyttFnr" type="Tfnr"/>
-      <xs:element name="tidligereFnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoReg" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tdnrfnr">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="dnr" type="Tfnr"/>
-      <xs:element name="nyttFnr" type="Tfnr"/>
-      <xs:element name="datoReg" type="DBdate"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tdnrdnr">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="nyttDnr" type="Tfnr"/>
-      <xs:element name="tidligereDnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoReg" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Ttilddnr">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="dnr" type="Tfnr"/>
-      <xs:element name="datoReg" type="DBdate"/>
-      <xs:element name="kortnavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="fornavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="mellomnavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="etternavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="statsborger">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="knr" type="Tknr_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tadrlinje">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoAdrFom" type="DBdate"/>
-      <xs:element name="adresse1">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adresse2">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adresse3">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adrLand" type="Tland_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TadrlinjeP">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoAdrFom" type="DBdate"/>
-      <xs:element name="adresse1">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adresse2">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adresse3">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="postAdrLand" type="Tland_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TadrlinjePN">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoAdrFom" type="DBdate"/>
-      <xs:element name="adresse1">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adresse2">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="adresse3">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="postnr" type="Tpostnr_N"/>
-      <xs:element name="poststed" type="xs:string"/>
-      <xs:element name="postAdrLand" type="Tland_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tnavneendring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoReg" type="DBdate"/>
-      <xs:element name="kortnavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="fornavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="mellomnavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="etternavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="tidligerenavn">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tsamboerendring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="samboerFnr">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:whiteSpace value="collapse"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="fom" type="DBdate"/>
-      <xs:element name="tom" type="DBdate"/>
-      <xs:element name="fomMottatt" type="DBdate"/>
-      <xs:element name="tomMottatt" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tumyndig">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="umyndiggjort" type="Tumyndig_N"/>
-      <xs:element name="datoUmyndiggjort" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="Tumyndig_N">
-    <xs:annotation>
-      <xs:documentation>Type som beskriver forskjellige umyndigkoder</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value=""/>
-      <xs:enumeration value="UMYN"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="Tstatsb">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="statsborger" type="Tstatsborgerskap_N"/>
-      <xs:element name="datoStatsborger" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="Tstatsborgerskap_N">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver mulige statsborgerskap</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||[A-Z]{3}|\?{3}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tland_N">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver mulige landkoder</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||[A-Z]{3}||\?{3}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="Topptil">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="opphTillatelse" type="TopphTillatelse"/>
-      <xs:element name="datoFraOpph" type="DBdate"/>
-      <xs:element name="datoTilOpph" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tarbtil">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="arbTillatelse" type="TarbTillatelse"/>
-      <xs:element name="datoFraArbeidsT" type="DBdate"/>
-      <xs:element name="datoTilArbeidsT" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tinnvandring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="innvandretFraLand" type="Tland_N"/>
-      <xs:element name="datoInnvandret" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TSAnnulering">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tutvandring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="utvandretTilLand" type="Tland_N"/>
-      <xs:element name="datoUtvandret" type="DBdate"/>
-      <xs:element name="postAdresse1" type="xs:string"/>
-      <xs:element name="postAdresse2" type="xs:string"/>
-      <xs:element name="postAdresse3" type="xs:string"/>
-      <xs:element name="postAdrLand" type="Tland_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tadresseendring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="datoRegAdr" type="DBdate"/>
-      <xs:element name="tknr" type="Ttknr_N"/>
-      <xs:element name="knr" type="Tknr_N"/>
-      <xs:element name="adresseType" type="TtadresseType"/>
-      <xs:element name="adresse1" type="xs:string"/>
-      <xs:element name="adresse2" type="xs:string"/>
-      <xs:element name="postnr" type="Tpostnr_N"/>
-      <xs:element name="poststed" type="xs:string"/>
-      <xs:element name="bolignr" type="Tbolignr"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tsivilstatusendring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="sivilstand" type="Tsivilstandkode"/>
-      <xs:element name="datoSivilstand" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tpersonstatusendring">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="personstatus" type="TpersonStatus"/>
-      <xs:element name="datoPersonstatus" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tdødsmelding">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="datoDod" type="DBdate"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TAnnullering">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="Tfødselsmelding">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="barnetsFnr" type="Tfnr"/>
-      <xs:element name="spesregType" type="TtypeSpesReg"/>
-      <xs:element name="tknr" type="Ttknr_N"/>
-      <xs:element name="knr" type="Tknr_N"/>
-      <xs:element name="kodePersonStatus" type="TpersonStatus"/>
-      <xs:element name="fornavn" type="xs:string"/>
-      <xs:element name="mellomnavn" type="xs:string"/>
-      <xs:element name="etternavn" type="xs:string"/>
-      <xs:element name="kortnavn" type="xs:string"/>
-      <xs:element name="statsborger" type="Tstatsborgerskap_N"/>
-      <xs:element name="boAdresse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="boAdresse1" type="xs:string"/>
-            <xs:element name="boAdresse2" type="xs:string"/>
-            <xs:element name="boPostnr" type="Tpostnr_N"/>
-            <xs:element name="boPoststed" type="xs:string"/>
-            <xs:element name="bolignr" type="Tbolignr"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="postAdresse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="landKode" type="Tland_N"/>
-            <xs:element name="land" type="xs:string"/>
-            <xs:element name="adresseType" type="xs:string"/>
-            <xs:element name="adresse1" type="xs:string"/>
-            <xs:element name="adresse2" type="xs:string"/>
-            <xs:element name="adresse3" type="xs:string"/>
-            <xs:element name="postnr" type="Tpostnr_N"/>
-            <xs:element name="poststed" type="xs:string"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="morsFnr" type="Tfnr_N"/>
-      <xs:element name="farsFnr" type="Tfnr_N"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TAfødselsmelding">
-    <xs:sequence>
-      <xs:element name="fnr" type="Tfnr"/>
-      <xs:element name="barnetsfnr" type="Tfnr"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="Tbolignr">
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||[A-Z][0-9][0-9][0-9][0-9]"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tfnr">
-    <xs:annotation>
-      <xs:documentation>Dette er en type for å beskrive fnr samt sjekkene mot fnr</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value="\d{11}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tfnr_N">
-    <xs:annotation>
-      <xs:documentation>Dette er en type for å beskrive fnr samt sjekkene mot fnr</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||[0-9]{11}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tknr">
-    <xs:annotation>
-      <xs:documentation>Dette er en type for å beskrive kommunenr</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value="\d{4}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tknr_N">
-    <xs:annotation>
-      <xs:documentation>Dette er en type for å beskrive kommunenr</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||\d{4}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tpostnr">
-    <xs:annotation>
-      <xs:documentation>Dette er en type for å beskrive postnr</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value="\d{4}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="Tpostnr_N">
-    <xs:annotation>
-      <xs:documentation>Dette er en type for å beskrive postnr</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value=" ||\d{4}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="TmeldingsIdent">
-    <xs:sequence>
-      <xs:element name="kildeSystem">
-        <xs:simpleType>
-          <xs:restriction base="xs:string"/>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="kjoreNr">
-        <xs:simpleType>
-          <xs:restriction base="xs:string"/>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="meldingsDato" type="DBdate"/>
-      <xs:element name="meldingsNr">
-        <xs:simpleType>
-          <xs:restriction base="xs:string"/>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="meldingsType" type="TmeldingsType"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="TmeldingsType">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver alle meldingstyperr fra TPS.</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="fodselsMelding"/>
-      <xs:enumeration value="annullertFodselsMelding"/>
-      <xs:enumeration value="dodsMelding"/>
-      <xs:enumeration value="annullertDodsMelding"/>
-      <xs:enumeration value="sivilstandsEndring"/>
-      <xs:enumeration value="adresseEndring"/>
-      <xs:enumeration value="opphortAdresse"/>
-      <xs:enumeration value="utvandring"/>
-      <xs:enumeration value="annullertUtvandring"/>
-      <xs:enumeration value="innvandring"/>
-      <xs:enumeration value="annullertInnvandring"/>
-      <xs:enumeration value="oppholdsTillatelse"/>
-      <xs:enumeration value="arbeidsTillatelse"/>
-      <xs:enumeration value="statsborgerskap"/>
-      <xs:enumeration value="umyndiggjoring"/>
-      <xs:enumeration value="navneEndring"/>
-      <xs:enumeration value="adresseEndringPostUtl"/>
-      <xs:enumeration value="opphortPostUtl"/>
-      <xs:enumeration value="adresseEndringUtlAdr"/>
-      <xs:enumeration value="annullertUtlAdr"/>
-      <xs:enumeration value="opphortUtlAdr"/>
-      <xs:enumeration value="adresseEndringPostNor"/>
-      <xs:enumeration value="opphortPostNor"/>
-      <xs:enumeration value="adresseEndringTilNor"/>
-      <xs:enumeration value="annullertTilNor"/>
-      <xs:enumeration value="opphortTilNor"/>
-      <xs:enumeration value="tildelingEndringDnr"/>
-      <xs:enumeration value="linkingDnrFnr"/>
-      <xs:enumeration value="linkingDnrDnr"/>
-      <xs:enumeration value="linkingFnrFnr"/>
-      <xs:enumeration value="tildelingFnr"/>
-      <xs:enumeration value="giroNrNorge"/>
-      <xs:enumeration value="annullertGiroNrNorge"/>
-      <xs:enumeration value="opphortGiroNrNorge"/>
-      <xs:enumeration value="giroNrUtland"/>
-      <xs:enumeration value="annullertGiroNrUtland"/>
-      <xs:enumeration value="opphortGiroNrUtland"/>
-      <xs:enumeration value="sprak"/>
-      <xs:enumeration value="epost"/>
-      <xs:enumeration value="samboerEndring"/>
-      <xs:enumeration value="annullertSamboerskap"/>
-      <xs:enumeration value="relasjoner"/>
-      <xs:enumeration value="endretSpesregType"/>
-      <xs:enumeration value="annullertTilgang"/>
-      <xs:enumeration value="personstatusEndring"/>
-      <xs:enumeration value="tknrEndring"/>
-      <xs:enumeration value="endretBrukerprioritertAdr"/>
-      <xs:enumeration value="endretBrukerspesifikasjon"/>
-      <xs:enumeration value="endretBrukerbehov"/>
-      <xs:enumeration value="annullertBrukerprioritertAdresse"/>
-      <xs:enumeration value="annullertBrukerspesifikasjon"/>
-      <xs:enumeration value="annullertBrukerbehov"/>
-      <xs:enumeration value="opphortBrukerprioritertAdr"/>
-      <xs:enumeration value="nyEpost"/>
-      <xs:enumeration value="opphorEpost"/>
-      <xs:enumeration value="nyTelefon"/>
-      <xs:enumeration value="opphorTelefon"/>
-      <xs:enumeration value="opprettetSikkerhetstiltak"/>
-      <xs:enumeration value="opphortSikkerhetstiltak"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="DBdate">
-    <xs:annotation>
-      <xs:documentation>Typen beskriver formatet og begrensningene til datoene som kommer fra TPS.</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:pattern value="\d{0}"/>
-      <xs:pattern value="\d{4}-\d{2}-\d{2}"/>
-    </xs:restriction>
-  </xs:simpleType>
   <xs:element name="tpsPersonData">
     <xs:annotation>
       <xs:documentation>Dette skjema er basert på dokumentasjonen i GR.8.11-0011.341.</xs:documentation>
@@ -1135,6 +97,15 @@
     <xs:restriction base="xs:string">
       <xs:pattern value="\d{0}"/>
       <xs:pattern value="\d{1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Tfnr">
+    <xs:annotation>
+      <xs:documentation>Dette er en type for å beskrive fnr samt sjekkene mot fnr</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+      <xs:pattern value="\d{11}"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TreturStatus">
@@ -2034,6 +1005,42 @@
       <xs:element name="tknr" type="Ttknr"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:simpleType name="Ttknr">
+    <xs:annotation>
+      <xs:documentation>Beskriver valideringskriteriene for tknr.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="DBdate">
+    <xs:annotation>
+      <xs:documentation>Typen beskriver formatet og begrensningene til datoene som kommer fra TPS.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+      <xs:pattern value="\d{0}"/>
+      <xs:pattern value="\d{4}-\d{2}-\d{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Tbolignr">
+    <xs:annotation>
+      <xs:documentation>Typen beskriver formatet og sjekkene på bolignummeret.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Tpostnr">
+    <xs:annotation>
+      <xs:documentation>Denne typen beskriver formatet og sjekkene for et postnummer</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+      <xs:pattern value="\d{0}"/>
+      <xs:pattern value="\d{4}"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="Tkommunenr">
     <xs:annotation>
       <xs:documentation>Denne typen beskriver formatet og sjekkene mot et kommunenummer</xs:documentation>
@@ -2044,6 +1051,26 @@
       <xs:pattern value="\d{4}"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="TpersonStatus">
+    <xs:annotation>
+      <xs:documentation>Typen beskriver personstatus som bosatt, død, utvandret</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="ABNR"/>
+      <xs:enumeration value="ADNR"/>
+      <xs:enumeration value="BOSA"/>
+      <xs:enumeration value="DØD"/>
+      <xs:enumeration value="DØDD"/>
+      <xs:enumeration value="FØDR"/>
+      <xs:enumeration value="FOSV"/>
+      <xs:enumeration value="UREG"/>
+      <xs:enumeration value="UTPE"/>
+      <xs:enumeration value="UTAN"/>
+      <xs:enumeration value="UFUL"/>
+      <xs:enumeration value="UTVA"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="Tland">
     <xs:annotation>
       <xs:documentation>Typen beskriver formatet og sjekkene på representasjonen av land</xs:documentation>
@@ -2051,6 +1078,26 @@
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="collapse"/>
       <xs:length value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Tsivilstandkode">
+    <xs:annotation>
+      <xs:documentation>Denne typen beskriver format og sjekker på sivilstandskoden som UGIFT, GIFT, SKILT,.... </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="NULL"/>
+      <xs:enumeration value="GIFT"/>
+      <xs:enumeration value="ENKE"/>
+      <xs:enumeration value="SKIL"/>
+      <xs:enumeration value="SEPR"/>
+      <xs:enumeration value="REPA"/>
+      <xs:enumeration value="SEPA"/>
+      <xs:enumeration value="SKPA"/>
+      <xs:enumeration value="GJPA"/>
+      <xs:enumeration value="SAMB"/>
+      <xs:enumeration value="GLAD"/>
+      <xs:enumeration value="UGIF"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="Tsivilstand">
@@ -2395,6 +1442,30 @@
       <xs:enumeration value="SVAL"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="Trelasjon">
+    <xs:annotation>
+      <xs:documentation>Type som beskriver de forskjellige relasjoner personer kan ha seg i mellom som BARN, EKTE, MORA, FARA, ....</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="MORA"/>
+      <xs:enumeration value="FARA"/>
+      <xs:enumeration value="BARN"/>
+      <xs:enumeration value="FOMO"/>
+      <xs:enumeration value="FOFA"/>
+      <xs:enumeration value="FOBA"/>
+      <xs:enumeration value="EKTE"/>
+      <xs:enumeration value="ENKE"/>
+      <xs:enumeration value="SKIL"/>
+      <xs:enumeration value="SEPR"/>
+      <xs:enumeration value="REPA"/>
+      <xs:enumeration value="SEPA"/>
+      <xs:enumeration value="SKPA"/>
+      <xs:enumeration value="GJPA"/>
+      <xs:enumeration value="GLAD"/>
+      <xs:enumeration value="SAMB"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="TadresseStatus">
     <xs:annotation>
       <xs:documentation>Beskriver format og sjekker på feltet adressestatus som retureres fra S005</xs:documentation>
@@ -2482,6 +1553,17 @@
       <xs:element name="avsluttetTidspunkt" type="DBdate"/>
       <xs:element name="avsluttetSystem" type="Tsystem"/>
       <xs:element name="avsluttetSaksbehandler" type="Tsaksbehandler"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Tepost">
+    <xs:annotation>
+      <xs:documentation>Denne typen beskriver det som har med epost å gjøre</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="epostAdresse" type="xs:string"/>
+      <xs:element name="epostTidspunkt" type="DBdate"/>
+      <xs:element name="epostSystem" type="Tsystem"/>
+      <xs:element name="epostSaksbehandler" type="Tsaksbehandler"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="BA_Tknr"/>

@@ -1,9 +1,11 @@
 package no.nav.bidrag.aktoerregister.service;
 
 import jakarta.xml.bind.JAXBException;
+import java.util.concurrent.TimeoutException;
 import javax.jms.JMSException;
 import no.nav.bidrag.aktoerregister.domene.AktoerId;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
+import no.nav.bidrag.aktoerregister.service.mq.MQService;
 import no.rtv.namespacetps.ObjectFactory;
 import no.rtv.namespacetps.SRnavn;
 import no.rtv.namespacetps.TpsPersonData;
@@ -25,7 +27,7 @@ public class TPSTestServiceImpl implements TPSTestService {
   }
 
   @Override
-  public TpsPersonData hentKontoInfo(AktoerId aktoerId) throws JAXBException, JMSException {
+  public TpsPersonData hentKontoInfo(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
     TpsPersonData request = createTpsPersonDataRequest(aktoerId);
     return mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
   }

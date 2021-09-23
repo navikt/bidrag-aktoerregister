@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.api;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.xml.bind.JAXBException;
+import java.util.concurrent.TimeoutException;
 import javax.jms.JMSException;
 import no.nav.bidrag.aktoerregister.domene.Aktoer;
 import no.nav.bidrag.aktoerregister.domene.AktoerId;
@@ -44,7 +45,7 @@ public class TSSTestController {
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
 //      @Parameter(in = ParameterIn.HEADER, name = "Token", description = "Maskinporten JWT token", required = true) String token)
-      throws JAXBException, JMSException {
+      throws JAXBException, JMSException, TimeoutException {
     AktoerId aktoerId = new AktoerId(ident, identtype);
     Aktoer aktoer = tssTestService.hentAktoer(aktoerId);
     return ResponseEntity.ok(aktoer);
@@ -59,7 +60,7 @@ public class TSSTestController {
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
-      throws JAXBException, JMSException {
+      throws JAXBException, JMSException, TimeoutException {
     AktoerId aktoerId = new AktoerId(ident, identtype);
     TssSamhandlerData tssSamhandlerData = tssTestService.hentTssSamhandler(aktoerId);
     return ResponseEntity.ok(tssSamhandlerData);
@@ -74,7 +75,7 @@ public class TSSTestController {
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
-      throws JAXBException, JMSException {
+      throws JAXBException, JMSException, TimeoutException {
     AktoerId aktoerId = new AktoerId(ident, identtype);
     TpsPersonData tpsPersonData = tpsTestService.hentKontoInfo(aktoerId);
     return ResponseEntity.ok(tpsPersonData);

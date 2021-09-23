@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.service;
 
 import jakarta.xml.bind.JAXBException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import javax.jms.JMSException;
 import no.nav.bidrag.aktoerregister.domene.Adresse;
 import no.nav.bidrag.aktoerregister.domene.Aktoer;
@@ -9,6 +10,7 @@ import no.nav.bidrag.aktoerregister.domene.AktoerId;
 import no.nav.bidrag.aktoerregister.domene.Identtype;
 import no.nav.bidrag.aktoerregister.domene.Kontonummer;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
+import no.nav.bidrag.aktoerregister.service.mq.MQService;
 import no.rtv.namespacetss.AdresseSamhType;
 import no.rtv.namespacetss.KontoType;
 import no.rtv.namespacetss.ObjectFactory;
@@ -38,14 +40,14 @@ public class TSSTestServiceImpl implements TSSTestService{
   }
 
   @Override
-  public Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException {
+  public Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
     TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
     return mapToAktoer(response, aktoerId);
   }
 
   @Override
-  public TssSamhandlerData hentTssSamhandler(AktoerId aktoerId) throws JAXBException, JMSException {
+  public TssSamhandlerData hentTssSamhandler(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
     return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }

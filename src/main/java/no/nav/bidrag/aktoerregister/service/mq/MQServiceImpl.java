@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.service;
+package no.nav.bidrag.aktoerregister.service.mq;
 
 import com.ibm.msg.client.jms.JmsConnectionFactory;
 import com.ibm.msg.client.jms.JmsFactoryFactory;
@@ -10,6 +10,7 @@ import jakarta.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
 import javax.jms.Destination;
 import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
@@ -37,9 +38,10 @@ public class MQServiceImpl implements MQService {
 
   @Override
   public <Request, Response> Response performRequestResponse(String queue, Request request, Class<Request> requestClass, Class<Response> responseClass)
-      throws JMSException, JAXBException {
+      throws JMSException, JAXBException, TimeoutException {
     try {
-      JMSContext jmsContext = createMQContext();
+      JMSContext jmsContext = createMQContext(true);
+
       Destination requestQueue = jmsContext.createQueue(queue);
 
       TextMessage requestMessage = jmsContext.createTextMessage(createXMLString(request, requestClass));
@@ -54,10 +56,46 @@ public class MQServiceImpl implements MQService {
       // Waiting for and consuming response from response queue
       Message responseMessage = consumeMessage(jmsContext, responseQueue);
 
-      // TODO: Check if responseMessage is null. This can happen if 15 seconds go by with no response.
+      jmsContext.close();
+      if (responseMessage == null) {
+        throw new TimeoutException("Konsument timet ut uten å ha mottatt noen respons fra MQ");
+      }
 
       // Mapping response message to Response class.
       return getObjectFromXMLMessage(responseMessage, responseClass);
+    } catch (JMSException | JAXBException | TimeoutException e) {
+      throw e;
+    }
+  }
+
+  public <Response> void consume(MQMessageHandler<Response> messageHandler, String queue, Class<Response> responseClass)
+      throws JMSException, JAXBException {
+    try {
+      JMSContext jmsContext = createMQContext();
+      Destination consumtionQueue = jmsContext.createQueue(queue);
+      boolean run = true;
+      int nrFailedAttempts = 0;
+      while(run) {
+        Message message = consumeMessage(jmsContext, consumtionQueue);
+        if (message == null) {
+          continue;
+        }
+        boolean success = messageHandler.onMessage(getObjectFromXMLMessage(message, responseClass));
+        if (success) {
+          // Resetting nr of failed message handling attempts
+          nrFailedAttempts = 0;
+          // Manually acknowledging that we have processed and are done with the message
+          message.acknowledge();
+        }
+        else {
+          // When message handling has failed 5 times we stop the consumer
+          nrFailedAttempts++;
+          if (nrFailedAttempts >= 5) {
+            run = false;
+          }
+        }
+      }
+      jmsContext.close();
     } catch (JMSException | JAXBException e) {
       throw e;
     }
@@ -89,6 +127,10 @@ public class MQServiceImpl implements MQService {
   }
 
   private JMSContext createMQContext() throws JMSException {
+    return createMQContext(false);
+  }
+
+  private JMSContext createMQContext(boolean autoAcknowledge) throws JMSException {
     try {
       // Create a connection factory
       JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
@@ -105,7 +147,12 @@ public class MQServiceImpl implements MQService {
       cf.setStringProperty(WMQConstants.USERID, mqProperties.getUsername());
       cf.setStringProperty(WMQConstants.PASSWORD, mqProperties.getPassword());
 
-      return cf.createContext();
+      if (autoAcknowledge) {
+        cf.setIntProperty(WMQConstants.ACKNOWLEDGE_MODE, WMQConstants.CLIENT_ACKNOWLEDGE);
+        return cf.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
+      }
+
+      return cf.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
     } catch (JMSException e) {
       logger.error("Failed while setting up MQ connection. " + "Message: " + e.getMessage() + " StackTrace: " + Arrays.toString(e.getStackTrace()));
       throw e;
