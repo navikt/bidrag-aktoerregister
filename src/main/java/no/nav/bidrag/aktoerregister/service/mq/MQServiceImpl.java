@@ -1,9 +1,12 @@
 package no.nav.bidrag.aktoerregister.service.mq;
 
+import static no.nav.bidrag.aktoerregister.util.XmlUtil.*;
+
 import com.ibm.msg.client.jms.JmsConnectionFactory;
 import com.ibm.msg.client.jms.JmsFactoryFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -18,7 +21,9 @@ import javax.jms.JMSException;
 import javax.jms.JMSProducer;
 import javax.jms.Message;
 import javax.jms.TextMessage;
+import javax.xml.transform.stream.StreamSource;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
+import no.nav.bidrag.aktoerregister.util.XmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,84 +42,79 @@ public class MQServiceImpl implements MQService {
   }
 
   @Override
-  public <Request, Response> Response performRequestResponse(String queue, Request request, Class<Request> requestClass, Class<Response> responseClass)
+  public <Request, Response> Response performRequestResponse(String queue, Request request, Class<Request> requestClass,
+      Class<Response> responseClass)
       throws JMSException, JAXBException, TimeoutException {
-    try {
-      JMSContext jmsContext = createMQContext(true);
+    JMSContext jmsContext = createMQContext(true);
 
-      Destination requestQueue = jmsContext.createQueue(queue);
+    Destination requestQueue = jmsContext.createQueue(queue);
 
-      TextMessage requestMessage = jmsContext.createTextMessage(createXMLString(request, requestClass));
+    TextMessage requestMessage = jmsContext.createTextMessage(createXMLString(request, requestClass));
 
-      // Creating temporary queue and asking for the reply to be written to that queue
-      Destination responseQueue = jmsContext.createTemporaryQueue();
-      requestMessage.setJMSReplyTo(responseQueue);
+    // Creating temporary queue and asking for the reply to be written to that queue
+    Destination responseQueue = jmsContext.createTemporaryQueue();
+    requestMessage.setJMSReplyTo(responseQueue);
 
-      // Sending the message to the request queue
-      sendMessage(jmsContext, requestMessage, requestQueue);
+    // Sending the message to the request queue
+    sendMessage(jmsContext, requestMessage, requestQueue);
 
-      // Waiting for and consuming response from response queue
-      Message responseMessage = consumeMessage(jmsContext, responseQueue);
+    // Waiting for and consuming response from response queue
+    Message responseMessage = consumeMessage(jmsContext, responseQueue);
 
-      jmsContext.close();
-      if (responseMessage == null) {
-        throw new TimeoutException("Konsument timet ut uten å ha mottatt noen respons fra MQ");
-      }
-
-      // Mapping response message to Response class.
-      return getObjectFromXMLMessage(responseMessage, responseClass);
-    } catch (JMSException | JAXBException | TimeoutException e) {
-      throw e;
+    jmsContext.close();
+    if (responseMessage == null) {
+      throw new TimeoutException("Konsument timet ut uten å ha mottatt noen respons fra MQ");
     }
+
+    // Mapping response message to Response class.
+    return getObjectFromXMLMessage(responseMessage.getBody(String.class), responseClass);
   }
 
   public <Response> void consume(MQMessageHandler<Response> messageHandler, String queue, Class<Response> responseClass)
       throws JMSException, JAXBException {
-    try {
-      JMSContext jmsContext = createMQContext();
-      Destination consumtionQueue = jmsContext.createQueue(queue);
-      boolean run = true;
-      int nrFailedAttempts = 0;
-      while(run) {
-        Message message = consumeMessage(jmsContext, consumtionQueue);
-        if (message == null) {
-          continue;
-        }
-        boolean success = messageHandler.onMessage(getObjectFromXMLMessage(message, responseClass));
-        if (success) {
-          // Resetting nr of failed message handling attempts
-          nrFailedAttempts = 0;
-          // Manually acknowledging that we have processed and are done with the message
-          message.acknowledge();
-        }
-        else {
-          // When message handling has failed 5 times we stop the consumer
-          nrFailedAttempts++;
-          if (nrFailedAttempts >= 5) {
-            run = false;
-          }
+    JMSContext jmsContext = createMQContext();
+    Destination consumtionQueue = jmsContext.createQueue(queue);
+    boolean run = true;
+    int nrFailedAttempts = 0;
+    while (run) {
+      Message message = consumeMessage(jmsContext, consumtionQueue);
+      if (message == null) {
+        continue;
+      }
+      boolean success = messageHandler.onMessage(getObjectFromXMLMessage(message.getBody(String.class), responseClass));
+      if (success) {
+        // Resetting nr of failed message handling attempts
+        nrFailedAttempts = 0;
+        // Manually acknowledging that we have processed and are done with the message
+        message.acknowledge();
+      } else {
+        // When message handling has failed 5 times we stop the consumer
+        nrFailedAttempts++;
+        if (nrFailedAttempts >= 5) {
+          run = false;
         }
       }
-      jmsContext.close();
-    } catch (JMSException | JAXBException e) {
-      throw e;
     }
+    jmsContext.close();
   }
 
-  private <T> String createXMLString(T object, Class<T> objectType) throws JAXBException {
-    JAXBContext jaxbContext = JAXBContext.newInstance(objectType);
-    Marshaller marshaller = jaxbContext.createMarshaller();
-    StringWriter stringWriter = new StringWriter();
-    marshaller.marshal(object, stringWriter);
-    return stringWriter.toString();
-  }
-
-  private <T> T getObjectFromXMLMessage(Message message, Class<T> objectType) throws JAXBException, JMSException {
-    JAXBContext jaxbContext = JAXBContext.newInstance(objectType);
-    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-    StringReader result = new StringReader(message.getBody(String.class));
-    return (T) unmarshaller.unmarshal(result);
-  }
+//  private <T> String createXMLString(T object, Class<T> objectType) throws JAXBException {
+//    JAXBContext jaxbContext = JAXBContext.newInstance(objectType);
+//    Marshaller marshaller = jaxbContext.createMarshaller();
+//    StringWriter stringWriter = new StringWriter();
+//    marshaller.marshal(object, stringWriter);
+//    return stringWriter.toString();
+//  }
+//
+//  private <T> T getObjectFromXMLMessage(Message message, Class<T> objectType) throws JAXBException, JMSException {
+//    JAXBContext jaxbContext = JAXBContext.newInstance();
+//    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+//    StringReader result = new StringReader(message.getBody(String.class));
+//    StreamSource streamSource = new StreamSource(result);
+//    JAXBElement<T> jaxbElement = unmarshaller.unmarshal(streamSource, objectType);
+//    return jaxbElement.getValue();
+////    return (T) unmarshaller.unmarshal(result);
+//  }
 
   private void sendMessage(JMSContext context, Message message, Destination queue) {
     JMSProducer producer = context.createProducer();

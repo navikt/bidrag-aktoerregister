@@ -3,10 +3,11 @@ package no.nav.bidrag.aktoerregister.service;
 import jakarta.xml.bind.JAXBException;
 import java.util.concurrent.TimeoutException;
 import javax.jms.JMSException;
+import no.nav.bidrag.aktoerregister.domene.Aktoer;
 import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.rtv.namespacetps.TpsPersonData;
 
-public interface TPSTestService {
+public interface TPSService {
 
-  TpsPersonData hentKontoInfo(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException;
+  Aktoer hentKontoInfo(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException, NullPointerException;
+
 }

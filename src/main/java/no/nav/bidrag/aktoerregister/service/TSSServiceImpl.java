@@ -27,14 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TSSTestServiceImpl implements TSSTestService{
+public class TSSServiceImpl implements TSSService {
 
   private final MQService mqService;
 
   private final MQProperties mqProperties;
 
   @Autowired
-  public TSSTestServiceImpl(MQService mqService, MQProperties mqProperties) {
+  public TSSServiceImpl(MQService mqService, MQProperties mqProperties) {
     this.mqService = mqService;
     this.mqProperties = mqProperties;
   }
@@ -44,12 +44,6 @@ public class TSSTestServiceImpl implements TSSTestService{
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
     TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
     return mapToAktoer(response, aktoerId);
-  }
-
-  @Override
-  public TssSamhandlerData hentTssSamhandler(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
-    TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
-    return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }
 
   private TssSamhandlerData createTssSamhandlerRequest(AktoerId aktoerId) {
