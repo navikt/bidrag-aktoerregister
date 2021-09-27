@@ -8,9 +8,8 @@ import no.nav.bidrag.aktoerregister.domene.Aktoer;
 import no.nav.bidrag.aktoerregister.domene.AktoerId;
 import no.nav.bidrag.aktoerregister.domene.Identtype;
 import no.nav.bidrag.aktoerregister.service.TPSService;
-import no.nav.bidrag.aktoerregister.service.TSSService;
 import no.nav.security.token.support.core.api.Unprotected;
-import no.rtv.namespacetss.TssSamhandlerData;
+import no.rtv.namespacetps.TpsPersonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,16 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/tss")
-//@ProtectedWithClaims(issuer = "maskinporten", claimMap = {"scope=nav:bidrag:aktoerregister.read"})
+@RequestMapping("/tps")
 @Unprotected
-public class TSSTestController {
+public class TPSTestController {
 
-  private final TSSService tssService;
+  private final TPSService tpsService;
 
   @Autowired
-  public TSSTestController(TSSService tssService) {
-    this.tssService = tssService;
+  public TPSTestController(TPSService tpsService) {
+    this.tpsService = tpsService;
   }
 
   @GetMapping("/aktoer/{identtype}/{ident}")
@@ -40,15 +38,14 @@ public class TSSTestController {
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
-//      @Parameter(in = ParameterIn.HEADER, name = "Token", description = "Maskinporten JWT token", required = true) String token)
       throws JAXBException, JMSException, TimeoutException {
     AktoerId aktoerId = new AktoerId(ident, identtype);
-    Aktoer aktoer = tssService.hentAktoer(aktoerId);
+    Aktoer aktoer = tpsService.hentKontoInfo(aktoerId);
     return ResponseEntity.ok(aktoer);
   }
 
-  @GetMapping("/samhandler/{identtype}/{ident}")
-  public ResponseEntity<TssSamhandlerData> getSamhandler(
+  @GetMapping("/persondata/{identtype}/{ident}")
+  public ResponseEntity<TpsPersonData> getTpsPersonData(
       @Parameter(description = "Angir hvilken type ident som er angitt i forespørselen. "
           + "For personer vil dette være FNR eller DNR, som angis med PERSONNUMMER. "
           + "Utover dette benyttes AKTOERNUMMER.") @PathVariable(name = "identtype") Identtype identtype,
@@ -56,11 +53,9 @@ public class TSSTestController {
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
-//      @Parameter(in = ParameterIn.HEADER, name = "Token", description = "Maskinporten JWT token", required = true) String token)
       throws JAXBException, JMSException, TimeoutException {
     AktoerId aktoerId = new AktoerId(ident, identtype);
-    TssSamhandlerData tssSamhandlerData = tssService.hentSamhandler(aktoerId);
-    return ResponseEntity.ok(tssSamhandlerData);
+    TpsPersonData tpsPersonData = tpsService.hentTpsPersonData(aktoerId);
+    return ResponseEntity.ok(tpsPersonData);
   }
-
 }

@@ -46,6 +46,12 @@ public class TSSServiceImpl implements TSSService {
     return mapToAktoer(response, aktoerId);
   }
 
+  @Override
+  public TssSamhandlerData hentSamhandler(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
+    TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
+    return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
+  }
+
   private TssSamhandlerData createTssSamhandlerRequest(AktoerId aktoerId) {
     ObjectFactory objectFactory = new ObjectFactory();
     TServicerutiner servicerutiner = objectFactory.createTServicerutiner();

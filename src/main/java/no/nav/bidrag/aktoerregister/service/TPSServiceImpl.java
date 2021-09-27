@@ -37,6 +37,12 @@ public class TPSServiceImpl implements TPSService {
     return mapToAktoer(mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class), aktoerId);
   }
 
+  @Override
+  public TpsPersonData hentTpsPersonData(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException, NullPointerException {
+    TpsPersonData request = createTpsPersonDataRequest(aktoerId);
+    return mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
+  }
+
   private TpsPersonData createTpsPersonDataRequest(AktoerId aktoerId) {
     ObjectFactory objectFactory = new ObjectFactory();
     TpsPersonData tpsPersonData = objectFactory.createTpsPersonData();

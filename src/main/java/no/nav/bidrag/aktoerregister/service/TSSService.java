@@ -5,9 +5,12 @@ import java.util.concurrent.TimeoutException;
 import javax.jms.JMSException;
 import no.nav.bidrag.aktoerregister.domene.Aktoer;
 import no.nav.bidrag.aktoerregister.domene.AktoerId;
+import no.rtv.namespacetss.TssSamhandlerData;
 
 public interface TSSService {
 
   Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException;
+
+  TssSamhandlerData hentSamhandler(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException;
 
 }
