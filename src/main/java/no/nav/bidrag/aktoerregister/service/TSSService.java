@@ -1,16 +1,16 @@
 package no.nav.bidrag.aktoerregister.service;
 
-import jakarta.xml.bind.JAXBException;
-import java.util.concurrent.TimeoutException;
-import javax.jms.JMSException;
-import no.nav.bidrag.aktoerregister.domene.Aktoer;
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
+import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
+import no.nav.bidrag.aktoerregister.exception.MQServiceException;
+import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.rtv.namespacetss.TssSamhandlerData;
 
 public interface TSSService {
 
-  Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException;
+  AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws AktoerNotFoundException, TSSServiceException, MQServiceException;
 
-  TssSamhandlerData hentSamhandler(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException;
+  TssSamhandlerData hentSamhandler(AktoerIdDTO aktoerId) throws MQServiceException;
 
 }

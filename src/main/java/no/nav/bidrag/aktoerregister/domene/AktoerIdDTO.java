@@ -1,13 +1,13 @@
 package no.nav.bidrag.aktoerregister.domene;
 
-public class AktoerId {
+public class AktoerIdDTO {
     private String aktoerId;
-    private Identtype identtype;
+    private IdenttypeDTO identtype;
 
-    public AktoerId() {
+    public AktoerIdDTO() {
     }
 
-    public AktoerId(String aktoerId, Identtype identtype) {
+    public AktoerIdDTO(String aktoerId, IdenttypeDTO identtype) {
         this.aktoerId = aktoerId;
         this.identtype = identtype;
     }
@@ -20,11 +20,11 @@ public class AktoerId {
         this.aktoerId = aktoer;
     }
 
-    public Identtype getIdenttype() {
+    public IdenttypeDTO getIdenttype() {
         return identtype;
     }
 
-    public void setIdenttype(Identtype identtype) {
+    public void setIdenttype(IdenttypeDTO identtype) {
         this.identtype = identtype;
     }
 
@@ -45,7 +45,7 @@ public class AktoerId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AktoerId other = (AktoerId) obj;
+        AktoerIdDTO other = (AktoerIdDTO) obj;
         if (identtype != other.identtype)
             return false;
         if (aktoerId == null) {

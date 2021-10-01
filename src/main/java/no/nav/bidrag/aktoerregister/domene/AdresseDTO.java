@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 // TODO: Kvalitetssikre beskrivelse av adresse-felter.
 @Schema(description = "Representerer navn og/eller adresse for en bidragsaktør. TODO: Beskrivelse av felter må kvalitetssikres.")
 @JsonInclude(Include.NON_NULL)
-public class Adresse {
+public class AdresseDTO {
     
     @Schema(description = "Aktørens navn")
 	private String navn;

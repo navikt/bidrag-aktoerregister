@@ -2,13 +2,13 @@ package no.nav.bidrag.aktoerregister.service;
 
 import java.util.List;
 
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.nav.bidrag.aktoerregister.domene.Hendelse;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
 
 public interface HendelseService {
 
-    List<Hendelse> hentHendelser(int fraSekvensnummer, int antallHendelser);
+    List<HendelseDTO> hentHendelser(int fraSekvensnummer, int antallHendelser);
 
-    void registrerHendelse(AktoerId aktoerId);
+    void registrerHendelse(AktoerIdDTO aktoerId);
 
 }

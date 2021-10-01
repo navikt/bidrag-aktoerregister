@@ -6,22 +6,22 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.nav.bidrag.aktoerregister.domene.Hendelse;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
 import no.nav.bidrag.aktoerregister.service.HendelseService;
 
 @Component
 public class HendelseServiceStub implements HendelseService {
-    private final List<Hendelse> hendelser = new ArrayList<>();
+    private final List<HendelseDTO> hendelser = new ArrayList<>();
 
-    public void registrerHendelse(AktoerId aktoerId) {
-        Hendelse hendelse = new Hendelse();
+    public void registrerHendelse(AktoerIdDTO aktoerId) {
+        HendelseDTO hendelse = new HendelseDTO();
         hendelse.setAktoerId(aktoerId);
         hendelse.setSekvensnummer(hendelser.size() + 1);
         hendelser.add(hendelse);
     }
     
-    public List<Hendelse> hentHendelser(int fraSekvensnummer, int antallHendelser) {
+    public List<HendelseDTO> hentHendelser(int fraSekvensnummer, int antallHendelser) {
         return hendelser
         .stream()
         .filter((h) -> h.getSekvensnummer() >= fraSekvensnummer)

@@ -1,14 +1,14 @@
 package no.nav.bidrag.aktoerregister.service;
 
-import jakarta.xml.bind.JAXBException;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
-import javax.jms.JMSException;
-import no.nav.bidrag.aktoerregister.domene.Adresse;
-import no.nav.bidrag.aktoerregister.domene.Aktoer;
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.nav.bidrag.aktoerregister.domene.Identtype;
-import no.nav.bidrag.aktoerregister.domene.Kontonummer;
+import no.nav.bidrag.aktoerregister.domene.AdresseDTO;
+import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
+import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
+import no.nav.bidrag.aktoerregister.exception.MQServiceException;
+import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.mq.MQService;
 import no.rtv.namespacetss.AdresseSamhType;
@@ -16,6 +16,7 @@ import no.rtv.namespacetss.KontoType;
 import no.rtv.namespacetss.ObjectFactory;
 import no.rtv.namespacetss.Samhandler;
 import no.rtv.namespacetss.SamhandlerIDataB910Type;
+import no.rtv.namespacetss.SvarStatusType;
 import no.rtv.namespacetss.TServicerutiner;
 import no.rtv.namespacetss.TidOFF1;
 import no.rtv.namespacetss.TssSamhandlerData;
@@ -40,24 +41,25 @@ public class TSSServiceImpl implements TSSService {
   }
 
   @Override
-  public Aktoer hentAktoer(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
+  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, AktoerNotFoundException, TSSServiceException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
     TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
+    validateResponse(response, aktoerId.getAktoerId());
     return mapToAktoer(response, aktoerId);
   }
 
   @Override
-  public TssSamhandlerData hentSamhandler(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException {
+  public TssSamhandlerData hentSamhandler(AktoerIdDTO aktoerId) throws MQServiceException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
     return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }
 
-  private TssSamhandlerData createTssSamhandlerRequest(AktoerId aktoerId) {
+  private TssSamhandlerData createTssSamhandlerRequest(AktoerIdDTO aktoerId) {
     ObjectFactory objectFactory = new ObjectFactory();
     TServicerutiner servicerutiner = objectFactory.createTServicerutiner();
 
     SamhandlerIDataB910Type samhandlerIDataB910 = objectFactory.createSamhandlerIDataB910Type();
-    if (aktoerId.getIdenttype().equals(Identtype.AKTOERNUMMER)) {
+    if (aktoerId.getIdenttype().equals(IdenttypeDTO.AKTOERNUMMER)) {
       samhandlerIDataB910.setIdOffTSS(aktoerId.getAktoerId());
     }
     else {
@@ -77,23 +79,29 @@ public class TSSServiceImpl implements TSSService {
     return tssSamhandlerData;
   }
 
-  private Aktoer mapToAktoer(TssSamhandlerData tssSamhandlerData, AktoerId aktoerId) {
-    Aktoer aktoer = new Aktoer(aktoerId);
+  private AktoerDTO mapToAktoer(TssSamhandlerData tssSamhandlerData, AktoerIdDTO aktoerId) {
     TypeOD910 samhandlerODataB910 = tssSamhandlerData.getTssOutputData().getSamhandlerODataB910();
     if (samhandlerODataB910 != null) {
-      aktoer.setAdresse(mapToAdresse(samhandlerODataB910));
-      aktoer.setKontonummer(mapToKontonummer(samhandlerODataB910));
+      AdresseDTO adresse = mapToAdresse(samhandlerODataB910);
+      KontonummerDTO kontonummer = mapToKontonummer(samhandlerODataB910);
+      // Not storing TSS aktoer if adresse or kontonummer is null
+      if (adresse != null & kontonummer != null) {
+        AktoerDTO aktoer = new AktoerDTO(aktoerId);
+        aktoer.setAdresse(mapToAdresse(samhandlerODataB910));
+        aktoer.setKontonummer(mapToKontonummer(samhandlerODataB910));
+        return aktoer;
+      }
     }
-    return aktoer;
+    return null;
   }
 
-  private Adresse mapToAdresse(TypeOD910 samhandlerODataB910) {
+  private AdresseDTO mapToAdresse(TypeOD910 samhandlerODataB910) {
     List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
     if (samhandlerListe.size() > 0) {
       TypeSamhAdr typeSamhAdr = samhandlerListe.get(0).getAdresse130();
       if (Integer.parseInt(typeSamhAdr.getAntAdresse()) > 0) {
         AdresseSamhType adresseSamhType = typeSamhAdr.getAdresseSamh().get(0);
-        Adresse adresse = new Adresse();
+        AdresseDTO adresse = new AdresseDTO();
         adresse.setLand(adresseSamhType.getKodeLand());
         adresse.setPoststed(adresseSamhType.getPoststed());
         adresse.setPostnr(adresseSamhType.getPostNr());
@@ -113,13 +121,13 @@ public class TSSServiceImpl implements TSSService {
     return null;
   }
 
-  private Kontonummer mapToKontonummer(TypeOD910 samhandlerODataB910) {
+  private KontonummerDTO mapToKontonummer(TypeOD910 samhandlerODataB910) {
     List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
     if (samhandlerListe.size() > 0) {
       TypeSamhKonto typeSamhKonto = samhandlerListe.get(0).getKonto140();
       if (Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
         KontoType kontoType = typeSamhKonto.getKonto().get(0);
-        Kontonummer kontonummer = new Kontonummer();
+        KontonummerDTO kontonummer = new KontonummerDTO();
         kontonummer.setBankLandkode(kontoType.getKodeLand());
         kontonummer.setBankNavn(kontoType.getBankNavn());
         kontonummer.setNorskKontonr(kontoType.getGironrInnland());
@@ -130,5 +138,16 @@ public class TSSServiceImpl implements TSSService {
       }
     }
     return null;
+  }
+
+  private void validateResponse(TssSamhandlerData tssSamhandlerData, String aktoerId) throws AktoerNotFoundException, TSSServiceException {
+    SvarStatusType svarStatusType = tssSamhandlerData.getTssOutputData().getSvarStatus();
+    if (svarStatusType.getAlvorligGrad().equals("00")) {
+      return;
+    }
+    else if (svarStatusType.getAlvorligGrad().equals("04") && svarStatusType.getKodeMelding().equals("B9XX008F")) {
+      throw new AktoerNotFoundException("Aktoer med aktoerId (" + aktoerId + ") ikke funnet.");
+    }
+    throw new TSSServiceException(svarStatusType.getBeskrMelding() + " " + svarStatusType.getKodeMelding());
   }
 }

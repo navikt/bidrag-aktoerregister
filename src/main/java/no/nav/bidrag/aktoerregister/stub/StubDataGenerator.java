@@ -2,10 +2,10 @@ package no.nav.bidrag.aktoerregister.stub;
 
 import java.util.List;
 
-import no.nav.bidrag.aktoerregister.domene.Adresse;
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.nav.bidrag.aktoerregister.domene.Identtype;
-import no.nav.bidrag.aktoerregister.domene.Kontonummer;
+import no.nav.bidrag.aktoerregister.domene.AdresseDTO;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
 
 public class StubDataGenerator extends StubHelper {
     private static final List<String> NAVN_KOMPONENTER_DEL1 = List.of("Søt", "Skummel", "Vennlig", "Sensuell", "Høylytt", "Stille", "Lang", "Bred");
@@ -13,19 +13,19 @@ public class StubDataGenerator extends StubHelper {
     private static final List<String> GATER = List.of("Ibsens gate", "Storgata", "Kongens gate");
     private static final List<String> POSTSTEDER = List.of("Oslo", "Lislefjødd", "Hamar");
     
-    public static AktoerId randomAktoer(Identtype ...identtyper) {
+    public static AktoerIdDTO randomAktoer(IdenttypeDTO...identtyper) {
         switch(random(identtyper)) {
         case AKTOERNUMMER:
-            return new AktoerId("8"+random(0,99999)+random(0,99999), Identtype.AKTOERNUMMER);
+            return new AktoerIdDTO("8"+random(0,99999)+random(0,99999), IdenttypeDTO.AKTOERNUMMER);
             
         case PERSONNUMMER:
-            return new AktoerId(random(10,28)+ "0" + random(1,9)+random(80, 99)+"12345", Identtype.PERSONNUMMER);
+            return new AktoerIdDTO(random(10,28)+ "0" + random(1,9)+random(80, 99)+"12345", IdenttypeDTO.PERSONNUMMER);
         }
         return null;
     }
     
-    public static Adresse nyAresse() {
-        Adresse adresse = new Adresse();
+    public static AdresseDTO nyAresse() {
+        AdresseDTO adresse = new AdresseDTO();
         adresse.setNavn(random(NAVN_KOMPONENTER_DEL1) + " " + random(NAVN_KOMPONENTER_DEL2));
         switch(random(Adressetype.values())) {
         
@@ -51,8 +51,8 @@ public class StubDataGenerator extends StubHelper {
         return adresse;
     }
     
-    public static Kontonummer nyttKontonummer() {
-        Kontonummer kontonummer = new Kontonummer();
+    public static KontonummerDTO nyttKontonummer() {
+        KontonummerDTO kontonummer = new KontonummerDTO();
         switch(random(Kontotype.values())) {
         case NORSK:
             kontonummer.setNorskKontonr(random(1000,9999) + "" + random(10, 99) + "" + random(10000, 99999));

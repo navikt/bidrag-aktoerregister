@@ -3,13 +3,13 @@ package no.nav.bidrag.aktoerregister.domene;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "En hendelse signaliserer at enten adresse eller kontonummer for en aktør er oppdatert. Hendelsen inneholder ikke selve oppdateringen.")
-public class Hendelse implements Comparable<Hendelse>{
+public class HendelseDTO implements Comparable<HendelseDTO>{
     
     @Schema(description = "Hendelsens sekvensnummer. Sekvensnummeret vil alltid øke i nyere hendelser.")
     private int sekvensnummer;
     
     @Schema(description = "Aktøren som er oppdatert.")
-    private AktoerId aktoerId;
+    private AktoerIdDTO aktoerId;
 
     public int getSekvensnummer() {
     	return sekvensnummer;
@@ -19,16 +19,16 @@ public class Hendelse implements Comparable<Hendelse>{
     	this.sekvensnummer = sekvensnummer;
     }
 
-    public AktoerId getAktoerId() {
+    public AktoerIdDTO getAktoerId() {
         return aktoerId;
     }
 
-    public void setAktoerId(AktoerId aktoerId) {
+    public void setAktoerId(AktoerIdDTO aktoerId) {
         this.aktoerId = aktoerId;
     }
 
     @Override
-    public int compareTo(Hendelse other) {
+    public int compareTo(HendelseDTO other) {
         return Integer.compare(sekvensnummer, other.sekvensnummer);
     }
 }

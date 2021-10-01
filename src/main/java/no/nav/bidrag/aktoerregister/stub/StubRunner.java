@@ -13,17 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.nav.bidrag.aktoerregister.domene.Identtype;
-import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.service.AktoerregisterServiceOld;
 
 @Component
 public class StubRunner implements CommandLineRunner {
 
     @Autowired
-    private AktoerregisterService service;
+    private AktoerregisterServiceOld service;
 
-    private final List<AktoerId> registrerteAktoerer = new ArrayList<>();
+    private final List<AktoerIdDTO> registrerteAktoerer = new ArrayList<>();
 
     @Override
     public void run(String... args) throws Exception {
@@ -47,17 +47,17 @@ public class StubRunner implements CommandLineRunner {
     }
 
     private void registrerNyAktoer() {
-        AktoerId aktoerId = randomAktoer(Identtype.AKTOERNUMMER, Identtype.PERSONNUMMER);
+        AktoerIdDTO aktoerId = randomAktoer(IdenttypeDTO.AKTOERNUMMER, IdenttypeDTO.PERSONNUMMER);
         registrerteAktoerer.add(aktoerId);
-        if (Identtype.AKTOERNUMMER.equals(aktoerId.getIdenttype())) {
+        if (IdenttypeDTO.AKTOERNUMMER.equals(aktoerId.getIdenttype())) {
             service.oppdaterAdresse(aktoerId, nyAresse());
         }
         service.oppdaterKonto(aktoerId, nyttKontonummer());
     }
 
-    private void oppdaterAktoer(AktoerId aktoerId) {
+    private void oppdaterAktoer(AktoerIdDTO aktoerId) {
         // Det er kun adresser som registreres
-        if (Identtype.PERSONNUMMER.equals(aktoerId.getIdenttype()) || randomSannsynlighet(.3)) {
+        if (IdenttypeDTO.PERSONNUMMER.equals(aktoerId.getIdenttype()) || randomSannsynlighet(.3)) {
             service.oppdaterKonto(aktoerId, nyttKontonummer());
 
         } else {

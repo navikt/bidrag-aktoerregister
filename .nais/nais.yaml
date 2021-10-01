@@ -7,6 +7,12 @@ metadata:
     team: bidrag
 spec:
   image: {{ image }}
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_12
+        databases:
+        - name: bidrag_aktoerregister
+          envVarPrefix: DB
   liveness:
     path: /bidrag-aktoerregister/actuator/health
     initialDelay: 20

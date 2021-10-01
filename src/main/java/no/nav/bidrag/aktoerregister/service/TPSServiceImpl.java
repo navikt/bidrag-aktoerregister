@@ -1,16 +1,17 @@
 package no.nav.bidrag.aktoerregister.service;
 
-import jakarta.xml.bind.JAXBException;
-import java.util.concurrent.TimeoutException;
-import javax.jms.JMSException;
-import no.nav.bidrag.aktoerregister.domene.Aktoer;
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
-import no.nav.bidrag.aktoerregister.domene.Kontonummer;
+import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
+import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
+import no.nav.bidrag.aktoerregister.exception.MQServiceException;
+import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.mq.MQService;
 import no.rtv.namespacetps.ObjectFactory;
 import no.rtv.namespacetps.PersondataFraTpsS102;
 import no.rtv.namespacetps.SRnavn;
+import no.rtv.namespacetps.StatusFraTPS;
 import no.rtv.namespacetps.TgiroNrUtland;
 import no.rtv.namespacetps.TgiroNummer;
 import no.rtv.namespacetps.TpsPersonData;
@@ -32,18 +33,21 @@ public class TPSServiceImpl implements TPSService {
   }
 
   @Override
-  public Aktoer hentKontoInfo(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException, NullPointerException {
+  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, AktoerNotFoundException, TPSServiceException {
     TpsPersonData request = createTpsPersonDataRequest(aktoerId);
-    return mapToAktoer(mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class), aktoerId);
+    TpsPersonData response = mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
+    validateResponse(response, aktoerId.getAktoerId());
+    return mapToAktoer(response, aktoerId);
   }
 
   @Override
-  public TpsPersonData hentTpsPersonData(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException, NullPointerException {
+  public TpsPersonData hentTpsPersonData(AktoerIdDTO aktoerId)
+      throws MQServiceException {
     TpsPersonData request = createTpsPersonDataRequest(aktoerId);
     return mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
   }
 
-  private TpsPersonData createTpsPersonDataRequest(AktoerId aktoerId) {
+  private TpsPersonData createTpsPersonDataRequest(AktoerIdDTO aktoerId) {
     ObjectFactory objectFactory = new ObjectFactory();
     TpsPersonData tpsPersonData = objectFactory.createTpsPersonData();
 
@@ -57,19 +61,33 @@ public class TPSServiceImpl implements TPSService {
     return tpsPersonData;
   }
 
-  private Aktoer mapToAktoer(TpsPersonData tpsPersonData, AktoerId aktoerId) throws NullPointerException {
-    Aktoer aktoer = new Aktoer(aktoerId);
+  private AktoerDTO mapToAktoer(TpsPersonData tpsPersonData, AktoerIdDTO aktoerId) {
     PersondataFraTpsS102 persondataFraTpsS102 = tpsPersonData.getTpsSvar().getPersonDataS102();
-    TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
-    TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
-    Kontonummer kontonummer = new Kontonummer();
-    kontonummer.setNorskKontonr(giroInfoNorsk.getGiroNummer());
-    kontonummer.setIban(giroInfoUtlandsk.getGiroNrUtland());
-    kontonummer.setSwift(giroInfoUtlandsk.getSwiftKodeUtland());
-    kontonummer.setValutaKode(giroInfoUtlandsk.getBankValuta());
-    kontonummer.setBankNavn(giroInfoUtlandsk.getBankNavnUtland());
-    kontonummer.setBankLandkode(giroInfoUtlandsk.getBankLandKode());
-    aktoer.setKontonummer(kontonummer);
-    return aktoer;
+    if (persondataFraTpsS102 != null) {
+      TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
+      TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
+
+      AktoerDTO aktoer = new AktoerDTO(aktoerId);
+      KontonummerDTO kontonummer = new KontonummerDTO();
+      kontonummer.setNorskKontonr(giroInfoNorsk.getGiroNummer());
+      kontonummer.setIban(giroInfoUtlandsk.getGiroNrUtland());
+      kontonummer.setSwift(giroInfoUtlandsk.getSwiftKodeUtland());
+      kontonummer.setValutaKode(giroInfoUtlandsk.getBankValuta());
+      kontonummer.setBankNavn(giroInfoUtlandsk.getBankNavnUtland());
+      kontonummer.setBankLandkode(giroInfoUtlandsk.getBankLandKode());
+      aktoer.setKontonummer(kontonummer);
+      return aktoer;
+    }
+    return null;
+  }
+
+  private void validateResponse(TpsPersonData tpsPersonData, String aktoerId) throws AktoerNotFoundException, TPSServiceException {
+    StatusFraTPS statusFraTPS = tpsPersonData.getTpsSvar().getSvarStatus();
+    if (statusFraTPS.getReturStatus().equals("00")) {
+      return;
+    } else if (statusFraTPS.getReturStatus().equals("08") && statusFraTPS.getReturMelding().equals("S102002F")) {
+      throw new AktoerNotFoundException("Aktoer med aktoerId (" + aktoerId + ") ikke funnet.");
+    }
+    throw new TPSServiceException(statusFraTPS.getUtfyllendeMelding() + " " + statusFraTPS.getReturMelding());
   }
 }

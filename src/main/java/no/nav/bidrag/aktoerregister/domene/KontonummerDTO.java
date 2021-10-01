@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Representerer kontonummer for en bidragsaktør. For norske kontonummer er det kun norskKontornr som er utfyllt, ellers benyttes de andre feltene for utlandske kontonummer.")
 @JsonInclude(Include.NON_NULL)
-public class Kontonummer {
+public class KontonummerDTO {
     
     @Schema(description = "Norsk kontonummer, 11 siffer.")
     private String norskKontonr;

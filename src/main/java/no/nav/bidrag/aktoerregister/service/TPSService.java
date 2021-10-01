@@ -1,16 +1,17 @@
 package no.nav.bidrag.aktoerregister.service;
 
-import jakarta.xml.bind.JAXBException;
-import java.util.concurrent.TimeoutException;
-import javax.jms.JMSException;
-import no.nav.bidrag.aktoerregister.domene.Aktoer;
-import no.nav.bidrag.aktoerregister.domene.AktoerId;
+import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
+import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
+import no.nav.bidrag.aktoerregister.exception.MQServiceException;
+import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
 import no.rtv.namespacetps.TpsPersonData;
 
 public interface TPSService {
 
-  Aktoer hentKontoInfo(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException, NullPointerException;
+  AktoerDTO hentAktoer(AktoerIdDTO aktoerId)
+      throws MQServiceException, AktoerNotFoundException, TPSServiceException;
 
-  TpsPersonData hentTpsPersonData(AktoerId aktoerId) throws JAXBException, JMSException, TimeoutException, NullPointerException;
+  TpsPersonData hentTpsPersonData(AktoerIdDTO aktoerId) throws MQServiceException;
 
 }
