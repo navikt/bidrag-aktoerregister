@@ -9,6 +9,7 @@ spec:
   image: {{ image }}
   gcp:
     sqlInstances:
+      cascadingDelete: true
       - type: POSTGRES_12
         databases:
         - name: bidrag-aktoerregister
