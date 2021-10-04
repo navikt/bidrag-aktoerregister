@@ -12,7 +12,7 @@ spec:
       - name: {{ dbinstancename }}
         type: POSTGRES_12
         databases:
-        - name: { { dbname } }
+        - name: {{ dbname }}
           envVarPrefix: DB
   liveness:
     path: /bidrag-aktoerregister/actuator/health
