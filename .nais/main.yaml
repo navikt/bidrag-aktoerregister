@@ -1,3 +1,5 @@
-name: bidrag-aktoerregister
+name: bidrag-aktoerregister-main
+dbinstancename: bidrag-aktoerregister-main
+dbname: bidrag-aktoerregister-db
 ingresses:
   - https://bidrag-aktoerregister.dev.intern.nav.no/

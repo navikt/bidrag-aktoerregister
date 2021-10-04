@@ -9,9 +9,10 @@ spec:
   image: {{ image }}
   gcp:
     sqlInstances:
-      - type: POSTGRES_12
+      - name: {{ dbinstancename }}
+        type: POSTGRES_12
         databases:
-        - name: bidrag-aktoerregister
+        - name: { { dbname } }
           envVarPrefix: DB
   liveness:
     path: /bidrag-aktoerregister/actuator/health
