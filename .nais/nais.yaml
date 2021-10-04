@@ -10,7 +10,7 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_12
-        cascadingDelete: false
+        cascadingDelete: true
         databases:
         - name: bidrag-aktoerregister
           envVarPrefix: DB
