@@ -2,6 +2,8 @@ package no.nav.bidrag.aktoerregister.service.mq;
 
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
+import no.nav.bidrag.aktoerregister.persistence.entities.Kontonummer;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
 import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import no.rtv.namespacetps.DistribusjonsMelding;
@@ -39,35 +41,35 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
     if (giroNrNorge != null) {
       logger.info("Distribusjonsmelding er av type GiroNrNorge");
       String fnr = giroNrNorge.getFnr();
-      AktoerDTO aktoerDTO = aktoerregisterService.hentAktoerFromDB(fnr);
-      if (aktoerDTO != null) {
-        KontonummerDTO kontonummer = new KontonummerDTO();
+      Aktoer aktoer = aktoerregisterService.hentAktoerFromDB(fnr);
+      if (aktoer != null) {
+        Kontonummer kontonummer = new Kontonummer();
         kontonummer.setNorskKontonr(giroNrNorge.getGiroNr());
-        aktoerDTO.setKontonummer(kontonummer);
-        aktoerregisterService.oppdaterAktoer(aktoerDTO);
+        aktoer.setKontonummer(kontonummer);
+        aktoerregisterService.oppdaterAktoer(aktoer);
       }
     }
     else if (giroNrUtland != null) {
       logger.info("Distribusjonsmelding er av type GiroNrUtland");
       String fnr = giroNrUtland.getFnr();
-      AktoerDTO aktoerDTO = aktoerregisterService.hentAktoerFromDB(fnr);
-      if (aktoerDTO != null) {
-        KontonummerDTO kontonummer = new KontonummerDTO();
+      Aktoer aktoer = aktoerregisterService.hentAktoerFromDB(fnr);
+      if (aktoer != null) {
+        Kontonummer kontonummer = new Kontonummer();
         kontonummer.setIban(giroNrUtland.getGiroNr());
         kontonummer.setSwift(giroNrUtland.getSwiftKode());
         kontonummer.setValutaKode(giroNrUtland.getValutaKode());
         kontonummer.setBankNavn(giroNrUtland.getBankNavn());
         kontonummer.setBankLandkode(giroNrUtland.getLandKode());
-        aktoerDTO.setKontonummer(kontonummer);
-        aktoerregisterService.oppdaterAktoer(aktoerDTO);
+        aktoer.setKontonummer(kontonummer);
+        aktoerregisterService.oppdaterAktoer(aktoer);
       }
     }
     else if (annulertKontonummer != null) {
       String fnr = annulertKontonummer.getFnr();
       logger.info("Kontonummer er annulert for fnr: {}", fnr);
-      AktoerDTO aktoerDTO = aktoerregisterService.hentAktoerFromDB(fnr);
-      if (aktoerDTO != null) {
-        aktoerDTO.setKontonummer(null);
+      Aktoer aktoer = aktoerregisterService.hentAktoerFromDB(fnr);
+      if (aktoer != null) {
+        aktoer.setKontonummer(null);
       }
     }
     return true;

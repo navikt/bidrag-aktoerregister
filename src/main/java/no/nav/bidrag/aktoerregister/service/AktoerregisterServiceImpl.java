@@ -40,9 +40,9 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 
   @Override
   public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    AktoerDTO aktoerDTOFromDB = hentAktoerFromDB(aktoerId.getAktoerId());
+    Aktoer aktoerDTOFromDB = hentAktoerFromDB(aktoerId.getAktoerId());
     if (aktoerDTOFromDB != null) {
-      return aktoerDTOFromDB;
+      return aktoerMapper.toDomain(aktoerDTOFromDB);
     }
 
     // Aktoer does not exist in our DB, and we need to fetch it from TSS or TPS
@@ -56,12 +56,8 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   }
 
   @Override
-  public AktoerDTO hentAktoerFromDB(String aktoerId) {
-    Aktoer aktoer = aktoerRepository.getAktoer(aktoerId);
-    if (aktoer != null) {
-      return aktoerMapper.toDomain(aktoer);
-    }
-    return null;
+  public Aktoer hentAktoerFromDB(String aktoerId) {
+    return aktoerRepository.getAktoer(aktoerId);
   }
 
   @Override
@@ -94,14 +90,16 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 
   @Transactional
   @Override
-  public void oppdaterAktoer(AktoerDTO updatedAktoerDTO) {
-    Aktoer existingAktoer = aktoerRepository.getAktoer(updatedAktoerDTO.getAktoerId().getAktoerId());
-    Aktoer updatedAktoer = aktoerMapper.toPersistence(updatedAktoerDTO);
+  public void oppdaterAktoer(Aktoer updatedAktoer) {
+//    Aktoer existingAktoer = aktoerRepository.getAktoer(updatedAktoer.getAktoerId().getAktoerId());
+//    Aktoer updatedAktoer = aktoerMapper.toPersistence(updatedAktoer);
+//
+//    // Add all existing hendelser
+//    updatedAktoer.getHendelser().addAll(existingAktoer.getHendelser());
+//    // Add new hendelse for the latest update
+//    updatedAktoer.getHendelser().add(createHendelse(updatedAktoer));
 
-    // Add all existing hendelser
-    updatedAktoer.getHendelser().addAll(existingAktoer.getHendelser());
-    // Add new hendelse for the latest update
-    updatedAktoer.getHendelser().add(createHendelse(updatedAktoer));
+    updatedAktoer.addHendelse(createHendelse(updatedAktoer));
 
     aktoerRepository.insertOrUpdateAktoer(updatedAktoer);
 //    updateAktoer(aktoerDTO);

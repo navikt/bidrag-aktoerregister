@@ -8,16 +8,17 @@ import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 
 public interface AktoerregisterService {
 
   AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException;
 
-  AktoerDTO hentAktoerFromDB(String aktoerId);
+  Aktoer hentAktoerFromDB(String aktoerId);
 
   List<HendelseDTO> hentHendelser(int sekvensunummer, int antallHendelser);
 
-  void oppdaterAktoer(AktoerDTO aktoer);
+  void oppdaterAktoer(Aktoer aktoer);
 
   void slettAktoer(String aktoerId);
 }

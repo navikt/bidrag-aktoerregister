@@ -15,6 +15,11 @@ import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
+import no.nav.bidrag.aktoerregister.mapper.Mapper;
+import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
+import no.nav.bidrag.aktoerregister.persistence.entities.Kontonummer;
 import no.nav.bidrag.aktoerregister.repository.AktoerRepositoryMock;
 import no.nav.bidrag.aktoerregister.repository.HendelseRepositoryMock;
 import no.nav.bidrag.aktoerregister.repository.MockDB;
@@ -46,12 +51,15 @@ public class AktoerregisterServiceTest {
 
   private AktoerregisterService aktoerregisterService;
 
+  private Mapper<AktoerDTO, Aktoer> aktoerMapper;
+
   @BeforeEach
   public void SetUp() {
     mockDB = new MockDB();
     aktoerRepository = new AktoerRepositoryMock(mockDB);
     hendelseRepositoryMock = new HendelseRepositoryMock(mockDB);
     aktoerregisterService = new AktoerregisterServiceImpl(aktoerRepository, hendelseRepositoryMock, tpsService, tssService);
+    aktoerMapper = new AktoerMapper();
   }
 
   @Test
@@ -75,17 +83,18 @@ public class AktoerregisterServiceTest {
   @Test
   public void TestHentAktoerWithAktoernummerAndAktoerDoesNotExist()
       throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    AktoerDTO aktoerDTO = createTSSAktoerDTO("12345678901", "242526272829", "Testgate 1", true);
+    Aktoer aktoer = createTSSAktoerDTO("12345678901", "242526272829", "Testgate 1", true);
+    AktoerIdDTO aktoerIdDTO = new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
-    when(tssService.hentAktoer(any())).thenReturn(aktoerDTO);
+    when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer));
 
-    AktoerDTO aktoerFromTSS = aktoerregisterService.hentAktoer(aktoerDTO.getAktoerId());
+    AktoerDTO aktoerFromTSS = aktoerregisterService.hentAktoer(aktoerIdDTO);
 
-    verify(tssService, times(1)).hentAktoer(aktoerDTO.getAktoerId());
+    verify(tssService, times(1)).hentAktoer(aktoerIdDTO);
 
     assertNotNull(aktoerFromTSS);
-    assertEquals(aktoerFromTSS.getKontonummer().getNorskKontonr(), aktoerDTO.getKontonummer().getNorskKontonr());
-    assertEquals(aktoerFromTSS.getAdresse().getAdresselinje1(), aktoerDTO.getAdresse().getAdresselinje1());
+    assertEquals(aktoerFromTSS.getKontonummer().getNorskKontonr(), aktoer.getKontonummer().getNorskKontonr());
+    assertEquals(aktoerFromTSS.getAdresse().getAdresselinje1(), aktoer.getAdresse().getAdresselinje1());
 
     assertEquals(1, mockDB.aktoerMap.size());
     assertEquals(1, mockDB.hendelseMap.size());
@@ -93,19 +102,20 @@ public class AktoerregisterServiceTest {
 
   @Test
   public void TestOppdaterAktoer() throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    AktoerDTO aktoerDTO = createTSSAktoerDTO("12345678901", "242526272829", "Testgate 1", true);
+    Aktoer aktoer = createTSSAktoerDTO("12345678901", "242526272829", "Testgate 1", true);
+    AktoerIdDTO aktoerIdDTO = new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
-    when(tssService.hentAktoer(any())).thenReturn(aktoerDTO);
+    when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer));
 
-    aktoerregisterService.hentAktoer(aktoerDTO.getAktoerId());
+    aktoerregisterService.hentAktoer(aktoerIdDTO);
 
-    aktoerDTO.getAdresse().setAdresselinje1("Testgate 2");
+    aktoer.getAdresse().setAdresselinje1("Testgate 2");
 
-    aktoerregisterService.oppdaterAktoer(aktoerDTO);
+    aktoerregisterService.oppdaterAktoer(aktoer);
 
-    AktoerDTO aktoerFromDb = aktoerregisterService.hentAktoer(aktoerDTO.getAktoerId());
+    AktoerDTO aktoerFromDb = aktoerregisterService.hentAktoer(aktoerIdDTO);
 
-    verify(tssService, times(1)).hentAktoer(aktoerDTO.getAktoerId());
+    verify(tssService, times(1)).hentAktoer(aktoerIdDTO);
 
     assertEquals("Testgate 2", aktoerFromDb.getAdresse().getAdresselinje1());
 
@@ -118,36 +128,40 @@ public class AktoerregisterServiceTest {
 
   @Test
   public void TestHentHendelser() throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    AktoerDTO aktoerDTO = createTSSAktoerDTO("12345678901", "242526272829", "Testgate 1", true);
-    when(tssService.hentAktoer(any())).thenReturn(aktoerDTO);
-    aktoerregisterService.hentAktoer(aktoerDTO.getAktoerId());
+    Aktoer aktoer = createTSSAktoerDTO("12345678901", "242526272829", "Testgate 1", true);
+    AktoerIdDTO aktoerIdDTO = new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
-    aktoerDTO.getAdresse().setAdresselinje1("Testgate 2");
-    aktoerregisterService.oppdaterAktoer(aktoerDTO);
+    when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer));
+    aktoerregisterService.hentAktoer(aktoerIdDTO);
 
-    aktoerDTO.getAdresse().setAdresselinje1("Testgate 3");
-    aktoerregisterService.oppdaterAktoer(aktoerDTO);
+    aktoer.getAdresse().setAdresselinje1("Testgate 2");
+    aktoerregisterService.oppdaterAktoer(aktoer);
 
-    aktoerDTO.getAdresse().setAdresselinje1("Testgate 4");
-    aktoerregisterService.oppdaterAktoer(aktoerDTO);
+    aktoer.getAdresse().setAdresselinje1("Testgate 3");
+    aktoerregisterService.oppdaterAktoer(aktoer);
+
+    aktoer.getAdresse().setAdresselinje1("Testgate 4");
+    aktoerregisterService.oppdaterAktoer(aktoer);
 
     List<HendelseDTO> hendelseDTOList = aktoerregisterService.hentHendelser(0, 10);
 
     assertEquals(1, hendelseDTOList.size());
     assertEquals(4, hendelseDTOList.get(0).getSekvensnummer());
 
-    AktoerDTO aktoerDTO2 = createTSSAktoerDTO("12345678902", "242526272823", "Testgate 1", true);
-    when(tssService.hentAktoer(any())).thenReturn(aktoerDTO2);
-    aktoerregisterService.hentAktoer(aktoerDTO2.getAktoerId());
+    Aktoer aktoer2 = createTSSAktoerDTO("12345678902", "242526272823", "Testgate 1", true);
+    AktoerIdDTO aktoerIdDTO2 = new AktoerIdDTO(aktoer2.getAktoerId(), IdenttypeDTO.valueOf(aktoer2.getAktoerType()));
 
-    aktoerDTO2.getAdresse().setAdresselinje1("Testgate 2");
-    aktoerregisterService.oppdaterAktoer(aktoerDTO2);
+    when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer2));
+    aktoerregisterService.hentAktoer(aktoerIdDTO2);
 
-    aktoerDTO2.getAdresse().setAdresselinje1("Testgate 3");
-    aktoerregisterService.oppdaterAktoer(aktoerDTO2);
+    aktoer2.getAdresse().setAdresselinje1("Testgate 2");
+    aktoerregisterService.oppdaterAktoer(aktoer2);
 
-    aktoerDTO2.getAdresse().setAdresselinje1("Testgate 4");
-    aktoerregisterService.oppdaterAktoer(aktoerDTO2);
+    aktoer2.getAdresse().setAdresselinje1("Testgate 3");
+    aktoerregisterService.oppdaterAktoer(aktoer2);
+
+    aktoer2.getAdresse().setAdresselinje1("Testgate 4");
+    aktoerregisterService.oppdaterAktoer(aktoer2);
 
     hendelseDTOList = aktoerregisterService.hentHendelser(0, 10);
 
@@ -172,24 +186,25 @@ public class AktoerregisterServiceTest {
     return aktoerDTO;
   }
 
-  private AktoerDTO createTSSAktoerDTO(String aktoerId, String kontonummer, String adresselinje1, boolean norsk) {
-    AktoerDTO aktoerDTO = new AktoerDTO();
+  private Aktoer createTSSAktoerDTO(String aktoerId, String kontonummer, String adresselinje1, boolean norsk) {
+    Aktoer aktoer = new Aktoer();
     AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
     aktoerIdDTO.setAktoerId(aktoerId);
     aktoerIdDTO.setIdenttype(IdenttypeDTO.AKTOERNUMMER);
-    KontonummerDTO kontonummerDTO = new KontonummerDTO();
+    Kontonummer kontonummerDTO = new Kontonummer();
     if (norsk) {
       kontonummerDTO.setNorskKontonr(kontonummer);
     } else {
       kontonummerDTO.setIban(kontonummer);
     }
-    AdresseDTO adresseDTO = new AdresseDTO();
+    Adresse adresseDTO = new Adresse();
     adresseDTO.setAdresselinje1(adresselinje1);
 
-    aktoerDTO.setAktoerId(aktoerIdDTO);
-    aktoerDTO.setAdresse(adresseDTO);
-    aktoerDTO.setKontonummer(kontonummerDTO);
-    return aktoerDTO;
+    aktoer.setAktoerId(aktoerId);
+    aktoer.setAktoerType(IdenttypeDTO.AKTOERNUMMER.name());
+    aktoer.setAdresse(adresseDTO);
+    aktoer.setKontonummer(kontonummerDTO);
+    return aktoer;
   }
 
 }

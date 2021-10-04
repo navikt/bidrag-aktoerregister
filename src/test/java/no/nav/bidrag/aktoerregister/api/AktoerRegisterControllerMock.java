@@ -10,6 +10,8 @@ import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
+import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
@@ -56,16 +58,14 @@ public class AktoerRegisterControllerMock {
 
   @GetMapping("/oppdater/{fnr}")
   public ResponseEntity<String> oppdaterAktoer(@PathVariable(name = "fnr") String fnr) {
-    AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
-    aktoerIdDTO.setAktoerId(fnr);
-    aktoerIdDTO.setIdenttype(IdenttypeDTO.PERSONNUMMER);
-    AktoerDTO aktoerDTO = new AktoerDTO();
-    aktoerDTO.setAktoerId(aktoerIdDTO);
+    Aktoer aktoer = new Aktoer();
+    aktoer.setAktoerId(fnr);
+    aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
-    AdresseDTO adresseDTO = new AdresseDTO();
-    adresseDTO.setAdresselinje1("Testgate 1");
-    aktoerDTO.setAdresse(adresseDTO);
-    aktoerregisterService.oppdaterAktoer(aktoerDTO);
+    Adresse adresse = new Adresse();
+    adresse.setAdresselinje1("Testgate 1");
+    aktoer.setAdresse(adresse);
+    aktoerregisterService.oppdaterAktoer(aktoer);
     return ResponseEntity.ok("Oppdatert + "  + fnr);
   }
 

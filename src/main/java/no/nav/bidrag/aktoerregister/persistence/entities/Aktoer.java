@@ -35,4 +35,8 @@ public class Aktoer {
 
   @OneToMany(mappedBy = "aktoer", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Hendelse> hendelser = new ArrayList<>();
+
+  public void addHendelse(Hendelse hendelse) {
+    hendelser.add(hendelse);
+  }
 }
