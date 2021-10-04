@@ -17,6 +17,7 @@ import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AktoerregisterServiceImpl implements AktoerregisterService {
@@ -85,7 +86,15 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     return aktoerMapper.toDomain(savedAktoer);
   }
 
-  private void updateAktoer(AktoerDTO updatedAktoerDTO) {
+  private Hendelse createHendelse(Aktoer aktoer) {
+    Hendelse hendelse = new Hendelse();
+    hendelse.setAktoer(aktoer);
+    return hendelse;
+  }
+
+  @Transactional
+  @Override
+  public void oppdaterAktoer(AktoerDTO updatedAktoerDTO) {
     Aktoer existingAktoer = aktoerRepository.getAktoer(updatedAktoerDTO.getAktoerId().getAktoerId());
     Aktoer updatedAktoer = aktoerMapper.toPersistence(updatedAktoerDTO);
 
@@ -95,17 +104,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     updatedAktoer.getHendelser().add(createHendelse(updatedAktoer));
 
     aktoerRepository.insertOrUpdateAktoer(updatedAktoer);
-  }
-
-  private Hendelse createHendelse(Aktoer aktoer) {
-    Hendelse hendelse = new Hendelse();
-    hendelse.setAktoer(aktoer);
-    return hendelse;
-  }
-
-  @Override
-  public void oppdaterAktoer(AktoerDTO aktoerDTO) {
-    updateAktoer(aktoerDTO);
+//    updateAktoer(aktoerDTO);
   }
 
   @Override

@@ -70,6 +70,7 @@ public class MQServiceImpl implements MQService {
       throws MQServiceException {
     try {
       JMSContext jmsContext = createMQContext();
+      jmsContext.recover();
       Destination consumtionQueue = jmsContext.createQueue(queue);
       boolean run = true;
       int nrFailedAttempts = 0;
@@ -130,8 +131,7 @@ public class MQServiceImpl implements MQService {
       cf.setStringProperty(WMQConstants.PASSWORD, mqProperties.getPassword());
 
       if (autoAcknowledge) {
-        cf.setIntProperty(WMQConstants.ACKNOWLEDGE_MODE, WMQConstants.CLIENT_ACKNOWLEDGE);
-        return cf.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
+        return cf.createContext(JMSContext.AUTO_ACKNOWLEDGE);
       }
 
       return cf.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
