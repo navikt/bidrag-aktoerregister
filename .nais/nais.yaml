@@ -10,9 +10,8 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_12
-        cascadingDelete: false
         databases:
-        - name: bidrag-aktoerregister
+        - name: bidrag-aktoerregister-temp
           envVarPrefix: DB
   liveness:
     path: /bidrag-aktoerregister/actuator/health
