@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.persistence.repository;
 
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
+import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ public class AktoerRepositoryImpl implements AktoerRepository {
 
   @Override
   public Aktoer insertOrUpdateAktoer(Aktoer aktoer) {
+    aktoer.addHendelse(createHendelse(aktoer));
     return aktoerJpaRepository.save(aktoer);
   }
 
@@ -29,5 +31,11 @@ public class AktoerRepositoryImpl implements AktoerRepository {
   @Override
   public void deleteAktoer(String aktoerId) {
     aktoerJpaRepository.deleteById(aktoerId);
+  }
+
+  private Hendelse createHendelse(Aktoer aktoer) {
+    Hendelse hendelse = new Hendelse();
+    hendelse.setAktoer(aktoer);
+    return hendelse;
   }
 }

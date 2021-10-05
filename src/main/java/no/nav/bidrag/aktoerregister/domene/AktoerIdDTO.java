@@ -37,22 +37,37 @@ public class AktoerIdDTO {
         return result;
     }
 
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null)
+//            return false;
+//        if (getClass() != obj.getClass())
+//            return false;
+//        AktoerIdDTO other = (AktoerIdDTO) obj;
+//        if (identtype != other.identtype)
+//            return false;
+//        if (aktoerId == null) {
+//            if (other.aktoerId != null)
+//                return false;
+//        } else if (!aktoerId.equals(other.aktoerId))
+//            return false;
+//        return true;
+//    }
+
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(Object o) {
+        if (o == this) {
             return true;
-        if (obj == null)
+        }
+
+        if (!(o instanceof AktoerIdDTO aktoerIdDTO)) {
             return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AktoerIdDTO other = (AktoerIdDTO) obj;
-        if (identtype != other.identtype)
-            return false;
-        if (aktoerId == null) {
-            if (other.aktoerId != null)
-                return false;
-        } else if (!aktoerId.equals(other.aktoerId))
-            return false;
-        return true;
+        }
+
+        return
+            this.getAktoerId().equals(aktoerIdDTO.getAktoerId()) &&
+            this.getIdenttype().equals(aktoerIdDTO.getIdenttype());
     }
 }

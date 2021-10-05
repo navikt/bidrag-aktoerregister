@@ -1,5 +1,7 @@
 package no.nav.bidrag.aktoerregister.domene;
 
+import static no.nav.bidrag.aktoerregister.util.StringUtil.isEqual;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -85,5 +87,25 @@ public class AdresseDTO {
 
 	public void setLand(String land) {
 		this.land = land;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (!(o instanceof AdresseDTO adresseDTO)) {
+			return false;
+		}
+
+		return
+				isEqual(this.getAdresselinje1(), adresseDTO.getAdresselinje1()) &&
+				isEqual(this.getAdresselinje2(), adresseDTO.getAdresselinje2()) &&
+				isEqual(this.getAdresselinje3(), adresseDTO.getAdresselinje3()) &&
+				isEqual(this.getLand(), adresseDTO.getLand()) &&
+				isEqual(this.getPostnr(), adresseDTO.getPostnr()) &&
+				isEqual(this.getPoststed(), adresseDTO.getPoststed()) &&
+				isEqual(this.getNavn(), adresseDTO.getNavn());
 	}
 }

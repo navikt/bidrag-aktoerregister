@@ -1,5 +1,7 @@
 package no.nav.bidrag.aktoerregister.domene;
 
+import static no.nav.bidrag.aktoerregister.util.StringUtil.isEqual;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -73,6 +75,24 @@ public class KontonummerDTO {
 
     public void setValutaKode(String valutaKode) {
         this.valutaKode = valutaKode;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof KontonummerDTO kontonummerDTO)) {
+            return false;
+        }
+
+        return
+            isEqual(this.getNorskKontonr(), kontonummerDTO.getNorskKontonr()) &&
+            isEqual(this.getBankLandkode(), kontonummerDTO.getBankLandkode()) &&
+            isEqual(this.getBankNavn(), kontonummerDTO.getBankNavn()) &&
+            isEqual(this.getSwift(), kontonummerDTO.getSwift()) &&
+            isEqual(this.getIban(), kontonummerDTO.getIban()) &&
+            isEqual(this.getValutaKode(), kontonummerDTO.getValutaKode());
     }
 
 }

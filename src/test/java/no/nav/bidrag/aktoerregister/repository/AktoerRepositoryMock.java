@@ -9,6 +9,7 @@ public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
 
   @Override
   public Aktoer insertOrUpdateAktoer(Aktoer aktoer) {
+    aktoer.addHendelse(createHendelse(aktoer));
     mockDB.aktoerMap.put(aktoer.getAktoerId(), aktoer);
     for (Hendelse hendelse : aktoer.getHendelser()) {
       insertHendelse(hendelse);
@@ -35,5 +36,11 @@ public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
   private int getSekvensNummer(Hendelse hendelse) {
     return hendelse.getSekvensnummer() != 0 ? hendelse.getSekvensnummer()
         : mockDB.hendelseMap.keySet().stream().max(Comparator.naturalOrder()).orElse(0) + 1;
+  }
+
+  private Hendelse createHendelse(Aktoer aktoer) {
+    Hendelse hendelse = new Hendelse();
+    hendelse.setAktoer(aktoer);
+    return hendelse;
   }
 }
