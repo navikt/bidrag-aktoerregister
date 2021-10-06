@@ -21,7 +21,7 @@ public class AktoerregisterApplication {
     private JobScheduler jobScheduler;
 
     public static void main(String[] args) {
-        System.exit(SpringApplication.exit(SpringApplication.run(AktoerregisterApplication.class, args)));
+        SpringApplication.run(AktoerregisterApplication.class, args);
     }
 
     @PostConstruct
