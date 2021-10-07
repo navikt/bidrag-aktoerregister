@@ -2,8 +2,10 @@
 
 import java.util.Set;
 import lombok.SneakyThrows;
+import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.explore.JobExplorer;
@@ -28,10 +30,15 @@ public class TSSBatchJobExecutionListener implements JobExecutionListener {
   @Override
   public void beforeJob(JobExecution jobExecution) {
     Set<JobExecution> runningJobExecutions = jobExplorer.findRunningJobExecutions(jobExecution.getJobInstance().getJobName());
+    for (JobExecution runningJobExecution : runningJobExecutions) {
+      logger.info("Kjørende batch jobb {} {} {}: ", runningJobExecution.getJobInstance().getJobName(), runningJobExecution.getStatus(), runningJobExecution.getStartTime());
+    }
+    logger.info("Attempting to start job: {} with id: {} and parameters: {}", jobExecution.getJobInstance().getJobName(), jobExecution.getJobInstance().getId(),
+        JsonUtil.objectToJsonString(jobExecution.getJobParameters()));
     if (runningJobExecutions.size() > 1) {
       for(JobExecution runningJobExecution : runningJobExecutions) {
-        if(!runningJobExecution.equals(jobExecution)) {
-          jobOperator.stop(jobExecution.getJobId());
+        if(!runningJobExecution.getJobId().equals(jobExecution.getJobId())) {
+          jobExecution.setExitStatus(ExitStatus.STOPPED);
           logger.info("Stopping job execution of {}, the job is already running on another pod.", jobExecution.getJobInstance().getJobName());
         }
       }
