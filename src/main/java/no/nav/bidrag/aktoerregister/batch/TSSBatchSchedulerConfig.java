@@ -31,7 +31,7 @@ public class TSSBatchSchedulerConfig {
 
   SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 
-  @Scheduled(cron = "0 0/5 * * * *")
+  @Scheduled(cron = "0 0/1 * * * *")
   public void scheduleTSSBatch()
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
     logger.info("Starting TSS batch job");

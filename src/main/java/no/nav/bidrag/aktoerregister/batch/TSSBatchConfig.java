@@ -6,6 +6,8 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableBatchProcessing
 public class TSSBatchConfig {
+
   @Autowired
   public JobBuilderFactory jobBuilderFactory;
 
@@ -29,20 +32,28 @@ public class TSSBatchConfig {
   @Autowired
   private TSSAktoerProcessor tssAktoerProcessor;
 
+  @Autowired
+  private JobExplorer jobExplorer;
+
+  @Autowired
+  private JobOperator jobOperator;
+
   @Bean
   public Job createJob() {
     return jobBuilderFactory.get("TSSAktoerUpdatesJob")
         .incrementer(new RunIdIncrementer())
+        .listener(new TSSBatchJobExecutionListener(jobExplorer, jobOperator))
         .flow(createStep()).end().build();
   }
 
   @Bean
   public Step createStep() {
     return stepBuilderFactory.get("UpdateTSSAktoererStep")
-        .<Aktoer, TSSAktoerProcessorResult> chunk(1)
+        .<Aktoer, TSSAktoerProcessorResult>chunk(1)
         .reader(tssAktoerReader)
         .processor(tssAktoerProcessor)
         .writer(tssAktoerWriter)
         .build();
   }
+
 }
