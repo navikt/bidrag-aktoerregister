@@ -44,7 +44,9 @@ public class JMSConfiguration {
   public JmsListenerContainerFactory<?> tpsContainerFactory(ConnectionFactory connectionFactory,
       DefaultJmsListenerContainerFactoryConfigurer configurer) {
     DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-    factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
+    factory.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
+    factory.setSessionTransacted(true);
+    factory.setErrorHandler(new TPSConsumerErrorHandler());
     configurer.configure(factory, connectionFactory);
     return factory;
   }

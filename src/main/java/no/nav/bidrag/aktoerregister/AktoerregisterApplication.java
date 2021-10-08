@@ -1,10 +1,6 @@
 package no.nav.bidrag.aktoerregister;
 
-import javax.annotation.PostConstruct;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
-import no.nav.bidrag.aktoerregister.jobs.TPSConsumerJob;
-import org.jobrunr.scheduling.JobScheduler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -19,15 +15,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
 public class AktoerregisterApplication {
 
-    @Autowired
-    private JobScheduler jobScheduler;
-
     public static void main(String[] args) {
         SpringApplication.run(AktoerregisterApplication.class, args);
     }
-
-//    @PostConstruct
-//    public void startJobs() {
-//        jobScheduler.enqueue(TPSConsumerJob::execute);
-//    }
 }
