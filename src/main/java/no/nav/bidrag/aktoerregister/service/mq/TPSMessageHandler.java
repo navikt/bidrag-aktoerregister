@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding> {
@@ -25,6 +26,7 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
     this.aktoerregisterService = aktoerregisterService;
   }
 
+  @Transactional
   @Override
   public boolean onMessage(DistribusjonsMelding distribusjonsMelding) {
     logger.info("Distribusjonsmelding: {}", JsonUtil.objectToJsonString(distribusjonsMelding));

@@ -5,6 +5,7 @@ import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Primary

@@ -88,7 +88,6 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 //    return hendelse;
 //  }
 
-  @Transactional
   @Override
   public void oppdaterAktoer(Aktoer updatedAktoer) {
 //    Aktoer existingAktoer = aktoerRepository.getAktoer(updatedAktoer.getAktoerId().getAktoerId());
