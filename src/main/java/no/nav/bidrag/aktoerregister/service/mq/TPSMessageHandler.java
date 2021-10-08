@@ -1,7 +1,5 @@
 package no.nav.bidrag.aktoerregister.service.mq;
 
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Kontonummer;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;

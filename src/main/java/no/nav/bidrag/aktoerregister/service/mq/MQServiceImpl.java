@@ -6,6 +6,7 @@ import com.ibm.msg.client.jms.JmsConnectionFactory;
 import com.ibm.msg.client.jms.JmsFactoryFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
 import jakarta.xml.bind.JAXBException;
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
@@ -26,11 +27,14 @@ public class MQServiceImpl implements MQService {
 
   private final MQProperties mqProperties;
 
+  private final ConnectionFactory connectionFactory;
+
   private static final Logger logger = LoggerFactory.getLogger(MQService.class);
 
   @Autowired
-  public MQServiceImpl(MQProperties mqProperties) {
+  public MQServiceImpl(MQProperties mqProperties, ConnectionFactory connectionFactory) {
     this.mqProperties = mqProperties;
+    this.connectionFactory = connectionFactory;
   }
 
   @Override
@@ -38,7 +42,10 @@ public class MQServiceImpl implements MQService {
       Class<Response> responseClass)
       throws MQServiceException {
     try {
-      JMSContext jmsContext = createMQContext(true);
+
+//      JMSContext jmsContext = createMQContext(true);
+
+      JMSContext jmsContext = connectionFactory.createContext();
 
       Destination requestQueue = jmsContext.createQueue(queue);
 
@@ -69,7 +76,8 @@ public class MQServiceImpl implements MQService {
   public <Response> void consume(MQMessageHandler<Response> messageHandler, String queue, Class<Response> responseClass)
       throws MQServiceException {
     try {
-      JMSContext jmsContext = createMQContext();
+//      JMSContext jmsContext = createMQContext();
+      JMSContext jmsContext = connectionFactory.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
       jmsContext.recover();
       Destination consumtionQueue = jmsContext.createQueue(queue);
       boolean run = true;
@@ -109,35 +117,35 @@ public class MQServiceImpl implements MQService {
     return consumer.receive(mqProperties.getTimeout());
   }
 
-  private JMSContext createMQContext() throws JMSException {
-    return createMQContext(false);
-  }
+//  private JMSContext createMQContext() throws JMSException {
+//    return createMQContext(false);
+//  }
 
-  private JMSContext createMQContext(boolean autoAcknowledge) throws JMSException {
-    try {
-      // Create a connection factory
-      JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
-      JmsConnectionFactory cf = ff.createConnectionFactory();
-
-      // Set the properties
-      cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, mqProperties.getHost());
-      cf.setIntProperty(WMQConstants.WMQ_PORT, mqProperties.getPort());
-      cf.setStringProperty(WMQConstants.WMQ_CHANNEL, mqProperties.getChannel());
-      cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT);
-      cf.setStringProperty(WMQConstants.WMQ_QUEUE_MANAGER, mqProperties.getQueueManager());
-      cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, mqProperties.getApplicationName());
-      cf.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, true);
-      cf.setStringProperty(WMQConstants.USERID, mqProperties.getUsername());
-      cf.setStringProperty(WMQConstants.PASSWORD, mqProperties.getPassword());
-
-      if (autoAcknowledge) {
-        return cf.createContext(JMSContext.AUTO_ACKNOWLEDGE);
-      }
-
-      return cf.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
-    } catch (JMSException e) {
-      logger.error("Failed while setting up MQ connection.");
-      throw e;
-    }
-  }
+//  private JMSContext createMQContext(boolean autoAcknowledge) throws JMSException {
+//    try {
+//      // Create a connection factory
+//      JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
+//      JmsConnectionFactory cf = ff.createConnectionFactory();
+//
+//      // Set the properties
+//      cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, mqProperties.getHost());
+//      cf.setIntProperty(WMQConstants.WMQ_PORT, mqProperties.getPort());
+//      cf.setStringProperty(WMQConstants.WMQ_CHANNEL, mqProperties.getChannel());
+//      cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT);
+//      cf.setStringProperty(WMQConstants.WMQ_QUEUE_MANAGER, mqProperties.getQueueManager());
+//      cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, mqProperties.getApplicationName());
+//      cf.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, true);
+//      cf.setStringProperty(WMQConstants.USERID, mqProperties.getUsername());
+//      cf.setStringProperty(WMQConstants.PASSWORD, mqProperties.getPassword());
+//
+//      if (autoAcknowledge) {
+//        return cf.createContext(JMSContext.AUTO_ACKNOWLEDGE);
+//      }
+//
+//      return cf.createContext(JMSContext.CLIENT_ACKNOWLEDGE);
+//    } catch (JMSException e) {
+//      logger.error("Failed while setting up MQ connection.");
+//      throw e;
+//    }
+//  }
 }

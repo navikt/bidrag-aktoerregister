@@ -5,6 +5,7 @@ import com.ibm.msg.client.jms.JmsFactoryFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Session;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
@@ -40,9 +41,10 @@ public class JMSConfiguration {
   }
 
   @Bean
-  public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
+  public JmsListenerContainerFactory<?> tpsContainerFactory(ConnectionFactory connectionFactory,
       DefaultJmsListenerContainerFactoryConfigurer configurer) {
     DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+    factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
     configurer.configure(factory, connectionFactory);
     return factory;
   }
