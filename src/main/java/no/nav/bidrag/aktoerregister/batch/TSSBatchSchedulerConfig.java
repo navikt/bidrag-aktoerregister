@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.batch;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -32,6 +33,7 @@ public class TSSBatchSchedulerConfig {
   SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 
   @Scheduled(cron = "0 0/1 * * * *")
+  @SchedulerLock(name = "TSSAktoerUpdatesJob", lockAtMostFor = "30s", lockAtLeastFor = "30s")
   public void scheduleTSSBatch()
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
     logger.info("Starting TSS batch job");

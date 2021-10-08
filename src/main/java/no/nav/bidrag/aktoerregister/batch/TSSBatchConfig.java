@@ -1,13 +1,14 @@
 package no.nav.bidrag.aktoerregister.batch;
 
+import javax.sql.DataSource;
+import net.javacrumbs.shedlock.core.LockProvider;
+import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,17 +33,10 @@ public class TSSBatchConfig {
   @Autowired
   private TSSAktoerProcessor tssAktoerProcessor;
 
-  @Autowired
-  private JobExplorer jobExplorer;
-
-  @Autowired
-  private JobOperator jobOperator;
-
   @Bean
   public Job createJob() {
     return jobBuilderFactory.get("TSSAktoerUpdatesJob")
         .incrementer(new RunIdIncrementer())
-        .listener(new TSSBatchJobExecutionListener(jobExplorer, jobOperator))
         .flow(createStep()).end().build();
   }
 
@@ -54,6 +48,11 @@ public class TSSBatchConfig {
         .processor(tssAktoerProcessor)
         .writer(tssAktoerWriter)
         .build();
+  }
+
+  @Bean
+  public LockProvider lockProvider(DataSource dataSource) {
+    return new JdbcTemplateLockProvider(dataSource, "aktoerregister.shedlock");
   }
 
 }

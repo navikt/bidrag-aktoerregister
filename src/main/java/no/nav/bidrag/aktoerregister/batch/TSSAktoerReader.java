@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.batch;
 
 import java.util.Collections;
 import java.util.Map;
+import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
 import org.springframework.batch.item.ItemReader;
@@ -17,8 +18,9 @@ public class TSSAktoerReader extends RepositoryItemReader<Aktoer> implements Ite
   public TSSAktoerReader(AktoerJpaRepository aktoerRepository) {
     Map<String, Direction> sorts = Collections.singletonMap("kontonummer", Direction.ASC);
     setRepository(aktoerRepository);
+    setMethodName("findAllByAktoerType");
+    setArguments(Collections.singletonList(IdenttypeDTO.AKTOERNUMMER.name()));
     setPageSize(100);
     setSort(sorts);
-    setMethodName("findAll");
   }
 }
