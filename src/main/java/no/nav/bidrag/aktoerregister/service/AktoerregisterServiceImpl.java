@@ -77,19 +77,18 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 
   private AktoerDTO addAktoer(AktoerDTO aktoerDTO) {
     Aktoer aktoer = aktoerMapper.toPersistence(aktoerDTO);
-//    aktoer.getHendelser().add(createHendelse(aktoer));
     Aktoer savedAktoer = aktoerRepository.insertOrUpdateAktoer(aktoer);
     return aktoerMapper.toDomain(savedAktoer);
   }
 
-//  private Hendelse createHendelse(Aktoer aktoer) {
-//    Hendelse hendelse = new Hendelse();
-//    hendelse.setAktoer(aktoer);
-//    return hendelse;
-//  }
 
+  @Transactional
   @Override
   public void oppdaterAktoer(Aktoer updatedAktoer) {
+    Aktoer existingAktoer = hentAktoerFromDB(updatedAktoer.getAktoerId());
+    existingAktoer.setAdresse(updatedAktoer.getAdresse());
+    existingAktoer.setKontonummer(updatedAktoer.getKontonummer());
+    aktoerRepository.insertOrUpdateAktoer(existingAktoer);
 //    Aktoer existingAktoer = aktoerRepository.getAktoer(updatedAktoer.getAktoerId().getAktoerId());
 //    Aktoer updatedAktoer = aktoerMapper.toPersistence(updatedAktoer);
 //
@@ -100,7 +99,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 
 //    updatedAktoer.addHendelse(createHendelse(updatedAktoer));
 
-    aktoerRepository.insertOrUpdateAktoer(updatedAktoer);
+//    aktoerRepository.insertOrUpdateAktoer(updatedAktoer);
 //    updateAktoer(aktoerDTO);
   }
 

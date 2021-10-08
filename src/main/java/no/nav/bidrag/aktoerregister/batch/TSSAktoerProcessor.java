@@ -14,6 +14,7 @@ import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,7 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
 
   private final Logger logger = LoggerFactory.getLogger(TSSAktoerProcessor.class);
 
+  @Autowired
   public TSSAktoerProcessor(TSSService tssService) {
     this.tssService = tssService;
     this.aktoerMapper = new AktoerMapper();

@@ -5,7 +5,4 @@ import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 public interface MQService {
   <Request, Response> Response performRequestResponse(String queue, Request request, Class<Request> requestClass, Class<Response> responseClass)
       throws MQServiceException;
-
-  <Response> void consume(MQMessageHandler<Response> callback, String queue, Class<Response> responseClass)
-      throws MQServiceException;
 }

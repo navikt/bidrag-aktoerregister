@@ -26,9 +26,8 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
     this.aktoerregisterService = aktoerregisterService;
   }
 
-  @Transactional
   @Override
-  public boolean onMessage(DistribusjonsMelding distribusjonsMelding) {
+  public void onMessage(DistribusjonsMelding distribusjonsMelding) {
     logger.info("Distribusjonsmelding: {}", JsonUtil.objectToJsonString(distribusjonsMelding));
 
     Tgironorsk giroNrNorge = distribusjonsMelding.getGiroNrNorge();
@@ -72,6 +71,5 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
         aktoer.setKontonummer(null);
       }
     }
-    return true;
   }
 }
