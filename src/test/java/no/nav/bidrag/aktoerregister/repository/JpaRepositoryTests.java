@@ -25,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -36,6 +37,7 @@ import java.util.UUID;
 @SpringBootTest(classes = AktoerregisterApplicationTest.class)
 @Testcontainers
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@TestPropertySource(locations="classpath:application.properties")
 public class JpaRepositoryTests {
 
   @Container
