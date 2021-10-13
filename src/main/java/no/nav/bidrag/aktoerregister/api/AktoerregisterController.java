@@ -15,18 +15,20 @@ import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
-import no.nav.security.token.support.core.api.Unprotected;
+import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/bidrag-aktorer")
-@Unprotected
+@ProtectedWithClaims(issuer = "maskinporten", claimMap = {"scope=nav:bidrag:aktoerregister.read"})
 public class AktoerregisterController {
 
   private final AktoerregisterService aktoerregisterService;
@@ -52,17 +54,16 @@ public class AktoerregisterController {
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
+      throws ResponseStatusException {
 
-    AktoerDTO aktoer = aktoerregisterService.hentAktoer(new AktoerIdDTO(ident, identtype));
-
-    if (aktoer == null) {
-      return ResponseEntity
-          .notFound()
-          .build();
+    try {
+      AktoerDTO aktoer = aktoerregisterService.hentAktoer(new AktoerIdDTO(ident, identtype));
+      return ResponseEntity.ok(aktoer);
+    } catch (AktoerNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e);
+    } catch (MQServiceException | TSSServiceException | TPSServiceException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem med oppkobling mot MQ. Prøv igjen senere.", e);
     }
-
-    return ResponseEntity.ok(aktoer);
   }
 
   @Operation(summary = "Tilbyr en liste over aktøroppdateringer.", description = "Ingen informasjon om aktøren leveres av denne tjenesten utover aktørId'n. Hendelsene legges inn med stigende sekvensnummer."
@@ -77,11 +78,15 @@ public class AktoerregisterController {
       @RequestParam(name = "fraSekvensnummer", defaultValue = "1") Integer fraSekvensnummer,
 
       @Parameter(description="Maksimalt antall hendelser som ønskes hentet. Default-verdi er 10000.")
-      @RequestParam(name = "antall", defaultValue = "10000") Integer antall) {
+      @RequestParam(name = "antall", defaultValue = "10000") Integer antall)  throws ResponseStatusException {
 
-    List<HendelseDTO> hendelser = aktoerregisterService
-        .hentHendelser(fraSekvensnummer, antall);
+    try {
+      List<HendelseDTO> hendelser = aktoerregisterService
+          .hentHendelser(fraSekvensnummer, antall);
 
-    return ResponseEntity.ok(hendelser);
+      return ResponseEntity.ok(hendelser);
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem ved henting av hendelser. Prøv igjen senere", e);
+    }
   }
 }

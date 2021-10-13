@@ -1,0 +1,91 @@
+package no.nav.bidrag.aktoerregister.api;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Collections;
+import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
+import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
+import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
+import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
+import no.nav.bidrag.aktoerregister.util.TestContainerTest;
+import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+
+@SpringBootTest(classes = AktoerregisterApplication.class)
+@AutoConfigureMockMvc
+public class AktoerregisterControllerTest extends TestContainerTest {
+
+  @Value("${aktoerregister.scope}")
+  private String aktoerregisterScope;
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockBean
+  private AktoerregisterService aktoerregisterService;
+
+  private final String hentAktoerUrl = "/bidrag-aktorer/aktoer/{identtype}/{ident}";
+
+  private final String hentHendelserUrl = "/bidrag-aktorer/hendelser";
+
+  private final Object[] pathParams = {"AKTOERNUMMER", "1234"};
+
+  private final String issuer = "maskinporten";
+
+  private final String clientId = "someClientId";
+
+  @Test
+  public void TestHentAktoerWithValidToken() throws Exception {
+    when(aktoerregisterService.hentAktoer(any())).thenReturn(new AktoerDTO());
+    String token = token(issuer, clientId, aktoerregisterScope);
+    mockMvc.perform(get(hentAktoerUrl, pathParams).header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isOk());
+  }
+
+  @Test
+  public void TestHentAktoerWithInvalidToken() throws Exception {
+    String token = token(issuer, clientId, "some-random-scope");
+    mockMvc.perform(get(hentAktoerUrl, pathParams).header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isUnauthorized());
+    token = token("some-random-issuer", clientId, aktoerregisterScope);
+    mockMvc.perform(get(hentAktoerUrl, pathParams).header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void TestHentHendelserWithValidToken() throws Exception {
+    when(aktoerregisterService.hentHendelser(anyInt(), anyInt())).thenReturn(Collections.singletonList(new HendelseDTO()));
+    String token = token(issuer, clientId, aktoerregisterScope);
+    mockMvc.perform(get(hentHendelserUrl).param("fraSekvensnummer", "1").param("antall", "100").header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isOk());
+  }
+
+  @Test
+  public void TestHentHendelserWithInvalidToken() throws Exception {
+    String token = token(issuer, clientId, "some-random-scope");
+    mockMvc.perform(get(hentHendelserUrl).param("fraSekvensnummer", "1").param("antall", "100").header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isUnauthorized());
+    token = token("some-random-issuer", clientId, aktoerregisterScope);
+    mockMvc.perform(get(hentHendelserUrl).param("fraSekvensnummer", "1").param("antall", "100").header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isUnauthorized());
+  }
+
+  private String token(String issuerId, String subject, String scope) {
+    return "Bearer "  + auth2Server.issueToken(
+        issuerId,
+        subject,
+        new DefaultOAuth2TokenCallback(
+            issuerId,
+            subject,
+            Collections.emptyList(),
+            Collections.singletonMap("scope", scope),
+            3600
+        )
+    ).serialize();
+  }
+}

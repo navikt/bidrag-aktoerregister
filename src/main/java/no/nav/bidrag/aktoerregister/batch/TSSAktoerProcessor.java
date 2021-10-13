@@ -42,6 +42,7 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
       AktoerDTO tssAktoerDTO = tssService.hentAktoer(aktoerIdDTO);
       AktoerDTO dbAktoerDTO = aktoerMapper.toDomain(aktoer);
       if (!tssAktoerDTO.equals(dbAktoerDTO)) {
+        logger.info("Aktoer med id {} har blitt oppdatert", aktoerIdDTO.getAktoerId());
         return new TSSAktoerProcessorResult(aktoerMapper.toPersistence(tssAktoerDTO), AktoerStatus.UPDATED);
       }
     } catch (MQServiceException | TSSServiceException e) {
@@ -51,7 +52,6 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
       logger.warn("Kunne ikke finne aktoer med id: {}", aktoerIdDTO.getAktoerId());
       return new TSSAktoerProcessorResult(null, AktoerStatus.NOT_FOUND);
     }
-    logger.info("Aktoer med id {} har ikke blitt oppdatert", aktoerIdDTO.getAktoerId());
     return new TSSAktoerProcessorResult(null, AktoerStatus.NOT_UPDATED);
   }
 }

@@ -3,8 +3,6 @@ package no.nav.bidrag.aktoerregister.batch;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -22,24 +20,20 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class TSSBatchSchedulerConfig {
 
-  private final Logger logger = LoggerFactory.getLogger(TSSBatchSchedulerConfig.class);
-
   @Autowired
   JobLauncher jobLauncher;
 
   @Autowired
   Job job;
 
-  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-  @Scheduled(cron = "0 0/10 * * * *")
+  @Scheduled(cron = "0 0/30 * * * *")
   @SchedulerLock(name = "TSSAktoerUpdatesJob", lockAtMostFor = "30s", lockAtLeastFor = "30s")
   public void scheduleTSSBatch()
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-    logger.info("Starting TSS batch job");
     JobParameters jobParameters = new JobParametersBuilder()
         .addString("time", format.format(Calendar.getInstance().getTime())).toJobParameters();
     jobLauncher.run(job, jobParameters);
-    logger.info("TSS batch job executed successfully");
   }
 }

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest;
+import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
@@ -16,29 +16,14 @@ import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
+import no.nav.bidrag.aktoerregister.util.TestContainerTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(classes = AktoerregisterApplicationTest.class)
-@Testcontainers
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-public class AktoerRepositoryTests {
-
-  @Container
-  static PostgreSQLContainer database = new PostgreSQLContainer("postgres").withDatabaseName("test_db").withUsername("root").withPassword("root");
-
-  @DynamicPropertySource
-  static void setDatasourceProperties(DynamicPropertyRegistry propertyRegistry) {
-    propertyRegistry.add("spring.datasource.url", database::getJdbcUrl);
-  }
+@SpringBootTest(classes = AktoerregisterApplication.class)
+public class AktoerRepositoryTests extends TestContainerTest {
 
   @Autowired
   private AktoerRepository aktoerRepository;
@@ -51,6 +36,11 @@ public class AktoerRepositoryTests {
 
   @Autowired
   private HendelseJpaRepository hendelseJpaRepository;
+
+  @BeforeEach
+  public void Setup() {
+    aktoerJpaRepository.deleteAll();
+  }
 
   @Test
   public void injectedRepositoriesIsNotNull() {

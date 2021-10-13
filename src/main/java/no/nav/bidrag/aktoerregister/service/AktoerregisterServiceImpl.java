@@ -89,18 +89,6 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     existingAktoer.setAdresse(updatedAktoer.getAdresse());
     existingAktoer.setKontonummer(updatedAktoer.getKontonummer());
     aktoerRepository.insertOrUpdateAktoer(existingAktoer);
-//    Aktoer existingAktoer = aktoerRepository.getAktoer(updatedAktoer.getAktoerId().getAktoerId());
-//    Aktoer updatedAktoer = aktoerMapper.toPersistence(updatedAktoer);
-//
-//    // Add all existing hendelser
-//    updatedAktoer.getHendelser().addAll(existingAktoer.getHendelser());
-//    // Add new hendelse for the latest update
-//    updatedAktoer.getHendelser().add(createHendelse(updatedAktoer));
-
-//    updatedAktoer.addHendelse(createHendelse(updatedAktoer));
-
-//    aktoerRepository.insertOrUpdateAktoer(updatedAktoer);
-//    updateAktoer(aktoerDTO);
   }
 
   @Override

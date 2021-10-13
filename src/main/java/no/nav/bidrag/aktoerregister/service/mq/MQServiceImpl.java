@@ -63,8 +63,6 @@ public class MQServiceImpl implements MQService {
     }
   }
 
-
-
   private void sendMessage(JMSContext context, Message message, Destination queue) {
     JMSProducer producer = context.createProducer();
     producer.send(queue, message);
