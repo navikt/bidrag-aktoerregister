@@ -16,14 +16,35 @@ import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
-import no.nav.bidrag.aktoerregister.util.TestContainerTest;
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(classes = AktoerregisterApplication.class)
-public class AktoerRepositoryTests extends TestContainerTest {
+@Testcontainers
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@EnableMockOAuth2Server
+public class AktoerRepositoryTests {
+
+  @Container
+  static PostgreSQLContainer database = new PostgreSQLContainer("postgres")
+      .withDatabaseName("test_db")
+      .withUsername("root")
+      .withPassword("root");
+
+  @DynamicPropertySource
+  static void setDatasourceProperties(DynamicPropertyRegistry propertyRegistry) {
+    propertyRegistry.add("spring.datasource.url", database::getJdbcUrl);
+  }
 
   @Autowired
   private AktoerRepository aktoerRepository;

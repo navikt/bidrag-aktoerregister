@@ -11,20 +11,45 @@ import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
-import no.nav.bidrag.aktoerregister.util.TestContainerTest;
+import no.nav.security.mock.oauth2.MockOAuth2Server;
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback;
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(classes = AktoerregisterApplication.class)
 @AutoConfigureMockMvc
-public class AktoerregisterControllerTest extends TestContainerTest {
+@Testcontainers
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@EnableMockOAuth2Server
+public class AktoerregisterControllerTest {
+
+  @Container
+  static PostgreSQLContainer database = new PostgreSQLContainer("postgres")
+      .withDatabaseName("test_db")
+      .withUsername("root")
+      .withPassword("root");
+
+  @DynamicPropertySource
+  static void setDatasourceProperties(DynamicPropertyRegistry propertyRegistry) {
+    propertyRegistry.add("spring.datasource.url", database::getJdbcUrl);
+  }
+
+  @Autowired
+  public MockOAuth2Server auth2Server;
 
   @Value("${aktoerregister.scope}")
   private String aktoerregisterScope;

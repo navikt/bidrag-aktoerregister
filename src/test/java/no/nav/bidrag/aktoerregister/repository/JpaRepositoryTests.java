@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
-import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
+import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
@@ -16,19 +16,40 @@ import no.nav.bidrag.aktoerregister.persistence.repository.AdresseJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.KontonummerJpaRepository;
-import no.nav.bidrag.aktoerregister.util.TestContainerTest;
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(classes = AktoerregisterApplication.class)
-public class JpaRepositoryTests extends TestContainerTest {
+@SpringBootTest(classes = AktoerregisterApplicationTest.class)
+@Testcontainers
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@EnableMockOAuth2Server
+public class JpaRepositoryTests {
+
+  @Container
+  static PostgreSQLContainer database = new PostgreSQLContainer("postgres")
+      .withDatabaseName("test_db")
+      .withUsername("root")
+      .withPassword("root");
+
+  @DynamicPropertySource
+  static void setDatasourceProperties(DynamicPropertyRegistry propertyRegistry) {
+    propertyRegistry.add("spring.datasource.url", database::getJdbcUrl);
+  }
 
   @Autowired
   private HendelseJpaRepository hendelseJpaRepository;
