@@ -15,13 +15,13 @@ spec:
         - name: {{ dbname }}
           envVarPrefix: DB
   liveness:
-    path: /bidrag-aktoerregister/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /bidrag-aktoerregister/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
   resources:
