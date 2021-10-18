@@ -27,6 +27,7 @@ Ved forespørsel etter aktør med identtype `PERSONNUMMER` vil applikasjonen hen
 
 For å sørge for at aktører med identtype `PERSONNYMMER` holdes oppdatert abonnerer applikasjonen på endringsmeldinger relatert til kontoinformasjon. Endringsmeldingene dukker opp på en egen MQ-kø som applikasjonen kontinuerlig lytter på. Dersom endringsmeldingen gjelder en aktør vi har lagret i databasen oppdaterer vi informasjonen i henhold til endringsmeldingen. For TPS er vi derfor ikke avhengig av en batch-jobb slik vi er for TSS.
 
+![System oversikt](./img/bidrag-aktoerregister.drawio.png)
 
 ## Database
 
