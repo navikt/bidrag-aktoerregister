@@ -34,8 +34,6 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
 
   @Override
   public TSSAktoerProcessorResult process(Aktoer aktoer) throws MQServiceException, TSSServiceException {
-
-    logger.info(JsonUtil.objectToJsonString(aktoerMapper.toDomain(aktoer)));
     AktoerIdDTO aktoerIdDTO = new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
     try {

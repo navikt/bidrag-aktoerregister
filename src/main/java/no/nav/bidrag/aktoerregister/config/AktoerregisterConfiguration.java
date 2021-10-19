@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister;
+package no.nav.bidrag.aktoerregister.config;
 
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;

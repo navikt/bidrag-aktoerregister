@@ -31,7 +31,7 @@ For å sørge for at aktører med identtype `PERSONNYMMER` holdes oppdatert abon
 
 ## Database
 
-Applikasjonen benytter `PostgreSQL` i GCP for lagring av aktører og hendelser. Provisjonering av databasen gjøres gjennom konfigurasjon i `nais.yaml`. Alle nødvendige tabeller settes opp automatisk ved hjelp av `Flyway` migrasjoner, som kjøres ved oppstart av app. I tillegg til aktør og hendelse tabeller opprettes det også tabeller for håndtering av batch-jobb mot TSS. Dette er tabeller for å sørge for at vi ikke trigger den samme jobben på flere pods og for å kunne holde oversikt over status på jobb-kjøringer. For batch-jobber brukes `Spring-batch` og `Shedlock` brukes for å begrense jobb til 1 pod.
+Applikasjonen benytter `PostgreSQL` i GCP for lagring av aktører og hendelser. Provisjonering av databasen gjøres gjennom konfigurasjon i `nais.yaml`. Alle nødvendige tabeller settes opp automatisk ved hjelp av `Flyway` migrasjoner, som kjøres ved oppstart av app. I tillegg til aktør og hendelse tabeller opprettes det også tabeller for håndtering av batch-jobb mot TSS. Dette er tabeller for å sørge for at vi ikke trigger den samme jobben på flere pods og for å kunne holde oversikt over status på jobb-kjøringer. For batch-jobber brukes `Spring-batch`. `Shedlock` brukes for å begrense batch-jobb til å kjøre på 1 pod.
 
 `Flyway` migrerings-script ligger under `/resources/db/migration/` og følger en bestemt navn-konvensjon. Dersom man skal endre på tabeller i en eksisterende database må man opprette nye scripts/filer for dette. Hvis man forsøker å endre i eksisterende filer vil man få feil ved oppstart.
 
