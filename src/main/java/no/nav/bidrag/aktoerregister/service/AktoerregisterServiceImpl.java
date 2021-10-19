@@ -15,6 +15,8 @@ import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +30,11 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   private final TSSService tssService;
   private final AktoerMapper aktoerMapper;
 
+  private static final Logger logger = LoggerFactory.getLogger(AktoerregisterService.class);
+
   @Autowired
-  public AktoerregisterServiceImpl(AktoerRepository aktoerRepository, HendelseRepository hendelseRepository, TPSService tpsService, TSSService tssService) {
+  public AktoerregisterServiceImpl(AktoerRepository aktoerRepository, HendelseRepository hendelseRepository, TPSService tpsService,
+      TSSService tssService) {
     this.aktoerRepository = aktoerRepository;
     this.hendelseRepository = hendelseRepository;
     this.tpsService = tpsService;
@@ -57,11 +62,13 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 
   @Override
   public Aktoer hentAktoerFromDB(String aktoerId) {
+    logger.info("Henter aktoer {} fra database.", aktoerId);
     return aktoerRepository.getAktoer(aktoerId);
   }
 
   @Override
   public List<HendelseDTO> hentHendelser(int sekvensunummer, int antallHendelser) {
+    logger.info("Henter {} hendelser fra sekvensnummer {}", antallHendelser, sekvensunummer);
     List<Hendelse> hendelser = hendelseRepository.hentHendelser(sekvensunummer, antallHendelser);
     return hendelser.stream().map(hendelse -> {
       HendelseDTO hendelseDTO = new HendelseDTO();
@@ -74,13 +81,14 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     }).sorted(Comparator.comparingInt(HendelseDTO::getSekvensnummer)).toList();
   }
 
-
   private AktoerDTO addAktoer(AktoerDTO aktoerDTO) {
     Aktoer aktoer = aktoerMapper.toPersistence(aktoerDTO);
+
+    logger.info("Lagrer ny aktoer {}", aktoer.getAktoerId());
     Aktoer savedAktoer = aktoerRepository.insertOrUpdateAktoer(aktoer);
+
     return aktoerMapper.toDomain(savedAktoer);
   }
-
 
   @Transactional
   @Override
@@ -88,11 +96,14 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     Aktoer existingAktoer = hentAktoerFromDB(updatedAktoer.getAktoerId());
     existingAktoer.setAdresse(updatedAktoer.getAdresse());
     existingAktoer.setKontonummer(updatedAktoer.getKontonummer());
+
+    logger.info("Oppdaterer eksisterende aktoer {}", existingAktoer.getAktoerId());
     aktoerRepository.insertOrUpdateAktoer(existingAktoer);
   }
 
   @Override
   public void slettAktoer(String aktoerId) {
+    logger.info("Sletter aktoer {}", aktoerId);
     aktoerRepository.deleteAktoer(aktoerId);
   }
 }

@@ -19,8 +19,12 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 @EnableJms
 public class JMSConfiguration {
 
+  private final MQProperties mqProperties;
+
   @Autowired
-  private MQProperties mqProperties;
+  public JMSConfiguration(MQProperties mqProperties) {
+    this.mqProperties = mqProperties;
+  }
 
   @Bean
   public ConnectionFactory connectionFactory() throws JMSException {

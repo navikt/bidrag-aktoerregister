@@ -18,20 +18,25 @@ import org.springframework.context.annotation.Configuration;
 @EnableBatchProcessing
 public class TSSBatchConfig {
 
-  @Autowired
-  public JobBuilderFactory jobBuilderFactory;
+  public final JobBuilderFactory jobBuilderFactory;
+
+  public final StepBuilderFactory stepBuilderFactory;
+
+  private final TSSAktoerReader tssAktoerReader;
+
+  private final TSSAktoerWriter tssAktoerWriter;
+
+  private final TSSAktoerProcessor tssAktoerProcessor;
 
   @Autowired
-  public StepBuilderFactory stepBuilderFactory;
-
-  @Autowired
-  private TSSAktoerReader tssAktoerReader;
-
-  @Autowired
-  private TSSAktoerWriter tssAktoerWriter;
-
-  @Autowired
-  private TSSAktoerProcessor tssAktoerProcessor;
+  public TSSBatchConfig(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, TSSAktoerReader tssAktoerReader,
+      TSSAktoerWriter tssAktoerWriter, TSSAktoerProcessor tssAktoerProcessor) {
+    this.jobBuilderFactory = jobBuilderFactory;
+    this.stepBuilderFactory = stepBuilderFactory;
+    this.tssAktoerReader = tssAktoerReader;
+    this.tssAktoerWriter = tssAktoerWriter;
+    this.tssAktoerProcessor = tssAktoerProcessor;
+  }
 
   @Bean
   public Job createJob() {

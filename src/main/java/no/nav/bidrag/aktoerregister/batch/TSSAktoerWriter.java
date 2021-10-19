@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class TSSAktoerWriter implements ItemWriter<TSSAktoerProcessorResult> {
 
+  private final AktoerregisterService aktoerregisterService;
+
   @Autowired
-  private AktoerregisterService aktoerregisterService;
+  public TSSAktoerWriter(AktoerregisterService aktoerregisterService) {
+    this.aktoerregisterService = aktoerregisterService;
+  }
 
   @Override
   public void write(List<? extends TSSAktoerProcessorResult> list) {

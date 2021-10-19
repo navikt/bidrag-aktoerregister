@@ -24,6 +24,8 @@ import no.rtv.namespacetss.TssSamhandlerData.TssInputData;
 import no.rtv.namespacetss.TypeOD910;
 import no.rtv.namespacetss.TypeSamhAdr;
 import no.rtv.namespacetss.TypeSamhKonto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class TSSServiceImpl implements TSSService {
 
   private final MQProperties mqProperties;
 
+  private static final Logger logger = LoggerFactory.getLogger(TSSService.class);
+
   @Autowired
   public TSSServiceImpl(MQService mqService, MQProperties mqProperties) {
     this.mqService = mqService;
@@ -43,15 +47,12 @@ public class TSSServiceImpl implements TSSService {
   @Override
   public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, AktoerNotFoundException, TSSServiceException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
+
+    logger.info("Henter aktoer {} fra TSS.", aktoerId.getAktoerId());
     TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
+
     validateResponse(response, aktoerId.getAktoerId());
     return mapToAktoer(response, aktoerId);
-  }
-
-  @Override
-  public TssSamhandlerData hentSamhandler(AktoerIdDTO aktoerId) throws MQServiceException {
-    TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
-    return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }
 
   private TssSamhandlerData createTssSamhandlerRequest(AktoerIdDTO aktoerId) {

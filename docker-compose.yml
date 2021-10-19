@@ -24,7 +24,6 @@ services:
     container_name: ibmmq_container
     image: ibmcom/mq:latest
     restart: always
-    # command: /bin/bash -c "setmqaut -m QM1 -t queue -n SYSTEM.DEFAULT.MODEL.QUEUE -p app +put +inq"
     environment:
       LICENSE: accept
       MQ_QMGR_NAME: QM1

@@ -5,13 +5,9 @@ import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
-import no.rtv.namespacetps.TpsPersonData;
 
 public interface TPSService {
 
   AktoerDTO hentAktoer(AktoerIdDTO aktoerId)
       throws MQServiceException, AktoerNotFoundException, TPSServiceException;
-
-  TpsPersonData hentTpsPersonData(AktoerIdDTO aktoerId) throws MQServiceException;
-
 }

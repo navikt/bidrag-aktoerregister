@@ -20,20 +20,23 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class TSSBatchSchedulerConfig {
 
-  @Autowired
-  JobLauncher jobLauncher;
+  private final JobLauncher jobLauncher;
+
+  private final Job job;
 
   @Autowired
-  Job job;
-
-  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  public TSSBatchSchedulerConfig(JobLauncher jobLauncher, Job job) {
+    this.jobLauncher = jobLauncher;
+    this.job = job;
+  }
 
   @Scheduled(cron = "0 0/30 * * * *")
   @SchedulerLock(name = "TSSAktoerUpdatesJob", lockAtMostFor = "30s", lockAtLeastFor = "30s")
   public void scheduleTSSBatch()
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     JobParameters jobParameters = new JobParametersBuilder()
-        .addString("time", format.format(Calendar.getInstance().getTime())).toJobParameters();
+        .addString("time", dateFormat.format(Calendar.getInstance().getTime())).toJobParameters();
     jobLauncher.run(job, jobParameters);
   }
 }
