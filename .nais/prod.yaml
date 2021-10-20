@@ -1,0 +1,8 @@
+name: bidrag-aktoerregister
+dbinstancename: bidrag-aktoerregister
+dbname: bidrag-aktoerregister-db
+ingresses:
+  - https://bidrag-aktoerregister.nav.no/
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: prod
