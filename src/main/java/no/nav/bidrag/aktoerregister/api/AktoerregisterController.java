@@ -21,13 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/bidrag-aktorer")
 @ProtectedWithClaims(issuer = "maskinporten", claimMap = {"scope=nav:bidrag:aktoerregister.read"})
 public class AktoerregisterController {
 
@@ -70,15 +68,15 @@ public class AktoerregisterController {
       + "Klienten må selv ta vare på hvilke sekvensnummer som sist er behandlet, og be om å få hendelser fra det neste sekvensnummeret ved neste kall."
       + "Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall."
       + "\n\n"
-      + "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser. Det kan forekomme hull i sekvensnummer-rekken. Laveste mulig sekvensnummer er 1."
+      + "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser. Det kan forekomme hull i sekvensnummer-rekken."
       + "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres.")
   @GetMapping("/hendelser")
   public ResponseEntity<List<HendelseDTO>> hentHendelser(
-      @Parameter(description = "Angir første sekvensnummer som ønskes hentet. Ved første kall skal dette settes til 1. Deretter benyttes siste sekvensnummer + 1.")
-      @RequestParam(name = "fraSekvensnummer", defaultValue = "1") Integer fraSekvensnummer,
+      @Parameter(description = "Angir første sekvensnummer som ønskes hentet. Default-verdi er 0")
+      @RequestParam(name = "fraSekvensnummer", defaultValue = "0") Integer fraSekvensnummer,
 
-      @Parameter(description="Maksimalt antall hendelser som ønskes hentet. Default-verdi er 10000.")
-      @RequestParam(name = "antall", defaultValue = "10000") Integer antall)  throws ResponseStatusException {
+      @Parameter(description="Maksimalt antall hendelser som ønskes hentet. Default-verdi er 1000.")
+      @RequestParam(name = "antall", defaultValue = "1000") Integer antall)  throws ResponseStatusException {
 
     try {
       List<HendelseDTO> hendelser = aktoerregisterService

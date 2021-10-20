@@ -10,7 +10,6 @@ import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
 import no.nav.bidrag.aktoerregister.mapper.Mapper;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.TSSService;
-import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;

@@ -13,19 +13,51 @@ Konsumenten er selv ansvarlig for å huske hvilket sekvensnummer som skal hentes
 
 Hendelsene inneholder i seg selv ikke endringene, disse må hentes for aktørId'n dersom det er interessant for konsumenten.
 
+## Endepunkter
+
+### Hent aktør
+
+Returnerer informasjon om aktør av type `identType` med id `ident`. `identType` kan være `PERSONNUMMER` eller `AKTOERNUMMER`. Ved oppslag på ident av type `PERSONNUMMER` returneres kun kontoinformasjon. Ved oppslag på ident av type `AKTOERNUMMER` returneres både kontoinformasjon og adresseinformasjon.
+
+```
+# Endepunkt
+GET /aktoer/{identType}/{ident}
+
+# Hent aktør med identType = PERSONNUMMER og ident = 18050592509
+GET /aktoer/PERSONNUMMER/18050592509
+
+# Hent aktør med identType = AKTOERNUMMER og ident = 80000365099
+GET /aktoer/AKTOERNUMMER/80000365099
+```
+
+### Hent hendelser
+
+Returnerer en liste av aktører som har blitt oppdatert siden sekvensnummer `fraSekvensnummer`. Antall aktøerer i den returnerte listen styres av parameteren `antall`. Den returnerte listen vil aldri inneholde flere innslag av samme aktør. Altså kan det hende at det siste sekvensnummeret som returneres er større enn `fraSekvensnummer` + `antall`. Den returnerte hendelseslisten vil være sortert etter sekvensnummer i stigende rekkefølge.
+
+```
+# Endepunkt
+GET /hendelser?fraSekvensnummer=X&antall=Y
+
+# Hente de 1000 første hendelsene
+GET /hendelser?fraSekvensnummer=0&antall=1000
+
+# Hent 1000 hendelser fra og med sekvensnummer 1001
+GET /hendelser?fraSekvensnummer=1001&antall=1000
+```
+
 ## Integrasjoner
 
 ### TSS
 
 Ved forespørsel etter aktør på ident med identtype `AKTOERNUMMER` vil applikasjonen hente aktørinformasjon fra TSS dersom vi ikke allerede har informasjonen i databasen. Informasjonen hentes ved hjelp av en request kø i MQ som TSS lytter på. Respons skrives deretter tilbake på en midlertidig respons-kø som applikasjonen lytter på. Den mottatte aktøren lagres så i egen database før den returneres. Aktørinformasjon fra TSS inneholder både konto- og adresse-informasjon.
 
-I tilegg til applikasjonen henter aktørinformasjon om forespurte aktører dersom de ikke allerede finnes i databasen, er det også satt opp en batch-jobb som sjekker om aktørene med identtype `AKTOERNUMMER` har blitt oppdatert i TSS siden sist de ble hentet. Aktørene som er endret vil oppdateres i applikasjonens database. Dette medfører også nye hendelser for de oppdaterte aktørene.
+I tillegg til at applikasjonen henter aktørinformasjon om forespurte aktører dersom de ikke allerede finnes i databasen, er det også satt opp en batch-jobb som sjekker om aktørene med identtype `AKTOERNUMMER` har blitt oppdatert i TSS siden sist de ble hentet. Aktørene som er endret vil oppdateres i applikasjonens database. Dette medfører også nye hendelser for de oppdaterte aktørene.
 
 ### TPS
 
 Ved forespørsel etter aktør med identtype `PERSONNUMMER` vil applikasjonen hente aktørinformasjon fra TPS dersom vi ikke allerede har informasjonen i databasen. Informasjonen hentes på samme måte som mot TSS, ved hjelp av request- og respons-køer. Aktørinformasjon fra TPS inneholder kun kontoinformasjon.
 
-For å sørge for at aktører med identtype `PERSONNYMMER` holdes oppdatert abonnerer applikasjonen på endringsmeldinger relatert til kontoinformasjon. Endringsmeldingene dukker opp på en egen MQ-kø som applikasjonen kontinuerlig lytter på. Dersom endringsmeldingen gjelder en aktør vi har lagret i databasen oppdaterer vi informasjonen i henhold til endringsmeldingen. For TPS er vi derfor ikke avhengig av en batch-jobb slik vi er for TSS.
+For å sørge for at aktører med identtype `PERSONNUMMER` holdes oppdatert abonnerer applikasjonen på endringsmeldinger relatert til kontoinformasjon. Endringsmeldingene dukker opp på en egen MQ-kø som applikasjonen kontinuerlig lytter på. Dersom endringsmeldingen gjelder en aktør vi har lagret i databasen oppdaterer vi informasjonen i henhold til endringsmeldingen. For TPS er vi derfor ikke avhengig av en batch-jobb slik vi er for TSS.
 
 ![System oversikt](./img/bidrag-aktoerregister.drawio.png)
 
@@ -41,7 +73,11 @@ For dataobjektene vi bruker i integrasjonene mot TSS og TPS bruker vi Java-klass
 
 ## Maskinporten
 
-Endepunktene i applikasjonen krever maskinporten-tokens med scope `nav:bidrag:aktoerregister.read`. Foreløpig kan token med riktig scope genereres av Nav og Skatteetaten. Dette er også konfigurert i `nais.yaml`. For test internt i Nav, er det opprettet en tjeneste (`bidrag-maskinporten-client`) som kan utstede tokens med rett scope. Denne kan dog ikke kalles på utenfra og krever tilkobling til naisdevice.
+Endepunktene i applikasjonen krever maskinporten-tokens med scope `nav:bidrag:aktoerregister.read`. Foreløpig kan token med riktig scope genereres av NAV og Skatteetaten. Dette er også konfigurert i `nais.yaml`. For test internt i NAV, er det opprettet en tjeneste (`bidrag-maskinporten-client`) som kan utstede tokens med rett scope. Denne kan dog ikke kalles på utenfra og krever tilkobling til naisdevice.
+
+Hent token:
+* DEV: https://bidrag-maskinporten-client.dev.intern.nav.no/token?scopes=nav:bidrag:aktoerregister.read
+* PROD: https://bidrag-maskinporten-client.intern.nav.no/token?scopes=nav:bidrag:aktoerregister.read (Fungerer foreløpig ikke da `bidrag-aktoerregister` ikke er rullet ut til prod enda)
 
 ## Kjør applikasjon lokalt
 
