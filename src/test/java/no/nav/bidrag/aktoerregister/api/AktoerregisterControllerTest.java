@@ -60,9 +60,9 @@ public class AktoerregisterControllerTest {
   @MockBean
   private AktoerregisterService aktoerregisterService;
 
-  private final String hentAktoerUrl = "/bidrag-aktorer/aktoer/{identtype}/{ident}";
+  private final String hentAktoerUrl = "/aktoer/{identtype}/{ident}";
 
-  private final String hentHendelserUrl = "/bidrag-aktorer/hendelser";
+  private final String hentHendelserUrl = "/hendelser";
 
   private final Object[] pathParams = {"AKTOERNUMMER", "1234"};
 
