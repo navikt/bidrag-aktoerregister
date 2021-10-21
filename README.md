@@ -1,6 +1,9 @@
 # Bidrag-Aktoerregister
 ![](https://github.com/navikt/bidrag-aktoerregister/workflows/continuous%20integration/badge.svg)
 
+* DEV: https://bidrag-aktoerregister.dev.intern.nav.no/ (må være koblet til naisdevice for å få tilgang). Ekstern ingress legges til etter avtale med Skatteetaten.
+* PROD: Ligger ikke i prod enda.
+
 Applikasjonen har ansvar for å holde oversikt over endringer i navn, adresse og kontonummer for aktører involvert i bidragssaker. Utover personer kan slike aktører være blant annet kommuner, institusjoner, spesifike avdelinger innenfor en oranisasjon, utlandske myndigheter eller sperrede bankkontoer.
 
 For personer er det kun opplysninger om kontonummer som følges opp, men for de andre typene aktører følges også navn og adresse. Informasjonen om aktørene kan hentes ved kall med identtype og ident.
