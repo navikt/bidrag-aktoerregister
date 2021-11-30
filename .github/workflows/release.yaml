@@ -20,6 +20,7 @@ jobs:
         run: |
           cd $( echo ${{ github.repository }} | sed 's;navikt/;;' ).git
           git log | grep -c ${{ github.sha }}
+
   build:
     name: Build release with maven and docker
     runs-on: ubuntu-latest
@@ -29,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '16'
+          java-version: '17'
       - uses: actions/cache@v1
         with:
           path: ~/.m2
@@ -49,6 +50,7 @@ jobs:
           docker image build --tag ${IMAGE} .
           echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
           docker image push ${IMAGE}
+
   deploy:
     runs-on: ubuntu-latest
     name: Deploy docker image to prod
