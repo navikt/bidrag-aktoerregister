@@ -2,7 +2,7 @@
 ![](https://github.com/navikt/bidrag-aktoerregister/workflows/continuous%20integration/badge.svg)
 
 * DEV: https://bidrag-aktoerregister.dev.intern.nav.no/ (må være koblet til naisdevice for å få tilgang). Ekstern ingress legges til etter avtale med Skatteetaten.
-* PROD: Ligger ikke i prod enda.
+* PROD: https://bidrag-aktoerregister.nav.no/. Applikasjonen kjører, men ingen har foreløpig tilgang til den da dette må konfigureres manuelt av `#tech-sikkerhet`.
 
 Applikasjonen har ansvar for å holde oversikt over endringer i navn, adresse og kontonummer for aktører involvert i bidragssaker. Utover personer kan slike aktører være blant annet kommuner, institusjoner, spesifike avdelinger innenfor en oranisasjon, utlandske myndigheter eller sperrede bankkontoer.
 
@@ -83,6 +83,9 @@ Hent token:
 * DEV: https://bidrag-maskinporten-client.dev.intern.nav.no/token?scopes=nav:bidrag:aktoerregister.read
 * PROD: https://bidrag-maskinporten-client.intern.nav.no/token?scopes=nav:bidrag:aktoerregister.read (Fungerer foreløpig ikke da `bidrag-aktoerregister` ikke er rullet ut til prod enda)
 
+## Kubernetes secrets
+Applikasjonen benytter én egendefinert Kubernetes secret i henholdsvis `dev-gcp` og `prod-gcp`. Passordet til IBM MQ. Passordet er representert gjennom miljøvariabelen `MQ_PASSWORD` i `application.properties`. I Kubernetes er den lagret på nøkkelen `bidrag-aktoerregister-mqpassword`, men når vi leser den ut i `nais.yaml` gjøres den tilgjengelig i pod'ene som miljøvariabelen `MQ_PASSWORD`.
+
 ## Kjør applikasjon lokalt
 
 Å kjøre opp applikasjonen lokalt med all funksjonalitet lar seg dessverre ikke gjøre. Man kan kjøre opp applikasjonen, men vi vil ikke ha noen kobling mot MQ for forespørsler mot TSS og TPS. Ved hjelp av `docker-compose.yaml` kan man kjøre opp en IBM MQ instans samt en PostgreSQL instans som gjør at tjenesten ihvertfall starter ved bruk av profilen `local`. Dette krever imidlertid at du har Docker kjørende på maskina. Man kan derfor ihvertfall få testet `Flyway`-script og slike ting.
@@ -113,5 +116,4 @@ Nå kan man kjøre opp applikasjonen med spring profilen `local`. Applikasjonen 
 
 ## Kjøring av tester
 
-Noen av testene benytter `testcontainers` som krever at Docker kjører på maskina. 
-
+Noen av testene benytter `testcontainers` som krever at Docker kjører på maskina.
