@@ -211,7 +211,6 @@
 					<sources>
 						<source>src/main/resources/TSSSkjema.xsd</source>
 						<source>src/main/resources/TPSSkjema.xsd</source>
-<!--						<source>src/main/resources/TPSDistrSkjema.xsd</source>-->
 					</sources>
 				</configuration>
 				<!--Making sure Jakarta is used instead of Javax-->
