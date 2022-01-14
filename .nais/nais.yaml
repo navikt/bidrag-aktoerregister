@@ -17,13 +17,13 @@ spec:
   liveness:
     path: /actuator/health
     initialDelay: 20
-    timeout: 1
+    timeout: 2
     periodSeconds: 5
-    failureThreshold: 10
+    failureThreshold: 5
   readiness:
     path: /actuator/health
     initialDelay: 20
-    timeout: 1
+    timeout: 2
   resources:
     limits:
       cpu: 1000m
