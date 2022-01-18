@@ -11,6 +11,7 @@ import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.mq.MQService;
+import no.rtv.namespacetps.TpsPersonData;
 import no.rtv.namespacetss.AdresseSamhType;
 import no.rtv.namespacetss.KontoType;
 import no.rtv.namespacetss.ObjectFactory;
@@ -53,6 +54,14 @@ public class TSSServiceImpl implements TSSService {
 
     validateResponse(response, aktoerId.getAktoerId());
     return mapToAktoer(response, aktoerId);
+  }
+
+  @Override
+  public TssSamhandlerData hentRawAktoer(AktoerIdDTO aktoerIdDTO) throws MQServiceException {
+    TssSamhandlerData request = createTssSamhandlerRequest(aktoerIdDTO);
+
+    logger.info("Henter aktoer {} fra TSS.", aktoerIdDTO.getAktoerId());
+    return mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
   }
 
   private TssSamhandlerData createTssSamhandlerRequest(AktoerIdDTO aktoerId) {

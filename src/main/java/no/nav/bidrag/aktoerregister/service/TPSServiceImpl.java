@@ -47,6 +47,14 @@ public class TPSServiceImpl implements TPSService {
     return mapToAktoer(response, aktoerId);
   }
 
+  @Override
+  public TpsPersonData hentRawAktoer(AktoerIdDTO aktoerIdDTO) throws MQServiceException {
+    TpsPersonData request = createTpsPersonDataRequest(aktoerIdDTO);
+
+    logger.info("Henter aktoer {} fra TPS.", aktoerIdDTO.getAktoerId());
+    return mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
+  }
+
   private TpsPersonData createTpsPersonDataRequest(AktoerIdDTO aktoerId) {
     ObjectFactory objectFactory = new ObjectFactory();
     TpsPersonData tpsPersonData = objectFactory.createTpsPersonData();

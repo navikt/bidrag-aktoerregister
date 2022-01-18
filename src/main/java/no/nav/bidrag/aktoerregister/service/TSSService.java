@@ -5,9 +5,11 @@ import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
+import no.rtv.namespacetss.TssSamhandlerData;
 
 public interface TSSService {
 
   AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws AktoerNotFoundException, TSSServiceException, MQServiceException;
 
+  TssSamhandlerData hentRawAktoer(AktoerIdDTO aktoerIdDTO) throws MQServiceException;
 }

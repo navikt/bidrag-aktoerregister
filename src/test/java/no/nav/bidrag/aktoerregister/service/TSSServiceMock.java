@@ -3,6 +3,8 @@ package no.nav.bidrag.aktoerregister.service;
 import no.nav.bidrag.aktoerregister.domene.AdresseDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.exception.MQServiceException;
+import no.rtv.namespacetss.TssSamhandlerData;
 
 public class TSSServiceMock implements TSSService {
 
@@ -16,5 +18,10 @@ public class TSSServiceMock implements TSSService {
 
     aktoerDTO.setAdresse(adresseDTO);
     return aktoerDTO;
+  }
+
+  @Override
+  public TssSamhandlerData hentRawAktoer(AktoerIdDTO aktoerIdDTO) throws MQServiceException {
+    return null;
   }
 }
