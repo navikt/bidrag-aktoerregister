@@ -31,6 +31,8 @@ spec:
     requests:
       cpu: 500m
       memory: 1024Mi
+  replicas:
+    cpuThresholdPercentage: 80
   maskinporten:
     enabled: true
     scopes:
