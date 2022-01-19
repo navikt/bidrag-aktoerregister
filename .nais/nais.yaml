@@ -36,6 +36,10 @@ spec:
   azure:
     application:
       enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{ azure.pdl_url }}
   maskinporten:
     enabled: true
     scopes:

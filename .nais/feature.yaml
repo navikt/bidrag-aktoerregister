@@ -3,6 +3,9 @@ dbinstancename: bidrag-aktoerregister-feature
 dbname: bidrag-aktoerregister-db
 ingresses:
   - https://bidrag-aktoerregister-feature.dev.intern.nav.no
+
+azure:
+  pdl_url: pdl-api.dev.intern.nav.no
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: dev
