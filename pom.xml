@@ -106,14 +106,30 @@
 			<version>${token-support.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>no.nav.security</groupId>
+			<artifactId>token-client-spring</artifactId>
+			<version>${token-support.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>no.nav.security</groupId>
 			<artifactId>token-validation-spring-test</artifactId>
 			<version>${token-support.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!--Bidrag felles-->
+		<dependency>
+			<groupId>no.nav.bidrag</groupId>
+			<artifactId>bidrag-commons</artifactId>
+			<version>0.5.15</version>
 		</dependency>
 
 		<!--Persistence-->

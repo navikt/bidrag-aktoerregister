@@ -1,0 +1,65 @@
+PDL_URL: https://pdl-api.dev.intern.nav.no/graphql
+
+mq:
+  applicationName: ${MQ_APPLICATION_NAME}
+  channel: ${MQ_CHANNEL}
+  host: ${MQ_HOST}
+  password: ${MQ_PASSWORD}
+  port: ${MQ_PORT}
+  queueManager: ${MQ_QUEUE_MANAGER}
+  timeout: ${MQ_TIMEOUT}
+  tpsEventQueue: ${MQ_TPS_EVENT_QUEUE}
+  tpsRequestQueue: ${MQ_TPS_REQUEST_QUEUE}
+  tssRequestQueue: ${MQ_TSS_REQUEST_QUEUE}
+  username: ${MQ_USERNAME}
+no:
+  nav:
+    security:
+      jwt:
+        issuer:
+          maskinporten:
+            accepted_audience: ${MASKINPORTEN_AUDIENCE}
+            discovery-url: ${MASKINPORTEN_WELL_KNOWN_URL}
+            validation:
+              optional-claims: aud,sub,nbf
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
+      client:
+        registration:
+          pdlapi:
+            provider: aad
+            client-id: ${AZURE_APP_CLIENT_ID}
+            client-secret: ${AZURE_APP_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope: api://${PDLAPI_SCOPE}/.default
+        provider:
+          aad:
+            token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
+            jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+      schema: aktoerregister
+    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    username: ${DB_USERNAME}
+  flyway:
+    locations: classpath:db/migration
+    schemas: migrations
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: none
+springdoc:
+  swagger-ui:
+    path: /

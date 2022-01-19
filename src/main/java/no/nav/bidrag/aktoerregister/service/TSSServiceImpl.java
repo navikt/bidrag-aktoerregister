@@ -108,10 +108,13 @@ public class TSSServiceImpl implements TSSService {
   private AdresseDTO mapToAdresse(TypeOD910 samhandlerODataB910) {
     List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
     if (samhandlerListe.size() > 0) {
-      TypeSamhAdr typeSamhAdr = samhandlerListe.get(0).getAdresse130();
+      Samhandler samhandler = samhandlerListe.get(0);
+      TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
+      var samhandlerNavn = samhandler.getSamhandler110().getSamhandler().get(0).getNavnSamh();
       if (Integer.parseInt(typeSamhAdr.getAntAdresse()) > 0) {
         AdresseSamhType adresseSamhType = typeSamhAdr.getAdresseSamh().get(0);
         AdresseDTO adresse = new AdresseDTO();
+        adresse.setNavn(samhandlerNavn);
         adresse.setLand(adresseSamhType.getKodeLand());
         adresse.setPoststed(adresseSamhType.getPoststed());
         adresse.setPostnr(adresseSamhType.getPostNr());

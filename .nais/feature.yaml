@@ -6,3 +6,7 @@ ingresses:
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: dev
+  - name: PDLAPI_SCOPE
+    value: dev-fss.pdl.pdl-api
+  - name: PDL_URL
+    value: https://pdl-api.dev.intern.nav.no/graphql
