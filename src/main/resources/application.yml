@@ -1,4 +1,4 @@
-PDL_URL: https://pdl-api.dev.intern.nav.no/graphql
+PDL_URL: https://pdl-api.dev-fss-pub.nais.io/graphql
 
 mq:
   applicationName: ${MQ_APPLICATION_NAME}
