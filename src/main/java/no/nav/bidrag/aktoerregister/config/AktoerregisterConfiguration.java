@@ -34,6 +34,7 @@ public class AktoerregisterConfiguration {
     HttpHeaderRestTemplate pdlRestTemplate = baseRestTemplate();
     logger.info("Setting pdlUrl to: " + pdlUrl);
     pdlRestTemplate.setUriTemplateHandler(new RootUriTemplateHandler(pdlUrl));
+    pdlRestTemplate.addHeaderGenerator("Tema", () -> "BID");
     pdlRestTemplate.getInterceptors().add(securityTokenService.generateBearerToken("pdlapi"));
     return pdlRestTemplate;
   }
