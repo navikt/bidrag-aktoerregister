@@ -36,7 +36,10 @@ public class SecurityTokenService {
                   .build()
           ).getAccessToken();
       logger.info("Generated token: " + accessToken);
+      logger.info("Token value: " + accessToken.getTokenValue());
       request.getHeaders().setBearerAuth(accessToken.getTokenValue());
+      logger.info("Authorization: " + request.getHeaders().get("Authorization"));
+      logger.info("X-Correlation-ID: " + request.getHeaders().get("X-Correlation-ID"));
       return execution.execute(request, body);
     };
   }

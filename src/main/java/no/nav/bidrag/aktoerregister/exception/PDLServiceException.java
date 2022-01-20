@@ -8,7 +8,7 @@ public class PDLServiceException extends Exception {
   private String message;
 
   public PDLServiceException(String message) {
-    super(message);
+    this.message = message;
   }
 
   public PDLServiceException(List<Error> errors) throws AktoerNotFoundException {
@@ -24,6 +24,7 @@ public class PDLServiceException extends Exception {
 
   public PDLServiceException(String message, Throwable error) {
     super(message, error);
+    this.message = message;
   }
 
   @Override
