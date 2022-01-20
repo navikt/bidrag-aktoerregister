@@ -37,9 +37,11 @@ public class PDLServiceImpl implements PDLService {
   @Override
   public PersonDTO hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException {
     GraphQLQuery graphQLQuery = GraphQLQueryCreator.create(HENT_PERSON_QUERY, Map.of("ident", id));
+    logger.info("Query: "  + graphQLQuery.getQuery());
     GraphQLResponse graphQLResponse = null;
     try {
       graphQLResponse = pdlRestTemplate.postForEntity("/", graphQLQuery, GraphQLResponse.class).getBody();
+      logger.info("Response: " + graphQLResponse);
     } catch (HttpClientErrorException e) {
       throw new PDLServiceException("Feil ved kall mot PDL", e);
     }
@@ -47,6 +49,7 @@ public class PDLServiceImpl implements PDLService {
   }
 
   private PersonDTO validateResponse(GraphQLResponse graphQLResponse) throws PDLServiceException, AktoerNotFoundException {
+    logger.info("Validating response: " + graphQLResponse);
     if (graphQLResponse == null) {
       throw new PDLServiceException("Response fra PDL er null");
     }
@@ -54,7 +57,7 @@ public class PDLServiceImpl implements PDLService {
     if (!graphQLResponse.getErrors().isEmpty()) {
       throw new PDLServiceException(graphQLResponse.getErrors());
     }
-
+    logger.info("Returning data: " + graphQLResponse.getData().getHentPerson());
     return graphQLResponse.getData().getHentPerson();
   }
 }
