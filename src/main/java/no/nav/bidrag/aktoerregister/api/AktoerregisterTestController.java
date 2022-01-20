@@ -18,6 +18,8 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.security.token.support.core.api.Unprotected;
 import no.rtv.namespacetps.TpsPersonData;
 import no.rtv.namespacetss.TssSamhandlerData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,8 @@ public class AktoerregisterTestController {
   private final TSSService tssService;
 
   private final PDLService pdlService;
+
+  private final static Logger logger = LoggerFactory.getLogger(AktoerregisterTestController.class);
 
   @Autowired
   public AktoerregisterTestController(TPSService tpsService, TSSService tssService, PDLService pdlService) {
@@ -99,6 +103,7 @@ public class AktoerregisterTestController {
       PersonDTO personDTO =  pdlService.hentRawAktoer(ident);
       return ResponseEntity.ok(personDTO);
     } catch (PDLServiceException e) {
+      logger.error(e.getMessage(), e);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
     } catch (AktoerNotFoundException e) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

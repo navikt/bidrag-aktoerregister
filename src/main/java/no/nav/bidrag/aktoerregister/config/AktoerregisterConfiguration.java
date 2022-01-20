@@ -7,6 +7,8 @@ import no.nav.bidrag.aktoerregister.service.SecurityTokenService;
 import no.nav.bidrag.commons.web.CorrelationIdFilter;
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate;
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RootUriTemplateHandler;
@@ -18,6 +20,8 @@ import org.springframework.context.annotation.Configuration;
 @EnableJwtTokenValidation(ignore = {"org.springframework","org.springdoc"})
 public class AktoerregisterConfiguration {
 
+  private final static Logger logger = LoggerFactory.getLogger(AktoerregisterConfiguration.class)
+
   @Bean("base")
   public HttpHeaderRestTemplate baseRestTemplate() {
     HttpHeaderRestTemplate restTemplate = new HttpHeaderRestTemplate();
@@ -28,6 +32,7 @@ public class AktoerregisterConfiguration {
   @Bean("pdl")
   public HttpHeaderRestTemplate pdlRestTemplate(@Value("${PDL_URL}") String pdlUrl, SecurityTokenService securityTokenService) {
     HttpHeaderRestTemplate pdlRestTemplate = baseRestTemplate();
+    logger.info("Setting pdlUrl to: " + pdlUrl);
     pdlRestTemplate.setUriTemplateHandler(new RootUriTemplateHandler(pdlUrl));
     pdlRestTemplate.getInterceptors().add(securityTokenService.generateBearerToken("pdlapi"));
     return pdlRestTemplate;

@@ -40,7 +40,7 @@ public class PDLServiceImpl implements PDLService {
     logger.info("Query: "  + graphQLQuery.getQuery());
     GraphQLResponse graphQLResponse = null;
     try {
-      graphQLResponse = pdlRestTemplate.postForEntity("/", graphQLQuery, GraphQLResponse.class).getBody();
+      graphQLResponse = pdlRestTemplate.postForEntity("", graphQLQuery, GraphQLResponse.class).getBody();
       logger.info("Response: " + graphQLResponse);
     } catch (HttpClientErrorException e) {
       logger.error(e.getMessage(), e);
