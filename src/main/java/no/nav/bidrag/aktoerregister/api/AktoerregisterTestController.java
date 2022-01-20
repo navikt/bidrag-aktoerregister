@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.domene.PersonDTO;
+import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.MQServiceException;
+import no.nav.bidrag.aktoerregister.exception.PDLServiceException;
 import no.nav.bidrag.aktoerregister.service.PDLService;
 import no.nav.bidrag.aktoerregister.service.TPSService;
 import no.nav.bidrag.aktoerregister.service.TSSService;
@@ -93,7 +95,13 @@ public class AktoerregisterTestController {
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
       throws ResponseStatusException {
 
+    try {
       PersonDTO personDTO =  pdlService.hentRawAktoer(ident);
       return ResponseEntity.ok(personDTO);
+    } catch (PDLServiceException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+    } catch (AktoerNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+    }
   }
 }

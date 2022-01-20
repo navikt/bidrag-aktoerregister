@@ -5,9 +5,10 @@ import static no.nav.bidrag.aktoerregister.service.graphql.GraphQLQueryCreator.H
 import java.util.Map;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.PersonDTO;
+import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
+import no.nav.bidrag.aktoerregister.exception.PDLServiceException;
 import no.nav.bidrag.aktoerregister.service.graphql.GraphQLQueryCreator;
 import no.nav.bidrag.aktoerregister.service.graphql.GraphQLResponse;
-import no.nav.bidrag.aktoerregister.util.JsonUtil;
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ public class PDLServiceImpl implements PDLService {
 
   public PDLServiceImpl(@Qualifier("pdl") HttpHeaderRestTemplate pdlRestTemplate) {
     this.pdlRestTemplate = pdlRestTemplate;
-    logger.info(JsonUtil.objectToJsonString(this.pdlRestTemplate.getUriTemplateHandler()));
   }
 
   @Override
@@ -35,17 +35,26 @@ public class PDLServiceImpl implements PDLService {
   }
 
   @Override
-  public PersonDTO hentRawAktoer(String id) {
+  public PersonDTO hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException {
     GraphQLQuery graphQLQuery = GraphQLQueryCreator.create(HENT_PERSON_QUERY, Map.of("ident", id));
-    GraphQLResponse response = null;
+    GraphQLResponse graphQLResponse = null;
     try {
-      response = pdlRestTemplate.postForEntity("/", graphQLQuery, GraphQLResponse.class).getBody();
+      graphQLResponse = pdlRestTemplate.postForEntity("/", graphQLQuery, GraphQLResponse.class).getBody();
     } catch (HttpClientErrorException e) {
-      return null;
+      throw new PDLServiceException("Feil ved kall mot PDL", e);
     }
-    if (response != null) {
-      return response.getData().getHentPerson();
+    return validateResponse(graphQLResponse);
+  }
+
+  private PersonDTO validateResponse(GraphQLResponse graphQLResponse) throws PDLServiceException, AktoerNotFoundException {
+    if (graphQLResponse == null) {
+      throw new PDLServiceException("Response fra PDL er null");
     }
-    return null;
+
+    if (!graphQLResponse.getErrors().isEmpty()) {
+      throw new PDLServiceException(graphQLResponse.getErrors());
+    }
+
+    return graphQLResponse.getData().getHentPerson();
   }
 }

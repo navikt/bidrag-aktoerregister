@@ -32,4 +32,9 @@ public class AktoerregisterConfiguration {
     pdlRestTemplate.getInterceptors().add(securityTokenService.generateBearerToken("pdlapi"));
     return pdlRestTemplate;
   }
+
+  @Bean
+  public CorrelationIdFilter correlationIdFilter() {
+    return new CorrelationIdFilter();
+  }
 }
