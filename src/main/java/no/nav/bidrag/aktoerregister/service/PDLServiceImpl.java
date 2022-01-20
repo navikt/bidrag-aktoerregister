@@ -37,7 +37,7 @@ public class PDLServiceImpl implements PDLService {
   }
 
   @Override
-  public JsonNode hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException {
+  public PersonDTO hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException {
     GraphQLQuery graphQLQuery = GraphQLQueryCreator.create(HENT_PERSON_QUERY, Map.of("ident", id));
     logger.info("Query: "  + graphQLQuery.getQuery());
     GraphQLResponse graphQLResponse = null;
@@ -55,7 +55,7 @@ public class PDLServiceImpl implements PDLService {
     return validateResponse(graphQLResponse);
   }
 
-  private JsonNode validateResponse(GraphQLResponse graphQLResponse) throws PDLServiceException, AktoerNotFoundException {
+  private PersonDTO validateResponse(GraphQLResponse graphQLResponse) throws PDLServiceException, AktoerNotFoundException {
     logger.info("Validating response: " + graphQLResponse);
     if (graphQLResponse == null) {
       throw new PDLServiceException("Response fra PDL er null");

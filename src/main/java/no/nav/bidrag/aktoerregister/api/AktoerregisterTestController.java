@@ -94,14 +94,14 @@ public class AktoerregisterTestController {
 
   @GetMapping("/pdl/{ident}")
   @Unprotected
-  public ResponseEntity<JsonNode> hentPDLAktoer(
+  public ResponseEntity<PersonDTO> hentPDLAktoer(
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
       throws ResponseStatusException {
 
     try {
-      JsonNode personDTO =  pdlService.hentRawAktoer(ident);
+      PersonDTO personDTO =  pdlService.hentRawAktoer(ident);
       return ResponseEntity.ok(personDTO);
     } catch (PDLServiceException e) {
       logger.error(e.getMessage(), e);

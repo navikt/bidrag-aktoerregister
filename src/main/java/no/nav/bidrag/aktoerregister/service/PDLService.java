@@ -9,5 +9,5 @@ import no.nav.bidrag.aktoerregister.exception.PDLServiceException;
 public interface PDLService {
     AktoerDTO hentAktoer(String id);
 
-    JsonNode hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException;
+    PersonDTO hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException;
 }

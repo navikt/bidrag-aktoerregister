@@ -1,11 +1,12 @@
 package no.nav.bidrag.aktoerregister.domene;
 
+import java.util.List;
 import lombok.Data;
 
 @Data
 public class PersonDTO {
-  private BostedadresseDTO bostedaddresse;
-  private UtenlandskAdresseDTO utenlandskAdresse;
+  private List<BostedadresseDTO> bostedaddresse;
+  private List<UtenlandskAdresseDTO> utenlandskAdresse;
 
   @Data
   public class BostedadresseDTO {
