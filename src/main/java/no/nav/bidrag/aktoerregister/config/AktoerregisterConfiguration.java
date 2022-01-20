@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableJwtTokenValidation(ignore = {"org.springframework","org.springdoc"})
 public class AktoerregisterConfiguration {
 
-  private final static Logger logger = LoggerFactory.getLogger(AktoerregisterConfiguration.class)
+  private final static Logger logger = LoggerFactory.getLogger(AktoerregisterConfiguration.class);
 
   @Bean("base")
   public HttpHeaderRestTemplate baseRestTemplate() {
