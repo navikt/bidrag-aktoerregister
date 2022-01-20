@@ -16,7 +16,7 @@ query($ident: ID!) {
                 bySted,
                 regionDistriktOmraade,
                 landkode
-            },
+            }
         }
     }
 }

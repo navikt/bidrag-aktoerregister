@@ -1,5 +1,9 @@
 PDL_URL: https://pdl-api.dev-fss-pub.nais.io
 
+server:
+  error:
+    include-message: always
+
 mq:
   applicationName: ${MQ_APPLICATION_NAME}
   channel: ${MQ_CHANNEL}
