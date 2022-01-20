@@ -1,5 +1,6 @@
 package no.nav.bidrag.aktoerregister.service.graphql;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import lombok.Data;
 import no.nav.bidrag.aktoerregister.domene.PersonDTO;
@@ -47,6 +48,7 @@ public class GraphQLResponse {
       this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
       return value;
     }
