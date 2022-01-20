@@ -29,7 +29,7 @@ public class PDLServiceException extends Exception {
 
   @Override
   public String getMessage() {
-    return message;
+    return this.message;
   }
 
   private String buildErrorMessage(Error error) {

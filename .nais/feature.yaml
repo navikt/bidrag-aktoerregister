@@ -5,11 +5,11 @@ ingresses:
   - https://bidrag-aktoerregister-feature.dev.intern.nav.no
 
 azure:
-  pdl_url: pdl-api.dev-fss-pub.nais.io/graphql
+  pdl_url: pdl-api.dev-fss-pub.nais.io
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: dev
   - name: PDLAPI_SCOPE
     value: dev-fss.pdl.pdl-api
   - name: PDL_URL
-    value: https://pdl-api.dev-fss-pub.nais.io/graphql
+    value: https://pdl-api.dev-fss-pub.nais.io
