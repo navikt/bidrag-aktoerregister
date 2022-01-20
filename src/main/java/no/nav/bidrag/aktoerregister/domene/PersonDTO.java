@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 public class PersonDTO {
-  private List<BostedadresseDTO> bostedaddresse;
+  private List<BostedsadresseDTO> bostedsadresse;
   private List<UtenlandskAdresseDTO> utenlandskAdresse;
 
   @Data
-  public class BostedadresseDTO {
+  public class BostedsadresseDTO {
     private String adressenavn;
     private String husnummer;
     private String husbokstav;
