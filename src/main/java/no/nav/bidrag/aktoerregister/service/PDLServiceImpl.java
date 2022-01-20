@@ -2,6 +2,8 @@ package no.nav.bidrag.aktoerregister.service;
 
 import static no.nav.bidrag.aktoerregister.service.graphql.GraphQLQueryCreator.HENT_PERSON_QUERY;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.core.util.Json;
 import java.util.Map;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.PersonDTO;
@@ -35,7 +37,7 @@ public class PDLServiceImpl implements PDLService {
   }
 
   @Override
-  public PersonDTO hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException {
+  public JsonNode hentRawAktoer(String id) throws PDLServiceException, AktoerNotFoundException {
     GraphQLQuery graphQLQuery = GraphQLQueryCreator.create(HENT_PERSON_QUERY, Map.of("ident", id));
     logger.info("Query: "  + graphQLQuery.getQuery());
     GraphQLResponse graphQLResponse = null;
@@ -53,7 +55,7 @@ public class PDLServiceImpl implements PDLService {
     return validateResponse(graphQLResponse);
   }
 
-  private PersonDTO validateResponse(GraphQLResponse graphQLResponse) throws PDLServiceException, AktoerNotFoundException {
+  private JsonNode validateResponse(GraphQLResponse graphQLResponse) throws PDLServiceException, AktoerNotFoundException {
     logger.info("Validating response: " + graphQLResponse);
     if (graphQLResponse == null) {
       throw new PDLServiceException("Response fra PDL er null");

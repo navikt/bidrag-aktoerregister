@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.service.graphql;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import lombok.Data;
 import no.nav.bidrag.aktoerregister.domene.PersonDTO;
@@ -12,7 +13,7 @@ public class GraphQLResponse {
 
   @lombok.Data
   public static class Data {
-    private PersonDTO hentPerson;
+    private JsonNode hentPerson;
   }
 
   @lombok.Data

@@ -1,5 +1,6 @@
 package no.nav.bidrag.aktoerregister.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -93,14 +94,14 @@ public class AktoerregisterTestController {
 
   @GetMapping("/pdl/{ident}")
   @Unprotected
-  public ResponseEntity<PersonDTO> hentPDLAktoer(
+  public ResponseEntity<JsonNode> hentPDLAktoer(
       @Parameter(description = "Identen for aktøren som skal hentes. "
           + "For personer vil dette være FNR eller DNR. "
           + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8.") @PathVariable(name = "ident") String ident)
       throws ResponseStatusException {
 
     try {
-      PersonDTO personDTO =  pdlService.hentRawAktoer(ident);
+      JsonNode personDTO =  pdlService.hentRawAktoer(ident);
       return ResponseEntity.ok(personDTO);
     } catch (PDLServiceException e) {
       logger.error(e.getMessage(), e);
