@@ -9,7 +9,7 @@ public class PersonDTO {
   private List<UtenlandskAdresseDTO> utenlandskAdresse;
 
   @Data
-  public class BostedsadresseDTO {
+  public static class BostedsadresseDTO {
     private String adressenavn;
     private String husnummer;
     private String husbokstav;
@@ -17,7 +17,7 @@ public class PersonDTO {
   }
 
   @Data
-  public class UtenlandskAdresseDTO {
+  public static class UtenlandskAdresseDTO {
     private String adressenavnNummer;
     private String bygningEtasjeLeilighet;
     private String postboksNummerNavn;
