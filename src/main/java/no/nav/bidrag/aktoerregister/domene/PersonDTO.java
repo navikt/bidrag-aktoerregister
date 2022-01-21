@@ -10,6 +10,12 @@ public class PersonDTO {
 
   @Data
   public static class BostedsadresseDTO {
+    private String coAdressenavn;
+    private VegadresseDTO vegadresse;
+  }
+
+  @Data
+  public static class VegadresseDTO {
     private String adressenavn;
     private String husnummer;
     private String husbokstav;
