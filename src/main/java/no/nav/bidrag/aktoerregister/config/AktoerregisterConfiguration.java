@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.config;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+import java.util.Arrays;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.SecurityTokenService;
 import no.nav.bidrag.commons.web.CorrelationIdFilter;
@@ -25,7 +26,10 @@ public class AktoerregisterConfiguration {
   @Bean("base")
   public HttpHeaderRestTemplate baseRestTemplate() {
     HttpHeaderRestTemplate restTemplate = new HttpHeaderRestTemplate();
-    restTemplate.addHeaderGenerator(CorrelationIdFilter.CORRELATION_ID_HEADER, CorrelationIdFilter::fetchCorrelationIdForThread);
+    restTemplate.addHeaderGenerator(CorrelationIdFilter.CORRELATION_ID_HEADER, () -> {
+      var correlationID = CorrelationIdFilter.fetchCorrelationIdForThread();
+      return Arrays.stream(correlationID.split("/")).findFirst().orElse(correlationID);
+    });
     return restTemplate;
   }
 
