@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.nimbusds.jose.JOSEObjectType;
 import java.util.Collections;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
@@ -107,6 +108,7 @@ public class AktoerregisterControllerTest {
         new DefaultOAuth2TokenCallback(
             issuerId,
             subject,
+            JOSEObjectType.JWT.getType(),
             Collections.emptyList(),
             Collections.singletonMap("scope", scope),
             3600
