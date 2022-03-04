@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.repository;
 
 import java.util.Comparator;
+import java.util.List;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
@@ -15,6 +16,14 @@ public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
       insertHendelse(hendelse);
     }
     return aktoer;
+  }
+
+  @Override
+  public List<Aktoer> insertOrUpdateAktoerer(List<Aktoer> aktoerList) {
+    for(Aktoer aktoer : aktoerList) {
+      insertOrUpdateAktoer(aktoer);
+    }
+    return aktoerList;
   }
 
   @Override

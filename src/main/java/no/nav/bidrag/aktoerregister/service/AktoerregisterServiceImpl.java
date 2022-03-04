@@ -101,6 +101,13 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     aktoerRepository.insertOrUpdateAktoer(existingAktoer);
   }
 
+  @Transactional
+  @Override
+  public void oppdaterAktoerer(List<Aktoer> updatedAktoerList) {
+    logger.info("Oppdaterer {} aktoerer", updatedAktoerList.size());
+    aktoerRepository.insertOrUpdateAktoerer(updatedAktoerList);
+  }
+
   @Override
   public void slettAktoer(String aktoerId) {
     logger.info("Sletter aktoer {}", aktoerId);

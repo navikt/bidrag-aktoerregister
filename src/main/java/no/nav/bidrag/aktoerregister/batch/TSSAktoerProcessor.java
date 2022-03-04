@@ -34,13 +34,17 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
   @Override
   public TSSAktoerProcessorResult process(Aktoer aktoer) throws MQServiceException, TSSServiceException {
     AktoerIdDTO aktoerIdDTO = new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
-
     try {
       AktoerDTO tssAktoerDTO = tssService.hentAktoer(aktoerIdDTO);
       AktoerDTO dbAktoerDTO = aktoerMapper.toDomain(aktoer);
       if (!tssAktoerDTO.equals(dbAktoerDTO)) {
         logger.info("Aktoer med id {} har blitt oppdatert", aktoerIdDTO.getAktoerId());
-        return new TSSAktoerProcessorResult(aktoerMapper.toPersistence(tssAktoerDTO), AktoerStatus.UPDATED);
+
+        // Oppdaterer eksisterende Aktoer
+        Aktoer updatedAktoer = aktoerMapper.toPersistence(tssAktoerDTO);
+        aktoer.setAdresse(updatedAktoer.getAdresse());
+        aktoer.setKontonummer(updatedAktoer.getKontonummer());
+        return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
       }
     } catch (MQServiceException | TSSServiceException e) {
       logger.error(e.getMessage(), e);
