@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -94,6 +95,27 @@ public class AktoerRepositoryTests {
 
     assertEquals(20, savedAktoerer.size());
     assertEquals(40, savedHendelser.size());
+  }
+
+  @Test
+  public void TestInsertAktoerList() {
+    List<Aktoer> aktoerer = generateAktoerList(20);
+    aktoerRepository.insertOrUpdateAktoerer(aktoerer);
+
+    List<Aktoer> savedAktoerer = aktoerJpaRepository.findAllByAktoerType(IdenttypeDTO.PERSONNUMMER.name(), Pageable.ofSize(100)).stream().toList();
+
+    assertEquals(20, savedAktoerer.size());
+    savedAktoerer.forEach(aktoer -> assertEquals(1, aktoer.getHendelser().size()));
+
+    List<Aktoer> sublist = savedAktoerer.subList(0, 10);
+
+    aktoerRepository.insertOrUpdateAktoerer(sublist);
+
+    savedAktoerer = aktoerJpaRepository.findAllByAktoerType(IdenttypeDTO.PERSONNUMMER.name(), Pageable.ofSize(100)).stream().toList();
+    assertEquals(20, savedAktoerer.size());
+
+    List<Aktoer> savedUpdatedAktoerer = savedAktoerer.stream().filter(aktoer -> sublist.stream().filter(aktoer1 -> aktoer1.getAktoerId().equals(aktoer.getAktoerId())).findAny().orElse(null) != null).toList();
+    savedUpdatedAktoerer.forEach(aktoer -> assertEquals(2, aktoer.getHendelser().size()));
   }
 
   private List<Aktoer> generateAktoerList(int numberOfAktoers) {

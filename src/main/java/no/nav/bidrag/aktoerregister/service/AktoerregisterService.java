@@ -20,5 +20,7 @@ public interface AktoerregisterService {
 
   void oppdaterAktoer(Aktoer aktoer);
 
+  void oppdaterAktoerer(List<Aktoer> aktoerer);
+
   void slettAktoer(String aktoerId);
 }

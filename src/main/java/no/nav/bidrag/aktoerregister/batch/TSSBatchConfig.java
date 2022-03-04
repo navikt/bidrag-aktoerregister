@@ -48,7 +48,7 @@ public class TSSBatchConfig {
   @Bean
   public Step createStep() {
     return stepBuilderFactory.get("UpdateTSSAktoererStep")
-        .<Aktoer, TSSAktoerProcessorResult>chunk(1)
+        .<Aktoer, TSSAktoerProcessorResult>chunk(100)
         .reader(tssAktoerReader)
         .processor(tssAktoerProcessor)
         .writer(tssAktoerWriter)

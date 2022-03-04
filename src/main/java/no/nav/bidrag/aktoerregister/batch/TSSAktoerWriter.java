@@ -19,12 +19,12 @@ public class TSSAktoerWriter implements ItemWriter<TSSAktoerProcessorResult> {
 
   @Override
   public void write(List<? extends TSSAktoerProcessorResult> list) {
-    for (TSSAktoerProcessorResult tssAktoerProcessorResult : list) {
-      Aktoer updatedAktoer = tssAktoerProcessorResult.getAktoer();
-      if (tssAktoerProcessorResult.getAktoerStatus() == AktoerStatus.UPDATED) {
-        aktoerregisterService.oppdaterAktoer(updatedAktoer);
-      }
-      //TODO: We might need to delete from db if id not found in TSS.
+    List<Aktoer> updatedAktoerList = list.stream()
+        .filter(tssAktoerProcessorResult -> tssAktoerProcessorResult.getAktoerStatus().equals(AktoerStatus.UPDATED)).map(
+            TSSAktoerProcessorResult::getAktoer).toList();
+    if (!updatedAktoerList.isEmpty()) {
+      aktoerregisterService.oppdaterAktoerer(updatedAktoerList);
     }
+    //TODO: We might need to delete from db if id not found in TSS.
   }
 }
