@@ -22,8 +22,10 @@ spec:
     failureThreshold: 5
   readiness:
     path: /actuator/health
-    initialDelay: 20
-    timeout: 2
+    initialDelay: 120
+    timeout: 10
+    periodSeconds: 30
+    failureThreshold: 5
   resources:
     limits:
       cpu: 1000m
