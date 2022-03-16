@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
 
@@ -16,5 +17,16 @@ public record HendelseRepositoryMock(MockDB mockDB) implements HendelseRepositor
         .collect(Collectors.groupingBy(hendelse -> hendelse.getAktoer().getAktoerId()));
     return hendelseHashMap.values().stream().map(hendelses -> hendelses.stream().max(Comparator.comparingInt(Hendelse::getSekvensnummer)).orElse(null)
     ).toList();
+  }
+
+  @Override
+  public void insertHendelser(List<Aktoer> updatedAktoerer) {
+    List<Hendelse> hendelser = updatedAktoerer.stream().map(Hendelse::new).toList();
+    int max = mockDB.hendelseMap.keySet().stream().max(Integer::compareTo).orElse(0);
+    for(Hendelse hendelse : hendelser) {
+      max++;
+      hendelse.setSekvensnummer(max);
+      mockDB.hendelseMap.put(max, hendelse);
+    }
   }
 }

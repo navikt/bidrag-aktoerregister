@@ -106,6 +106,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   public void oppdaterAktoerer(List<Aktoer> updatedAktoerList) {
     logger.info("Oppdaterer {} aktoerer", updatedAktoerList.size());
     aktoerRepository.insertOrUpdateAktoerer(updatedAktoerList);
+    hendelseRepository.insertHendelser(updatedAktoerList);
   }
 
   @Override

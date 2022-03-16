@@ -31,6 +31,10 @@ public class Hendelse {
   public Hendelse() {
   }
 
+  public Hendelse(Aktoer aktoer) {
+    this.aktoer = aktoer;
+  }
+
   public Hendelse(int sekvensnummer, Aktoer aktoer) {
     this.sekvensnummer = sekvensnummer;
     this.aktoer = aktoer;

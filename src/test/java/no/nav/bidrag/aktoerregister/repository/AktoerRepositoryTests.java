@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
@@ -101,21 +105,45 @@ public class AktoerRepositoryTests {
   public void TestInsertAktoerList() {
     List<Aktoer> aktoerer = generateAktoerList(20);
     aktoerRepository.insertOrUpdateAktoerer(aktoerer);
+    hendelseRepository.insertHendelser(aktoerer);
 
     List<Aktoer> savedAktoerer = aktoerJpaRepository.findAllByAktoerType(IdenttypeDTO.PERSONNUMMER.name(), Pageable.ofSize(100)).stream().toList();
+    List<Hendelse> savedHendelser = hendelseJpaRepository.findAll();
 
     assertEquals(20, savedAktoerer.size());
-    savedAktoerer.forEach(aktoer -> assertEquals(1, aktoer.getHendelser().size()));
+    assertEquals(20, savedHendelser.size());
+//    savedAktoerer.forEach(aktoer -> assertEquals(1, aktoer.getHendelser().size()));
 
     List<Aktoer> sublist = savedAktoerer.subList(0, 10);
 
     aktoerRepository.insertOrUpdateAktoerer(sublist);
+    hendelseRepository.insertHendelser(sublist);
 
     savedAktoerer = aktoerJpaRepository.findAllByAktoerType(IdenttypeDTO.PERSONNUMMER.name(), Pageable.ofSize(100)).stream().toList();
+    savedHendelser = hendelseJpaRepository.findAll();
     assertEquals(20, savedAktoerer.size());
+    assertEquals(30, savedHendelser.size());
 
-    List<Aktoer> savedUpdatedAktoerer = savedAktoerer.stream().filter(aktoer -> sublist.stream().filter(aktoer1 -> aktoer1.getAktoerId().equals(aktoer.getAktoerId())).findAny().orElse(null) != null).toList();
-    savedUpdatedAktoerer.forEach(aktoer -> assertEquals(2, aktoer.getHendelser().size()));
+    List<String> aktoerIds = sublist.stream().map(Aktoer::getAktoerId).toList();
+
+    List<Hendelse> aktoerHendelser = savedHendelser.stream().filter(hendelse -> aktoerIds.contains(hendelse.getAktoer().getAktoerId())).toList();
+
+    Map<String, List<Hendelse>> hendelseMap = new HashMap<>();
+    for(Hendelse hendelse : aktoerHendelser) {
+      if (!hendelseMap.containsKey(hendelse.getAktoer().getAktoerId())) {
+        hendelseMap.put(hendelse.getAktoer().getAktoerId(), new ArrayList<>());
+      }
+      List<Hendelse> hendelser = hendelseMap.get(hendelse.getAktoer().getAktoerId());
+      hendelser.add(hendelse);
+      hendelseMap.put(hendelse.getAktoer().getAktoerId(), hendelser);
+    }
+
+    sublist.forEach(aktoer -> {
+      assertEquals(2, hendelseMap.get(aktoer.getAktoerId()).size());
+    });
+
+//    List<Aktoer> savedUpdatedAktoerer = savedAktoerer.stream().filter(aktoer -> sublist.stream().filter(aktoer1 -> aktoer1.getAktoerId().equals(aktoer.getAktoerId())).findAny().orElse(null) != null).toList();
+//    savedUpdatedAktoerer.forEach(aktoer -> assertEquals(2, aktoer.getHendelser().size()));
   }
 
   private List<Aktoer> generateAktoerList(int numberOfAktoers) {
