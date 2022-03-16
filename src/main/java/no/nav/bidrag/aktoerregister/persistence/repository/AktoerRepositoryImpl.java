@@ -20,13 +20,12 @@ public class AktoerRepositoryImpl implements AktoerRepository {
 
   @Override
   public Aktoer insertOrUpdateAktoer(Aktoer aktoer) {
-    aktoer.addHendelse(createHendelse(aktoer));
+    aktoer.addHendelse(new Hendelse(aktoer));
     return aktoerJpaRepository.save(aktoer);
   }
 
   @Override
   public List<Aktoer> insertOrUpdateAktoerer(List<Aktoer> aktoerList) {
-    aktoerList.forEach(aktoer -> aktoer.addHendelse(createHendelse(aktoer)));
     return aktoerJpaRepository.saveAll(aktoerList);
   }
 
@@ -38,11 +37,5 @@ public class AktoerRepositoryImpl implements AktoerRepository {
   @Override
   public void deleteAktoer(String aktoerId) {
     aktoerJpaRepository.deleteById(aktoerId);
-  }
-
-  private Hendelse createHendelse(Aktoer aktoer) {
-    Hendelse hendelse = new Hendelse();
-    hendelse.setAktoer(aktoer);
-    return hendelse;
   }
 }
