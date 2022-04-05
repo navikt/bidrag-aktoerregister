@@ -1,6 +1,6 @@
 name: bidrag-aktoerregister-feature
 dbinstancename: bidrag-aktoerregister-feature
-dbname: bidrag-aktoerregister-db
+dbname: bidrag-aktoerregister-feature
 ingresses:
   - https://bidrag-aktoerregister-feature.dev.intern.nav.no
 env:
