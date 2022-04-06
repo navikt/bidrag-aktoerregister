@@ -5,6 +5,8 @@
 * DEV-Ekstern: https://bidrag-aktoerregister.ekstern.dev.nav.no/.
 * PROD: https://bidrag-aktoerregister.nav.no/. Applikasjonen kjører, men ingen har foreløpig tilgang til den da dette må konfigureres manuelt av `#tech-sikkerhet`.
 
+
+
 Applikasjonen har ansvar for å holde oversikt over endringer i navn, adresse og kontonummer for aktører involvert i bidragssaker. Utover personer kan slike aktører være blant annet kommuner, institusjoner, spesifike avdelinger innenfor en oranisasjon, utlandske myndigheter eller sperrede bankkontoer.
 
 For personer er det kun opplysninger om kontonummer som følges opp, men for de andre typene aktører følges også navn og adresse. Informasjonen om aktørene kan hentes ved kall med identtype og ident.
