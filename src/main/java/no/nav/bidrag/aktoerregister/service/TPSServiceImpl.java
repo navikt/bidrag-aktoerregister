@@ -69,12 +69,12 @@ public class TPSServiceImpl implements TPSService {
 
       AktoerDTO aktoer = new AktoerDTO(aktoerId);
       KontonummerDTO kontonummer = new KontonummerDTO();
-      kontonummer.setNorskKontonr(giroInfoNorsk.getGiroNummer());
-      kontonummer.setIban(giroInfoUtlandsk.getGiroNrUtland());
-      kontonummer.setSwift(giroInfoUtlandsk.getSwiftKodeUtland());
-      kontonummer.setValutaKode(giroInfoUtlandsk.getBankValuta());
-      kontonummer.setBankNavn(giroInfoUtlandsk.getBankNavnUtland());
-      kontonummer.setBankLandkode(giroInfoUtlandsk.getBankLandKode());
+      kontonummer.setNorskKontonr(giroInfoNorsk.getGiroNummer().trim());
+      kontonummer.setIban(giroInfoUtlandsk.getGiroNrUtland().trim());
+      kontonummer.setSwift(giroInfoUtlandsk.getSwiftKodeUtland().trim());
+      kontonummer.setValutaKode(giroInfoUtlandsk.getBankValuta().trim());
+      kontonummer.setBankNavn(giroInfoUtlandsk.getBankNavnUtland().trim());
+      kontonummer.setBankLandkode(giroInfoUtlandsk.getBankLandKode().trim());
       aktoer.setKontonummer(kontonummer);
       return aktoer;
     }
