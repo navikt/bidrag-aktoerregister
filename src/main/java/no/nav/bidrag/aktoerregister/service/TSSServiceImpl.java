@@ -103,18 +103,18 @@ public class TSSServiceImpl implements TSSService {
       if (Integer.parseInt(typeSamhAdr.getAntAdresse()) > 0) {
         AdresseSamhType adresseSamhType = typeSamhAdr.getAdresseSamh().get(0);
         AdresseDTO adresse = new AdresseDTO();
-        adresse.setLand(adresseSamhType.getKodeLand());
-        adresse.setPoststed(adresseSamhType.getPoststed());
-        adresse.setPostnr(adresseSamhType.getPostNr());
+        adresse.setLand(adresseSamhType.getKodeLand().trim());
+        adresse.setPoststed(adresseSamhType.getPoststed().trim());
+        adresse.setPostnr(adresseSamhType.getPostNr().trim());
         List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
         if (adresselinjer.size() >= 1) {
-          adresse.setAdresselinje1(adresselinjer.get(0));
+          adresse.setAdresselinje1(adresselinjer.get(0).trim());
         }
         if(adresselinjer.size() >= 2) {
-          adresse.setAdresselinje2(adresselinjer.get(1));
+          adresse.setAdresselinje2(adresselinjer.get(1).trim());
         }
         if(adresselinjer.size() >= 3) {
-          adresse.setAdresselinje3(adresselinjer.get(2));
+          adresse.setAdresselinje3(adresselinjer.get(2).trim());
         }
         return adresse;
       }
@@ -129,12 +129,12 @@ public class TSSServiceImpl implements TSSService {
       if (Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
         KontoType kontoType = typeSamhKonto.getKonto().get(0);
         KontonummerDTO kontonummer = new KontonummerDTO();
-        kontonummer.setBankLandkode(kontoType.getKodeLand());
-        kontonummer.setBankNavn(kontoType.getBankNavn());
-        kontonummer.setNorskKontonr(kontoType.getGironrInnland());
-        kontonummer.setSwift(kontoType.getSwiftKode());
-        kontonummer.setValutaKode(kontoType.getKodeValuta());
-        kontonummer.setIban(kontoType.getGironrUtland());
+        kontonummer.setBankLandkode(kontoType.getKodeLand().trim());
+        kontonummer.setBankNavn(kontoType.getBankNavn().trim());
+        kontonummer.setNorskKontonr(kontoType.getGironrInnland().trim());
+        kontonummer.setSwift(kontoType.getSwiftKode().trim());
+        kontonummer.setValutaKode(kontoType.getKodeValuta().trim());
+        kontonummer.setIban(kontoType.getGironrUtland().trim());
         return kontonummer;
       }
     }
