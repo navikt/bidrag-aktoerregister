@@ -117,4 +117,4 @@ Nå kan man kjøre opp applikasjonen med spring profilen `local`. Applikasjonen 
 
 ## Kjøring av tester
 
-Noen av testene benytter `testcontainers` som krever at Docker kjører på maskina. 
+Noen av testene benytter `testcontainers` som krever at Docker kjører på maskina.
