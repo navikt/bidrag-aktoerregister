@@ -54,7 +54,8 @@ public class JMSConfiguration {
     factory.setSessionTransacted(true);
     factory.setErrorHandler(new TPSConsumerErrorHandler());
     factory.setExceptionListener(new TPSExceptionListener());
-    ExponentialBackOff exponentialBackOff = new ExponentialBackOff(mqProperties.getBackOffInitialInterval(), mqProperties.getBackOffIntervalMultiplier());
+    ExponentialBackOff exponentialBackOff = new ExponentialBackOff();
+    exponentialBackOff.setInitialInterval(mqProperties.getBackOffInitialInterval());
     exponentialBackOff.setMaxInterval(mqProperties.getBackOffMaxInterval());
     factory.setBackOff(exponentialBackOff);
     configurer.configure(factory, connectionFactory);

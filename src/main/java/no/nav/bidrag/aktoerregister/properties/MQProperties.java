@@ -21,6 +21,5 @@ public class MQProperties {
   private int timeout;
   private String applicationName;
   private long backOffInitialInterval;
-  private double backOffIntervalMultiplier;
   private long backOffMaxInterval;
 }
