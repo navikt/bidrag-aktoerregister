@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.ExponentialBackOff;
+import org.springframework.util.backoff.FixedBackOff;
 
 @Configuration
 @EnableJms
@@ -30,7 +33,6 @@ public class JMSConfiguration {
   public ConnectionFactory connectionFactory() throws JMSException {
     JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
     JmsConnectionFactory cf = ff.createConnectionFactory();
-
     // Set the properties
     cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, mqProperties.getHost());
     cf.setIntProperty(WMQConstants.WMQ_PORT, mqProperties.getPort());
@@ -51,6 +53,11 @@ public class JMSConfiguration {
     factory.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
     factory.setSessionTransacted(true);
     factory.setErrorHandler(new TPSConsumerErrorHandler());
+    factory.setExceptionListener(new TPSExceptionListener());
+    ExponentialBackOff exponentialBackOff = new ExponentialBackOff();
+    exponentialBackOff.setInitialInterval(mqProperties.getBackOffInitialInterval());
+    exponentialBackOff.setMaxInterval(mqProperties.getBackOffMaxInterval());
+    factory.setBackOff(exponentialBackOff);
     configurer.configure(factory, connectionFactory);
     return factory;
   }

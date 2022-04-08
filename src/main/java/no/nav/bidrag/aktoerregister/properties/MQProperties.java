@@ -20,4 +20,6 @@ public class MQProperties {
   private String tpsEventQueue;
   private int timeout;
   private String applicationName;
+  private long backOffInitialInterval;
+  private long backOffMaxInterval;
 }
