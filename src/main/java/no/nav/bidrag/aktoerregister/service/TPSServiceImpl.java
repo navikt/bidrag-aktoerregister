@@ -16,8 +16,6 @@ import no.rtv.namespacetps.TgiroNrUtland;
 import no.rtv.namespacetps.TgiroNummer;
 import no.rtv.namespacetps.TpsPersonData;
 import no.rtv.namespacetps.TpsPersonData.TpsServiceRutine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +25,6 @@ public class TPSServiceImpl implements TPSService {
   private final MQService mqService;
 
   private final MQProperties mqProperties;
-
-  private static final Logger logger = LoggerFactory.getLogger(TPSService.class);
 
   @Autowired
   public TPSServiceImpl(MQService mqService, MQProperties mqProperties) {
@@ -40,7 +36,6 @@ public class TPSServiceImpl implements TPSService {
   public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, AktoerNotFoundException, TPSServiceException {
     TpsPersonData request = createTpsPersonDataRequest(aktoerId);
 
-    logger.info("Henter aktoer {} fra TPS.", aktoerId.getAktoerId());
     TpsPersonData response = mqService.performRequestResponse(mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
 
     validateResponse(response, aktoerId.getAktoerId());
