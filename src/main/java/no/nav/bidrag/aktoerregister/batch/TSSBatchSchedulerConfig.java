@@ -31,7 +31,7 @@ public class TSSBatchSchedulerConfig {
   }
 
   @Scheduled(cron = "0 0/30 * * * *")
-  @SchedulerLock(name = "TSSAktoerUpdatesJob", lockAtMostFor = "30s", lockAtLeastFor = "30s")
+  @SchedulerLock(name = TSSBatchConfig.TSS_AKTOER_UPDATES_JOB, lockAtMostFor = "30s", lockAtLeastFor = "30s")
   public void scheduleTSSBatch()
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

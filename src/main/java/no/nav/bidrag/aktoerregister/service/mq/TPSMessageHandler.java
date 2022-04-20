@@ -7,15 +7,11 @@ import no.rtv.namespacetps.DistribusjonsMelding;
 import no.rtv.namespacetps.TAnnullering;
 import no.rtv.namespacetps.Tgironorsk;
 import no.rtv.namespacetps.Tgiroutl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding> {
-
-  private static final Logger logger = LoggerFactory.getLogger(TPSMessageHandler.class);
 
   private final AktoerregisterService aktoerregisterService;
 
@@ -42,7 +38,6 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
         kontonummer.setNorskKontonr(giroNrNorge.getGiroNr());
         aktoer.setKontonummer(kontonummer);
         aktoerregisterService.oppdaterAktoer(aktoer);
-        logger.info("Norsk kontonummer er oppdatert for aktoer {}", fnr);
       }
     }
     else if (giroNrUtland != null) {
@@ -57,7 +52,6 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
         kontonummer.setBankLandkode(giroNrUtland.getLandKode());
         aktoer.setKontonummer(kontonummer);
         aktoerregisterService.oppdaterAktoer(aktoer);
-        logger.info("Utenlandsk kontonummer er oppdatert for aktoer {}", fnr);
       }
     }
     else if (annulertKontonummer != null) {
@@ -66,16 +60,11 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
       if (aktoer != null) {
         aktoer.setKontonummer(null);
         aktoerregisterService.oppdaterAktoer(aktoer);
-        logger.info("Kontonummer er annulert for aktoer: {}", fnr);
       }
     }
   }
 
   private Aktoer hentExistingAktoer(String fnr) {
-    Aktoer aktoer = aktoerregisterService.hentAktoerFromDB(fnr);
-    if (aktoer != null) {
-      logger.info("Mottatt distribusjonsmelding gjelder lagret aktoer {}", fnr);
-    }
-    return aktoer;
+    return aktoerregisterService.hentAktoerFromDB(fnr);
   }
 }

@@ -28,6 +28,11 @@ public class TSSBatchConfig {
 
   private final TSSAktoerProcessor tssAktoerProcessor;
 
+  public static final String NR_UPDATED = "NR_UPDATED";
+  public static final String NR_TOTAL = "NR_TOTAL";
+  public static final String TSS_AKTOER_UPDATES_JOB = "TSS_AKTOER_UPDATES_JOB";
+  public static final String TSS_UPDATE_AKTOERER_STEP = "TSS_UPDATE_AKTOERER_STEP";
+
   @Autowired
   public TSSBatchConfig(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, TSSAktoerReader tssAktoerReader,
       TSSAktoerWriter tssAktoerWriter, TSSAktoerProcessor tssAktoerProcessor) {
@@ -40,15 +45,17 @@ public class TSSBatchConfig {
 
   @Bean
   public Job createJob() {
-    return jobBuilderFactory.get("TSSAktoerUpdatesJob")
+    return jobBuilderFactory.get(TSS_AKTOER_UPDATES_JOB)
+        .listener(new TSSJobListener())
         .incrementer(new RunIdIncrementer())
         .flow(createStep()).end().build();
   }
 
   @Bean
   public Step createStep() {
-    return stepBuilderFactory.get("UpdateTSSAktoererStep")
+    return stepBuilderFactory.get(TSS_UPDATE_AKTOERER_STEP)
         .<Aktoer, TSSAktoerProcessorResult>chunk(100)
+        .listener(new TSSStepListener())
         .reader(tssAktoerReader)
         .processor(tssAktoerProcessor)
         .writer(tssAktoerWriter)

@@ -24,8 +24,6 @@ import no.rtv.namespacetss.TssSamhandlerData.TssInputData;
 import no.rtv.namespacetss.TypeOD910;
 import no.rtv.namespacetss.TypeSamhAdr;
 import no.rtv.namespacetss.TypeSamhKonto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +33,6 @@ public class TSSServiceImpl implements TSSService {
   private final MQService mqService;
 
   private final MQProperties mqProperties;
-
-  private static final Logger logger = LoggerFactory.getLogger(TSSService.class);
 
   @Autowired
   public TSSServiceImpl(MQService mqService, MQProperties mqProperties) {
@@ -48,7 +44,6 @@ public class TSSServiceImpl implements TSSService {
   public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) throws MQServiceException, AktoerNotFoundException, TSSServiceException {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
 
-    logger.info("Henter aktoer {} fra TSS.", aktoerId.getAktoerId());
     TssSamhandlerData response = mqService.performRequestResponse(mqProperties.getTssRequestQueue(), request, TssSamhandlerData.class, TssSamhandlerData.class);
 
     validateResponse(response, aktoerId.getAktoerId());
