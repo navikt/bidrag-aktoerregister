@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Bidrag Aktørregister", version = "0.2", description = "Inneholder adresse- og kontoinformasjon om aktører i Bidrassaker."))
+@OpenAPIDefinition(info = @Info(title = "Bidrag Aktørregister", version = "0.4", description = "Inneholder adresse- og kontoinformasjon om aktører i Bidrassaker."))
 @EnableConfigurationProperties()
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
 public class AktoerregisterApplication {

@@ -30,7 +30,7 @@ public class AdresseDTO {
     @Schema(description = "Poststed dersom dette er tilgjengelig som strukturerte data.")
 	private String poststed;
     
-    @Schema(description = "Land. TODO: Bestemme representasjon av land. 3-sifret land-kode?")
+    @Schema(description = "Land som 3-bokstavs land-kode.")
 	private String land;
 
     public String getNavn() {

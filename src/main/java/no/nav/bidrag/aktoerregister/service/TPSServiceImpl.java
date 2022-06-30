@@ -70,6 +70,7 @@ public class TPSServiceImpl implements TPSService {
       kontonummer.setValutaKode(giroInfoUtlandsk.getBankValuta().trim());
       kontonummer.setBankNavn(giroInfoUtlandsk.getBankNavnUtland().trim());
       kontonummer.setBankLandkode(giroInfoUtlandsk.getBankLandKode().trim());
+      kontonummer.setBankCode(giroInfoUtlandsk.getBankKodeUtland().trim());
       aktoer.setKontonummer(kontonummer);
       return aktoer;
     }

@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,6 +58,29 @@ public class AktoerregisterController {
 
     try {
       AktoerDTO aktoer = aktoerregisterService.hentAktoer(new AktoerIdDTO(ident, identtype));
+      return ResponseEntity.ok(aktoer);
+    } catch (AktoerNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e);
+    } catch (MQServiceException | TSSServiceException | TPSServiceException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem med oppkobling mot MQ. Prøv igjen senere.", e);
+    }
+  }
+
+  @Operation(summary = "Hent informasjon om gitt aktør.",
+  description = "For personer returneres kun kontonummer. "
+          + "For andre typer aktører leveres også navn og adresse.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Aktøren ble funnet."),
+    @ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = @Content()),
+    @ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content = @Content())
+  })
+  @PostMapping("/aktoer/")
+  public ResponseEntity<AktoerDTO> hentAktoer(
+    @RequestBody AktoerIdDTO request)
+    throws ResponseStatusException {
+
+    try {
+      AktoerDTO aktoer = aktoerregisterService.hentAktoer(request);
       return ResponseEntity.ok(aktoer);
     } catch (AktoerNotFoundException e) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e);

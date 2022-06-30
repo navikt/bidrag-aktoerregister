@@ -26,6 +26,9 @@ public class KontonummerDTO {
     @Schema(description = "Bankens landkode. TODO: Bestemme representasjon av land. 3-sifret land-kode?")
     private String bankLandkode;
     
+    @Schema(description = "BankCode. Format varierer.")
+    private String bankCode;
+
     @Schema(description = "Kontoens valuta.")
     private String valutaKode;
 
@@ -69,6 +72,14 @@ public class KontonummerDTO {
         this.bankLandkode = bankLandkode;
     }
 
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
     public String getValutaKode() {
         return valutaKode;
     }
@@ -92,6 +103,7 @@ public class KontonummerDTO {
             isEqual(this.getBankNavn(), kontonummerDTO.getBankNavn()) &&
             isEqual(this.getSwift(), kontonummerDTO.getSwift()) &&
             isEqual(this.getIban(), kontonummerDTO.getIban()) &&
+            isEqual(this.getBankCode(), kontonummerDTO.getBankCode()) &&
             isEqual(this.getValutaKode(), kontonummerDTO.getValutaKode());
     }
 

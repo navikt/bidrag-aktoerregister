@@ -129,6 +129,7 @@ public class TSSServiceImpl implements TSSService {
         kontonummer.setNorskKontonr(kontoType.getGironrInnland().trim());
         kontonummer.setSwift(kontoType.getSwiftKode().trim());
         kontonummer.setValutaKode(kontoType.getKodeValuta().trim());
+        kontonummer.setBankCode(kontoType.getBankKode().trim());
         kontonummer.setIban(kontoType.getGironrUtland().trim());
         return kontonummer;
       }
