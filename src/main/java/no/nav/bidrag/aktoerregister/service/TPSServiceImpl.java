@@ -95,10 +95,9 @@ public class TPSServiceImpl implements TPSService {
   }
 
   private static String trim(String input) {
-    if (input == null || input.isBlank()) {
-      return null;
-    }
-    return input.trim();
+    return input != null && !input.isBlank()
+      ? input.trim()
+      : null;
   }
 
   private void validateResponse(TpsPersonData tpsPersonData, String aktoerId) throws AktoerNotFoundException, TPSServiceException {

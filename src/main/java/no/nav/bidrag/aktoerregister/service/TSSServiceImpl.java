@@ -77,28 +77,28 @@ public class TSSServiceImpl implements TSSService {
 
   private AktoerDTO mapToAktoer(TssSamhandlerData tssSamhandlerData, AktoerIdDTO aktoerId) {
     TypeOD910 samhandlerODataB910 = tssSamhandlerData.getTssOutputData().getSamhandlerODataB910();
-    if (samhandlerODataB910 != null) {
-      AdresseDTO adresse = mapToAdresse(samhandlerODataB910);
-      KontonummerDTO kontonummer = mapToKontonummer(samhandlerODataB910);
-      // Not storing TSS aktoer if adresse or kontonummer is null
+    if (samhandlerODataB910 != null
+      && samhandlerODataB910.getEnkeltSamhandler() != null
+      && !samhandlerODataB910.getEnkeltSamhandler().isEmpty()) {
+
+      Samhandler samhandler = samhandlerODataB910.getEnkeltSamhandler().get(0);
+
       AktoerDTO aktoer = new AktoerDTO(aktoerId);
-      aktoer.setAdresse(adresse);
-      aktoer.setKontonummer(kontonummer);
+      aktoer.setAdresse(mapToAdresse(samhandler));
+      aktoer.setKontonummer(mapToKontonummer(samhandler));
       return aktoer;
     }
     return null;
   }
 
-  private AdresseDTO mapToAdresse(TypeOD910 samhandlerODataB910) {
-    List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
-    if (samhandlerListe.size() > 0) {
-      TypeSamhAdr typeSamhAdr = samhandlerListe.get(0).getAdresse130();
-      if (Integer.parseInt(typeSamhAdr.getAntAdresse()) > 0) {
-        AdresseSamhType adresseSamhType = typeSamhAdr.getAdresseSamh().get(0);
-        AdresseDTO adresse = new AdresseDTO();
-        adresse.setLand(trim(adresseSamhType.getKodeLand()));
-        adresse.setPoststed(trim(adresseSamhType.getPoststed()));
-        adresse.setPostnr(trim(adresseSamhType.getPostNr()));
+  private AdresseDTO mapToAdresse(Samhandler samhandler) {
+    TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
+    for (AdresseSamhType adresseSamhType : typeSamhAdr.getAdresseSamh()) {
+      AdresseDTO adresse = new AdresseDTO();
+      adresse.setLand(trim(adresseSamhType.getKodeLand()));
+      adresse.setPoststed(trim(adresseSamhType.getPoststed()));
+      adresse.setPostnr(trim(adresseSamhType.getPostNr()));
+      if (adresseSamhType.getAdrLinjeInfo() != null) {
         List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
         if (adresselinjer.size() >= 1) {
           adresse.setAdresselinje1(trim(adresselinjer.get(0)));
@@ -109,34 +109,31 @@ public class TSSServiceImpl implements TSSService {
         if(adresselinjer.size() >= 3) {
           adresse.setAdresselinje3(trim(adresselinjer.get(2)));
         }
-        return adresse;
       }
+      return adresse;
     }
     return null;
   }
 
-  private KontonummerDTO mapToKontonummer(TypeOD910 samhandlerODataB910) {
-    List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
+  private KontonummerDTO mapToKontonummer(Samhandler samhandler) {
     KontonummerDTO kontonummerNorsk = null;
     KontonummerDTO kontonummerUtlandsk = null;
-    if (samhandlerListe.size() > 0) {
-      TypeSamhKonto typeSamhKonto = samhandlerListe.get(0).getKonto140();
-      if (typeSamhKonto != null && Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
-        for (KontoType kontoType : typeSamhKonto.getKonto()) {
-          KontonummerDTO kontonummer = new KontonummerDTO();
-          kontonummer.setBankLandkode(trim(kontoType.getKodeLand()));
-          kontonummer.setBankNavn(trim(kontoType.getBankNavn()));
-          kontonummer.setNorskKontonr(trim(kontoType.getGironrInnland()));
-          kontonummer.setSwift(trim(kontoType.getSwiftKode()));
-          kontonummer.setValutaKode(trim(kontoType.getKodeValuta()));
-          kontonummer.setBankCode(trim(kontoType.getBankKode()));
-          kontonummer.setIban(trim(kontoType.getGironrUtland()));
-          if (kontonummer.getNorskKontonr() != null) {
-            kontonummerNorsk = kontonummer;
-          }
-          if (kontonummer.getIban() != null) {
-            kontonummerUtlandsk = kontonummer;
-          }
+    TypeSamhKonto typeSamhKonto = samhandler.getKonto140();
+    if (typeSamhKonto != null) {
+      for (KontoType kontoType : typeSamhKonto.getKonto()) {
+        KontonummerDTO kontonummer = new KontonummerDTO();
+        kontonummer.setBankLandkode(trim(kontoType.getKodeLand()));
+        kontonummer.setBankNavn(trim(kontoType.getBankNavn()));
+        kontonummer.setNorskKontonr(trim(kontoType.getGironrInnland()));
+        kontonummer.setSwift(trim(kontoType.getSwiftKode()));
+        kontonummer.setValutaKode(trim(kontoType.getKodeValuta()));
+        kontonummer.setBankCode(trim(kontoType.getBankKode()));
+        kontonummer.setIban(trim(kontoType.getGironrUtland()));
+        if (kontonummer.getNorskKontonr() != null) {
+          kontonummerNorsk = kontonummer;
+        }
+        if (kontonummer.getIban() != null) {
+          kontonummerUtlandsk = kontonummer;
         }
       }
     }
