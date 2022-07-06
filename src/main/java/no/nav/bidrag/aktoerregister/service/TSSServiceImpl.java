@@ -136,7 +136,7 @@ public class TSSServiceImpl implements TSSService {
   }
 
   private static String trim(String input) {
-    return input != null
+    return input != null && !input.isBlank()
       ? input.trim()
       : null;
   }

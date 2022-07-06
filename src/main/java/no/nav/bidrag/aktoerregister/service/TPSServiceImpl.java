@@ -59,34 +59,46 @@ public class TPSServiceImpl implements TPSService {
   private AktoerDTO mapToAktoer(TpsPersonData tpsPersonData, AktoerIdDTO aktoerId) {
     PersondataFraTpsS102 persondataFraTpsS102 = tpsPersonData.getTpsSvar().getPersonDataS102();
     if (persondataFraTpsS102 != null) {
-      TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
-      TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
 
       AktoerDTO aktoer = new AktoerDTO(aktoerId);
-      if (giroInfoNorsk != null || giroInfoUtlandsk != null) {
-        KontonummerDTO kontonummer = new KontonummerDTO();
-        if (giroInfoNorsk != null) {
-          kontonummer.setNorskKontonr(trim(giroInfoNorsk.getGiroNummer()));
-        }
-        if (giroInfoUtlandsk != null) {
-          kontonummer.setIban(trim(giroInfoUtlandsk.getGiroNrUtland()));
-          kontonummer.setSwift(trim(giroInfoUtlandsk.getSwiftKodeUtland()));
-          kontonummer.setValutaKode(trim(giroInfoUtlandsk.getBankValuta()));
-          kontonummer.setBankNavn(trim(giroInfoUtlandsk.getBankNavnUtland()));
-          kontonummer.setBankLandkode(trim(giroInfoUtlandsk.getBankLandKode()));
-          kontonummer.setBankCode(trim(giroInfoUtlandsk.getBankKodeUtland()));
-        }
-        aktoer.setKontonummer(kontonummer);
-      }
+      aktoer.setKontonummer(mapToKontonummer(persondataFraTpsS102));
       return aktoer;
     }
     return null;
   }
 
+  private KontonummerDTO mapToKontonummer(PersondataFraTpsS102 persondataFraTpsS102) {
+    TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
+    TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
+
+    if (giroInfoNorsk != null
+    && giroInfoNorsk.getGiroNummer() != null
+    && !giroInfoNorsk.getGiroNummer().isBlank()) {
+      KontonummerDTO kontonummer = new KontonummerDTO();
+      kontonummer.setNorskKontonr(trim(giroInfoNorsk.getGiroNummer()));
+      return kontonummer;
+    }
+    if (giroInfoUtlandsk != null
+      && giroInfoUtlandsk.getGiroNrUtland() != null
+      && !giroInfoUtlandsk.getGiroNrUtland().isBlank()) {
+      KontonummerDTO kontonummer = new KontonummerDTO();
+      kontonummer.setIban(trim(giroInfoUtlandsk.getGiroNrUtland()));
+      kontonummer.setSwift(trim(giroInfoUtlandsk.getSwiftKodeUtland()));
+      kontonummer.setValutaKode(trim(giroInfoUtlandsk.getBankValuta()));
+      kontonummer.setBankNavn(trim(giroInfoUtlandsk.getBankNavnUtland()));
+      kontonummer.setBankLandkode(trim(giroInfoUtlandsk.getBankLandKode()));
+      kontonummer.setBankCode(trim(giroInfoUtlandsk.getBankKodeUtland()));
+      return kontonummer;
+    }
+
+    return null;
+  }
+
   private static String trim(String input) {
-    return input != null
-      ? input.trim()
-      : null;
+    if (input == null || input.isBlank()) {
+      return null;
+    }
+    return input.trim();
   }
 
   private void validateResponse(TpsPersonData tpsPersonData, String aktoerId) throws AktoerNotFoundException, TPSServiceException {
