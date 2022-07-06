@@ -117,22 +117,33 @@ public class TSSServiceImpl implements TSSService {
 
   private KontonummerDTO mapToKontonummer(TypeOD910 samhandlerODataB910) {
     List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
+    KontonummerDTO kontonummerNorsk = null;
+    KontonummerDTO kontonummerUtlandsk = null;
     if (samhandlerListe.size() > 0) {
       TypeSamhKonto typeSamhKonto = samhandlerListe.get(0).getKonto140();
       if (typeSamhKonto != null && Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
-        KontoType kontoType = typeSamhKonto.getKonto().get(0);
-        KontonummerDTO kontonummer = new KontonummerDTO();
-        kontonummer.setBankLandkode(trim(kontoType.getKodeLand()));
-        kontonummer.setBankNavn(trim(kontoType.getBankNavn()));
-        kontonummer.setNorskKontonr(trim(kontoType.getGironrInnland()));
-        kontonummer.setSwift(trim(kontoType.getSwiftKode()));
-        kontonummer.setValutaKode(trim(kontoType.getKodeValuta()));
-        kontonummer.setBankCode(trim(kontoType.getBankKode()));
-        kontonummer.setIban(trim(kontoType.getGironrUtland()));
-        return kontonummer;
+        for (KontoType kontoType : typeSamhKonto.getKonto()) {
+          KontonummerDTO kontonummer = new KontonummerDTO();
+          kontonummer.setBankLandkode(trim(kontoType.getKodeLand()));
+          kontonummer.setBankNavn(trim(kontoType.getBankNavn()));
+          kontonummer.setNorskKontonr(trim(kontoType.getGironrInnland()));
+          kontonummer.setSwift(trim(kontoType.getSwiftKode()));
+          kontonummer.setValutaKode(trim(kontoType.getKodeValuta()));
+          kontonummer.setBankCode(trim(kontoType.getBankKode()));
+          kontonummer.setIban(trim(kontoType.getGironrUtland()));
+          if (kontonummer.getNorskKontonr() != null) {
+            kontonummerNorsk = kontonummer;
+          }
+          if (kontonummer.getIban() != null) {
+            kontonummerUtlandsk = kontonummer;
+          }
+        }
       }
     }
-    return null;
+    if (kontonummerNorsk != null) {
+      return kontonummerNorsk;
+    }
+    return kontonummerUtlandsk;
   }
 
   private static String trim(String input) {
