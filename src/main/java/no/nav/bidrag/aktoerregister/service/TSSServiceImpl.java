@@ -65,7 +65,7 @@ public class TSSServiceImpl implements TSSService {
       samhandlerIDataB910.setOFFid(tidOFF1);
     }
     samhandlerIDataB910.setHistorikk("N");
-    samhandlerIDataB910.setBrukerID("HMB2990");
+    samhandlerIDataB910.setBrukerID("RTV9999");
     servicerutiner.setSamhandlerIDataB910(samhandlerIDataB910);
 
     TssInputData tssInputData = objectFactory.createTssSamhandlerDataTssInputData();
@@ -96,18 +96,18 @@ public class TSSServiceImpl implements TSSService {
       if (Integer.parseInt(typeSamhAdr.getAntAdresse()) > 0) {
         AdresseSamhType adresseSamhType = typeSamhAdr.getAdresseSamh().get(0);
         AdresseDTO adresse = new AdresseDTO();
-        adresse.setLand(adresseSamhType.getKodeLand().trim());
-        adresse.setPoststed(adresseSamhType.getPoststed().trim());
-        adresse.setPostnr(adresseSamhType.getPostNr().trim());
+        adresse.setLand(trim(adresseSamhType.getKodeLand()));
+        adresse.setPoststed(trim(adresseSamhType.getPoststed()));
+        adresse.setPostnr(trim(adresseSamhType.getPostNr()));
         List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
         if (adresselinjer.size() >= 1) {
-          adresse.setAdresselinje1(adresselinjer.get(0).trim());
+          adresse.setAdresselinje1(trim(adresselinjer.get(0)));
         }
         if(adresselinjer.size() >= 2) {
-          adresse.setAdresselinje2(adresselinjer.get(1).trim());
+          adresse.setAdresselinje2(trim(adresselinjer.get(1)));
         }
         if(adresselinjer.size() >= 3) {
-          adresse.setAdresselinje3(adresselinjer.get(2).trim());
+          adresse.setAdresselinje3(trim(adresselinjer.get(2)));
         }
         return adresse;
       }
@@ -122,17 +122,23 @@ public class TSSServiceImpl implements TSSService {
       if (typeSamhKonto != null && Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
         KontoType kontoType = typeSamhKonto.getKonto().get(0);
         KontonummerDTO kontonummer = new KontonummerDTO();
-        kontonummer.setBankLandkode(kontoType.getKodeLand().trim());
-        kontonummer.setBankNavn(kontoType.getBankNavn().trim());
-        kontonummer.setNorskKontonr(kontoType.getGironrInnland().trim());
-        kontonummer.setSwift(kontoType.getSwiftKode().trim());
-        kontonummer.setValutaKode(kontoType.getKodeValuta().trim());
-        kontonummer.setBankCode(kontoType.getBankKode().trim());
-        kontonummer.setIban(kontoType.getGironrUtland().trim());
+        kontonummer.setBankLandkode(trim(kontoType.getKodeLand()));
+        kontonummer.setBankNavn(trim(kontoType.getBankNavn()));
+        kontonummer.setNorskKontonr(trim(kontoType.getGironrInnland()));
+        kontonummer.setSwift(trim(kontoType.getSwiftKode()));
+        kontonummer.setValutaKode(trim(kontoType.getKodeValuta()));
+        kontonummer.setBankCode(trim(kontoType.getBankKode()));
+        kontonummer.setIban(trim(kontoType.getGironrUtland()));
         return kontonummer;
       }
     }
     return null;
+  }
+
+  private static String trim(String input) {
+    return input != null
+      ? input.trim()
+      : null;
   }
 
   private void validateResponse(TssSamhandlerData tssSamhandlerData, String aktoerId) throws AktoerNotFoundException, TSSServiceException {
