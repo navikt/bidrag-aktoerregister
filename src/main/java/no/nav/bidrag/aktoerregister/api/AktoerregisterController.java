@@ -74,7 +74,7 @@ public class AktoerregisterController {
     @ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = @Content()),
     @ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content = @Content())
   })
-  @PostMapping("/aktoer/")
+  @PostMapping("/aktoer")
   public ResponseEntity<AktoerDTO> hentAktoer(
     @RequestBody AktoerIdDTO request)
     throws ResponseStatusException {
