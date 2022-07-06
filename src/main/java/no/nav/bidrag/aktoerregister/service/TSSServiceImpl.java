@@ -81,12 +81,10 @@ public class TSSServiceImpl implements TSSService {
       AdresseDTO adresse = mapToAdresse(samhandlerODataB910);
       KontonummerDTO kontonummer = mapToKontonummer(samhandlerODataB910);
       // Not storing TSS aktoer if adresse or kontonummer is null
-      if (adresse != null & kontonummer != null) {
-        AktoerDTO aktoer = new AktoerDTO(aktoerId);
-        aktoer.setAdresse(mapToAdresse(samhandlerODataB910));
-        aktoer.setKontonummer(mapToKontonummer(samhandlerODataB910));
-        return aktoer;
-      }
+      AktoerDTO aktoer = new AktoerDTO(aktoerId);
+      aktoer.setAdresse(adresse);
+      aktoer.setKontonummer(kontonummer);
+      return aktoer;
     }
     return null;
   }
