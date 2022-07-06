@@ -121,7 +121,7 @@ public class TSSServiceImpl implements TSSService {
     List<Samhandler> samhandlerListe = samhandlerODataB910.getEnkeltSamhandler();
     if (samhandlerListe.size() > 0) {
       TypeSamhKonto typeSamhKonto = samhandlerListe.get(0).getKonto140();
-      if (Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
+      if (typeSamhKonto != null && Integer.parseInt(typeSamhKonto.getAntKonto()) > 0) {
         KontoType kontoType = typeSamhKonto.getKonto().get(0);
         KontonummerDTO kontonummer = new KontonummerDTO();
         kontonummer.setBankLandkode(kontoType.getKodeLand().trim());
