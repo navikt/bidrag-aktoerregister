@@ -93,24 +93,26 @@ public class TSSServiceImpl implements TSSService {
 
   private AdresseDTO mapToAdresse(Samhandler samhandler) {
     TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
-    for (AdresseSamhType adresseSamhType : typeSamhAdr.getAdresseSamh()) {
-      AdresseDTO adresse = new AdresseDTO();
-      adresse.setLand(trim(adresseSamhType.getKodeLand()));
-      adresse.setPoststed(trim(adresseSamhType.getPoststed()));
-      adresse.setPostnr(trim(adresseSamhType.getPostNr()));
-      if (adresseSamhType.getAdrLinjeInfo() != null) {
-        List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
-        if (adresselinjer.size() >= 1) {
-          adresse.setAdresselinje1(trim(adresselinjer.get(0)));
+    if (typeSamhAdr != null) {
+      for (AdresseSamhType adresseSamhType : typeSamhAdr.getAdresseSamh()) {
+        AdresseDTO adresse = new AdresseDTO();
+        adresse.setLand(trim(adresseSamhType.getKodeLand()));
+        adresse.setPoststed(trim(adresseSamhType.getPoststed()));
+        adresse.setPostnr(trim(adresseSamhType.getPostNr()));
+        if (adresseSamhType.getAdrLinjeInfo() != null) {
+          List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
+          if (adresselinjer.size() >= 1) {
+            adresse.setAdresselinje1(trim(adresselinjer.get(0)));
+          }
+          if(adresselinjer.size() >= 2) {
+            adresse.setAdresselinje2(trim(adresselinjer.get(1)));
+          }
+          if(adresselinjer.size() >= 3) {
+            adresse.setAdresselinje3(trim(adresselinjer.get(2)));
+          }
         }
-        if(adresselinjer.size() >= 2) {
-          adresse.setAdresselinje2(trim(adresselinjer.get(1)));
-        }
-        if(adresselinjer.size() >= 3) {
-          adresse.setAdresselinje3(trim(adresselinjer.get(2)));
-        }
+        return adresse;
       }
-      return adresse;
     }
     return null;
   }
