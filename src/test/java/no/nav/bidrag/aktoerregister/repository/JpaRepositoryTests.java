@@ -122,18 +122,18 @@ public class JpaRepositoryTests {
 
     int lastReceivedSekvensnummer = latestHendelser.get(latestHendelser.size() - 1).getSekvensnummer();
 
-    latestHendelser = hendelseJpaRepository.getHendelserWithUniqueAktoerPageable(lastReceivedSekvensnummer, Pageable.ofSize(10)).stream().sorted(
+    latestHendelser = hendelseJpaRepository.getHendelserWithUniqueAktoerPageable(lastReceivedSekvensnummer + 1, Pageable.ofSize(10)).stream().sorted(
         Comparator.comparing(Hendelse::getSekvensnummer)).collect(Collectors.toList());
 
     uniqueAktoerIds = latestHendelser.stream().map(hendelse -> hendelse.getAktoer().getAktoerId()).distinct().toList();
 
     assertEquals(10, latestHendelser.size());
     assertEquals(10, uniqueAktoerIds.size());
-    assertTrue(latestHendelser.get(0).getSekvensnummer() > lastReceivedSekvensnummer);
+    assertTrue(latestHendelser.get(0).getSekvensnummer() >= lastReceivedSekvensnummer);
 
     lastReceivedSekvensnummer = latestHendelser.get(latestHendelser.size() - 1).getSekvensnummer();
 
-    latestHendelser = hendelseJpaRepository.getHendelserWithUniqueAktoerPageable(lastReceivedSekvensnummer, Pageable.ofSize(20)).stream().sorted(
+    latestHendelser = hendelseJpaRepository.getHendelserWithUniqueAktoerPageable(lastReceivedSekvensnummer + 1, Pageable.ofSize(20)).stream().sorted(
         Comparator.comparing(Hendelse::getSekvensnummer)).collect(Collectors.toList());
 
     uniqueAktoerIds = latestHendelser.stream().map(hendelse -> hendelse.getAktoer().getAktoerId()).distinct().toList();
