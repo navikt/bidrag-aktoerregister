@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
     info =
         @Info(
             title = "Bidrag Aktørregister",
-            version = "1.0",
+            version = "1.1",
             description = "Inneholder adresse- og kontoinformasjon om aktører i Bidragssaker."))
 @EnableConfigurationProperties()
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")

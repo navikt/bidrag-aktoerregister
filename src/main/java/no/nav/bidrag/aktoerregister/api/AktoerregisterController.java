@@ -66,7 +66,7 @@ public class AktoerregisterController {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e);
     } catch (Exception e) {
-      log.info("Feil ved henting av aktør {}", request.getAktoerId(), e);
+      log.error("Feil ved henting av aktør {}", request.getAktoerId(), e);
       throw new ResponseStatusException(
           HttpStatus.INTERNAL_SERVER_ERROR,
           "Intern tjenestefeil. Problem med oppkobling mot MQ. Prøv igjen senere.",
