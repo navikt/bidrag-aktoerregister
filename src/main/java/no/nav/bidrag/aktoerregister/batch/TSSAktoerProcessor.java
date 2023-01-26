@@ -35,7 +35,7 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
   public TSSAktoerProcessorResult process(Aktoer aktoer)
       throws MQServiceException, TSSServiceException {
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
     try {
       AktoerDTO tssAktoerDTO = tssService.hentAktoer(aktoerIdDTO);
       AktoerDTO dbAktoerDTO = aktoerMapper.toDomain(aktoer);

@@ -115,7 +115,7 @@ public class JpaRepositoryTests {
     // Making sure each hendelse has a unique aktoerId.
     List<String> uniqueAktoerIds =
         latestHendelser.stream()
-            .map(hendelse -> hendelse.getAktoer().getAktoerId())
+            .map(hendelse -> hendelse.getAktoer().getAktoerIdent())
             .distinct()
             .toList();
 
@@ -136,7 +136,7 @@ public class JpaRepositoryTests {
 
     uniqueAktoerIds =
         latestHendelser.stream()
-            .map(hendelse -> hendelse.getAktoer().getAktoerId())
+            .map(hendelse -> hendelse.getAktoer().getAktoerIdent())
             .distinct()
             .toList();
 
@@ -156,7 +156,7 @@ public class JpaRepositoryTests {
 
     uniqueAktoerIds =
         latestHendelser.stream()
-            .map(hendelse -> hendelse.getAktoer().getAktoerId())
+            .map(hendelse -> hendelse.getAktoer().getAktoerIdent())
             .distinct()
             .toList();
 
@@ -169,7 +169,7 @@ public class JpaRepositoryTests {
     List<Aktoer> aktoerList = new ArrayList<>();
     for (int i = 0; i < numberOfAktoers; i++) {
       Aktoer aktoer = new Aktoer();
-      aktoer.setAktoerId(UUID.randomUUID().toString());
+      aktoer.setAktoerIdent(UUID.randomUUID().toString());
       aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
       addHendelser(numberOfHendelser, aktoer);

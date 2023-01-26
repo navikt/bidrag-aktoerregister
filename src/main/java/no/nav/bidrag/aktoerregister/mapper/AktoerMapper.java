@@ -12,25 +12,28 @@ public class AktoerMapper implements Mapper<AktoerDTO, Aktoer> {
 
   public AktoerMapper() {
     modelMapper = new ModelMapper();
+
     Converter<IdenttypeDTO, String> converter = mappingContext -> mappingContext.getSource().name();
-    Converter<String, IdenttypeDTO> converter1 =
-        mappingContext -> IdenttypeDTO.valueOf(mappingContext.getSource());
     modelMapper
         .typeMap(AktoerDTO.class, Aktoer.class)
         .addMappings(
             mapper -> {
-              mapper.map(src -> src.getAktoerId().getAktoerId(), Aktoer::setAktoerId);
+              mapper.skip(Aktoer::setId);
+              mapper.map(src -> src.getAktoerId().getAktoerId(), Aktoer::setAktoerIdent);
               mapper
                   .using(converter)
                   .map(src -> src.getAktoerId().getIdenttype(), Aktoer::setAktoerType);
             });
+
+    Converter<String, IdenttypeDTO> converter1 =
+        mappingContext -> IdenttypeDTO.valueOf(mappingContext.getSource());
     modelMapper
         .typeMap(Aktoer.class, AktoerDTO.class)
         .addMappings(
             mapper -> {
               mapper.<String>map(
-                  Aktoer::getAktoerId,
-                  (aktoerDTO, aktoerId) -> aktoerDTO.getAktoerId().setAktoerId(aktoerId));
+                  Aktoer::getAktoerIdent,
+                  (aktoerDTO, aktoerIdent) -> aktoerDTO.getAktoerId().setAktoerId(aktoerIdent));
               mapper
                   .using(converter1)
                   .<IdenttypeDTO>map(

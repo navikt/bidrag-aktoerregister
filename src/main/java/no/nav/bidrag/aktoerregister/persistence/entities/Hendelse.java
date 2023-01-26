@@ -21,7 +21,7 @@ public class Hendelse {
   private int sekvensnummer;
 
   @ManyToOne
-  @JoinColumn(name = "aktoerid", referencedColumnName = "aktoerid")
+  @JoinColumn(name = "aktoer_id", referencedColumnName = "id")
   private Aktoer aktoer;
 
   public Hendelse() {}

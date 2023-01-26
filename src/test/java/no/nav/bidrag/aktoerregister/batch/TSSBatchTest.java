@@ -71,7 +71,7 @@ public class TSSBatchTest {
   public void tssAktoerUpdateRunningSuccessfully() throws Exception {
     // when
 
-    createAktoererAndSetupMocks(150, 50);
+    createAktoererAndSetupMocks();
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     JobParameters jobParameters =
@@ -100,12 +100,12 @@ public class TSSBatchTest {
         50, updateTSSAktoererStep.getExecutionContext().getLong(TSSBatchConfig.NR_UPDATED));
   }
 
-  private void createAktoererAndSetupMocks(int nrOfAktoerer, int nrOfUpdatedAktoerer)
+  private void createAktoererAndSetupMocks()
       throws MQServiceException, TSSServiceException, AktoerNotFoundException {
     List<Aktoer> aktoerList = new ArrayList<>();
-    for (int i = 0; i < nrOfAktoerer; i++) {
+    for (int i = 0; i < 150; i++) {
       Aktoer aktoer = new Aktoer();
-      aktoer.setAktoerId(UUID.randomUUID().toString());
+      aktoer.setAktoerIdent(UUID.randomUUID().toString());
       aktoer.setAktoerType(IdenttypeDTO.AKTOERNUMMER.name());
       aktoerList.add(aktoer);
     }
@@ -113,14 +113,14 @@ public class TSSBatchTest {
 
     for (int i = 0; i < aktoerList.size(); i++) {
       Aktoer aktoer = aktoerList.get(i);
-      if (i < nrOfUpdatedAktoerer) {
+      if (i < 50) {
         Kontonummer kontonummer = new Kontonummer();
         kontonummer.setNorskKontonr("12345678910");
         aktoer.setKontonummer(kontonummer);
       }
       AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
       aktoerIdDTO.setIdenttype(IdenttypeDTO.AKTOERNUMMER);
-      aktoerIdDTO.setAktoerId(aktoer.getAktoerId());
+      aktoerIdDTO.setAktoerId(aktoer.getAktoerIdent());
       Mockito.when(tssService.hentAktoer(aktoerIdDTO)).thenReturn(aktoerMapper.toDomain(aktoer));
     }
   }

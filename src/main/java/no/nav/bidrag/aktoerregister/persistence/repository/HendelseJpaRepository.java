@@ -18,6 +18,6 @@ public interface HendelseJpaRepository extends JpaRepository<Hendelse, Integer> 
    */
   @Query(
       value =
-          "SELECT new Hendelse(max(h.sekvensnummer), h.aktoer) FROM Hendelse h WHERE h.sekvensnummer >= :sekvensnummer GROUP BY h.aktoer.aktoerId ORDER BY max(h.sekvensnummer)")
+          "SELECT new Hendelse(max(h.sekvensnummer), h.aktoer) FROM Hendelse h WHERE h.sekvensnummer >= :sekvensnummer GROUP BY h.aktoer.id ORDER BY max(h.sekvensnummer)")
   List<Hendelse> getHendelserWithUniqueAktoerPageable(int sekvensnummer, Pageable pageable);
 }
