@@ -1,0 +1,8 @@
+name: bidrag-aktoerregister-feature
+dbinstancename: bidrag-aktoerregister-feature
+dbname: bidrag-aktoerregister-feature
+ingresses:
+  - https://bidrag-aktoerregister-feature.dev.intern.nav.no
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: dev

@@ -1,0 +1,45 @@
+name: 🚀 Deploy til prod
+on:
+  push:
+    branches:
+      - release
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+jobs:
+
+  check_docker_image:
+    name: 🐋 Verify Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if the Docker image for the commit already exist
+        run: |
+          TOKEN=$(curl --silent -u ${GITHUB_REPOSITORY}:${GITHUB_TOKEN} https://ghcr.io/token\?scope\="repository:<repository/path>:pull" | jq -r .token)
+          RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null --head -H "Authorization: Bearer ${TOKEN}" https://ghcr.io/v2/${GITHUB_REPOSITORY}/manifests/${GITHUB_SHA})
+          if [ "$RESPONSE" == "200" ]; then
+            echo ✔️ Image ${IMAGE} found
+          else
+            echo ❌ Image ${IMAGE} not found
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: 🚀 Deploy to prod
+    needs: check_docker_image
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: deploy
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: deploy/.nais/nais.yaml
+          VARS: deploy/.nais/prod.yaml
+

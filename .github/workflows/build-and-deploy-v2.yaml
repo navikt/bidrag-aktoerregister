@@ -1,0 +1,107 @@
+name: 🏗 Build and deploy
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+      - 'wip/**'
+      - 'bugfix/**'
+
+env:
+  VERSION: 2.${{ github.run_number }}
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+jobs:
+
+  build:
+    name: 🐋 Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if the Docker image for the commit already exist
+        id: dockerimage
+        run: |
+          TOKEN=$(curl --silent -u ${GITHUB_REPOSITORY}:${GITHUB_TOKEN} https://ghcr.io/token\?scope\="repository:<repository/path>:pull" | jq -r .token)
+          RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null --head -H "Authorization: Bearer ${TOKEN}" https://ghcr.io/v2/${GITHUB_REPOSITORY}/manifests/${GITHUB_SHA})
+          if [ "$RESPONSE" == "200" ]; then
+            echo ✔️ Image ${IMAGE} found
+            echo ::set-output name=image_found::true
+          elif [ "$RESPONSE" == "404" ]; then
+            echo ❌ Image ${IMAGE} not found
+            echo ::set-output name=image_found::false
+          else
+            echo Unexpected response code: $RESPONSE
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: GIT checkout
+        if: steps.dockerimage.outputs.image_found == 'false'
+        uses: actions/checkout@v2
+
+      - name: Set up Java 16
+        if: steps.dockerimage.outputs.image_found == 'false'
+        uses: actions/setup-java@v1
+        with:
+          java-version: '16'
+
+      - name: Set up Maven
+        if: steps.dockerimage.outputs.image_found == 'false'
+        uses: navikt/bidrag-maven/setup@v7.0.5
+        with:
+          repositories: maven-central=https://repo.maven.apache.org/maven2,github-packages=https://maven.pkg.github.com/navikt/maven-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build with Maven
+        if: steps.dockerimage.outputs.image_found == 'false'
+        run: |
+          mvn install -B -e -Drevision=${VERSION}
+
+      - name: Build and publish Docker image
+        if: steps.dockerimage.outputs.image_found == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker image build --tag ${IMAGE} .
+          echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
+          docker image push ${IMAGE}
+
+      - name: Tag version
+        if: steps.dockerimage.outputs.image_found == 'false'
+        run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)" 
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git tag -a "${VERSION}" -m "Version ${VERSION} built into image ${IMAGE}"
+          git push origin "${VERSION}"
+
+  deploy:
+    name: 🚀 Deploy to dev
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: GIT checkout
+        uses: actions/checkout@v2
+        with:
+          path: deploy
+
+      - name: Deploy to dev-gcp (main)
+        if: github.ref == 'refs/heads/main'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: deploy/.nais/nais.yaml
+          VARS: deploy/.nais/main.yaml
+
+      - name: Deploy to dev-gcp (feature)
+        if: github.ref != 'refs/heads/main'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: deploy/.nais/nais.yaml
+          VARS: deploy/.nais/feature.yaml
