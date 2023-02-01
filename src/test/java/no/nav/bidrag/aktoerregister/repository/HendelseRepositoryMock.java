@@ -15,7 +15,7 @@ public record HendelseRepositoryMock(MockDB mockDB) implements HendelseRepositor
     Map<String, List<Hendelse>> hendelseHashMap =
         mockDB.hendelseMap.values().stream()
             .filter(hendelse -> hendelse.getSekvensnummer() > fraSekvensnummer)
-            .collect(Collectors.groupingBy(hendelse -> hendelse.getAktoer().getAktoerId()));
+            .collect(Collectors.groupingBy(hendelse -> hendelse.getAktoer().getAktoerIdent()));
     return hendelseHashMap.values().stream()
         .map(
             hendelses ->

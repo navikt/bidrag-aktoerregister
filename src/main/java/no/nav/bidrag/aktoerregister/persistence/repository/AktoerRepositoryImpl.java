@@ -30,12 +30,12 @@ public class AktoerRepositoryImpl implements AktoerRepository {
   }
 
   @Override
-  public Aktoer getAktoer(String aktoerId) {
-    return aktoerJpaRepository.findById(aktoerId).orElse(null);
+  public Aktoer getAktoer(String aktoerIdent) {
+    return aktoerJpaRepository.findByAktoerIdent(aktoerIdent);
   }
 
   @Override
-  public void deleteAktoer(String aktoerId) {
-    aktoerJpaRepository.deleteById(aktoerId);
+  public void deleteAktoer(String aktoerIdent) {
+    aktoerJpaRepository.deleteAktoerByAktoerIdent(aktoerIdent);
   }
 }

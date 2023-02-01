@@ -128,34 +128,32 @@ public class AktoerRepositoryTests {
     assertEquals(20, savedAktoerer.size());
     assertEquals(30, savedHendelser.size());
 
-    List<String> aktoerIds = sublist.stream().map(Aktoer::getAktoerId).toList();
+    List<String> aktoerIds = sublist.stream().map(Aktoer::getAktoerIdent).toList();
 
     List<Hendelse> aktoerHendelser =
         savedHendelser.stream()
-            .filter(hendelse -> aktoerIds.contains(hendelse.getAktoer().getAktoerId()))
+            .filter(hendelse -> aktoerIds.contains(hendelse.getAktoer().getAktoerIdent()))
             .toList();
 
     Map<String, List<Hendelse>> hendelseMap = new HashMap<>();
     for (Hendelse hendelse : aktoerHendelser) {
-      if (!hendelseMap.containsKey(hendelse.getAktoer().getAktoerId())) {
-        hendelseMap.put(hendelse.getAktoer().getAktoerId(), new ArrayList<>());
+      if (!hendelseMap.containsKey(hendelse.getAktoer().getAktoerIdent())) {
+        hendelseMap.put(hendelse.getAktoer().getAktoerIdent(), new ArrayList<>());
       }
-      List<Hendelse> hendelser = hendelseMap.get(hendelse.getAktoer().getAktoerId());
+      List<Hendelse> hendelser = hendelseMap.get(hendelse.getAktoer().getAktoerIdent());
       hendelser.add(hendelse);
-      hendelseMap.put(hendelse.getAktoer().getAktoerId(), hendelser);
+      hendelseMap.put(hendelse.getAktoer().getAktoerIdent(), hendelser);
     }
 
     sublist.forEach(
-        aktoer -> {
-          assertEquals(2, hendelseMap.get(aktoer.getAktoerId()).size());
-        });
+        aktoer -> assertEquals(2, hendelseMap.get(aktoer.getAktoerIdent()).size()));
   }
 
   private List<Aktoer> generateAktoerList(int numberOfAktoers) {
     List<Aktoer> aktoerList = new ArrayList<>();
     for (int i = 0; i < numberOfAktoers; i++) {
       Aktoer aktoer = new Aktoer();
-      aktoer.setAktoerId(UUID.randomUUID().toString());
+      aktoer.setAktoerIdent(UUID.randomUUID().toString());
       aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
       addAdresse(aktoer, i);

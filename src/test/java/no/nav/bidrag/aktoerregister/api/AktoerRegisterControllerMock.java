@@ -61,7 +61,7 @@ public class AktoerRegisterControllerMock {
   @GetMapping("/oppdater/{fnr}")
   public ResponseEntity<String> oppdaterAktoer(@PathVariable(name = "fnr") String fnr) {
     Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerId(fnr);
+    aktoer.setAktoerIdent(fnr);
     aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
     Adresse adresse = new Adresse();
