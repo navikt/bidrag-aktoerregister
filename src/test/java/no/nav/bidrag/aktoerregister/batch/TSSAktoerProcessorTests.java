@@ -39,7 +39,7 @@ public class TSSAktoerProcessorTests {
       throws MQServiceException, TSSServiceException, AktoerNotFoundException {
 
     Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerId("1234");
+    aktoer.setAktoerIdent("1234");
     aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
     AktoerDTO tssAktoer = new AktoerDTO();
@@ -63,7 +63,7 @@ public class TSSAktoerProcessorTests {
   public void TestAktoerFromTssNotUpdated()
       throws MQServiceException, TSSServiceException, AktoerNotFoundException {
     Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerId("1234");
+    aktoer.setAktoerIdent("1234");
     aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
     Adresse adresse = new Adresse();
@@ -91,7 +91,7 @@ public class TSSAktoerProcessorTests {
   public void TestAkterNotFound()
       throws MQServiceException, TSSServiceException, AktoerNotFoundException {
     Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerId("1234");
+    aktoer.setAktoerIdent("1234");
     aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
 
     Mockito.when(tssService.hentAktoer(any())).thenThrow(new AktoerNotFoundException(""));

@@ -8,7 +8,7 @@ public interface AktoerRepository {
 
   List<Aktoer> insertOrUpdateAktoerer(List<Aktoer> aktoerList);
 
-  Aktoer getAktoer(String aktoerId);
+  Aktoer getAktoer(String aktoerIdent);
 
   void deleteAktoer(String aktoerId);
 }

@@ -21,7 +21,7 @@ public class HendelseRepositoryImpl implements HendelseRepository {
 
   @Override
   public List<Hendelse> hentHendelser(int fraSekvensnummer, int antallHendelser) {
-    return hendelseJpaRepository.getHendelserWithUniqueAktoerPageable(
+    return hendelseJpaRepository.hentHendelserMedUnikAktoer(
         fraSekvensnummer, Pageable.ofSize(antallHendelser));
   }
 

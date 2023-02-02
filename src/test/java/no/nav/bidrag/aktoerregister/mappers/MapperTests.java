@@ -39,7 +39,7 @@ public class MapperTests {
     AktoerDTO mappedAktoerDTO = aktoerMapper.toDomain(aktoer);
 
     assertNotNull(aktoer);
-    assertEquals(aktoer.getAktoerId(), aktoerDTO.getAktoerId().getAktoerId());
+    assertEquals(aktoer.getAktoerIdent(), aktoerDTO.getAktoerId().getAktoerId());
     assertEquals(aktoer.getAktoerType(), aktoerDTO.getAktoerId().getIdenttype().name());
 
     assertEquals(aktoer.getAdresse().getAdresselinje1(), aktoerDTO.getAdresse().getAdresselinje1());
@@ -50,7 +50,7 @@ public class MapperTests {
         aktoer.getKontonummer().getNorskKontonr(), aktoerDTO.getKontonummer().getNorskKontonr());
 
     assertNotNull(mappedAktoerDTO);
-    assertEquals(mappedAktoerDTO.getAktoerId().getAktoerId(), aktoer.getAktoerId());
+    assertEquals(mappedAktoerDTO.getAktoerId().getAktoerId(), aktoer.getAktoerIdent());
     assertEquals(mappedAktoerDTO.getAktoerId().getIdenttype().name(), aktoer.getAktoerType());
 
     assertEquals(

@@ -39,14 +39,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class AktoerregisterServiceTest {
-  private static TestPerson PERSON1 = person().opprett();
-  private static TestKonto KONTO1 = konto().opprett();
-  private static TestSamhandler SAMHANDLER1 = samhandler().opprett();
-  private static TestSamhandler SAMHANDLER2 = samhandler().opprett();
-
-  private AktoerRepositoryMock aktoerRepository;
-
-  private HendelseRepositoryMock hendelseRepositoryMock;
+  private static final TestPerson PERSON1 = person().opprett();
+  private static final TestKonto KONTO1 = konto().opprett();
+  private static final TestSamhandler SAMHANDLER1 = samhandler().opprett();
+  private static final TestSamhandler SAMHANDLER2 = samhandler().opprett();
 
   private MockDB mockDB;
 
@@ -61,8 +57,8 @@ public class AktoerregisterServiceTest {
   @BeforeEach
   public void SetUp() {
     mockDB = new MockDB();
-    aktoerRepository = new AktoerRepositoryMock(mockDB);
-    hendelseRepositoryMock = new HendelseRepositoryMock(mockDB);
+    AktoerRepositoryMock aktoerRepository = new AktoerRepositoryMock(mockDB);
+    HendelseRepositoryMock hendelseRepositoryMock = new HendelseRepositoryMock(mockDB);
     aktoerregisterService =
         new AktoerregisterServiceImpl(
             aktoerRepository, hendelseRepositoryMock, tpsService, tssService);
@@ -95,7 +91,7 @@ public class AktoerregisterServiceTest {
       throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
     Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1, KONTO1, "Testgate 1", true);
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
     when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer));
 
@@ -119,7 +115,7 @@ public class AktoerregisterServiceTest {
       throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
     Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1, KONTO1, "Testgate 1", true);
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
     when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer));
 
@@ -139,9 +135,9 @@ public class AktoerregisterServiceTest {
     assertEquals(2, mockDB.hendelseMap.size());
 
     assertEquals(
-        SAMHANDLER1.getSamhandlerIdent(), mockDB.hendelseMap.get(1).getAktoer().getAktoerId());
+        SAMHANDLER1.getSamhandlerIdent(), mockDB.hendelseMap.get(1).getAktoer().getAktoerIdent());
     assertEquals(
-        SAMHANDLER1.getSamhandlerIdent(), mockDB.hendelseMap.get(2).getAktoer().getAktoerId());
+        SAMHANDLER1.getSamhandlerIdent(), mockDB.hendelseMap.get(2).getAktoer().getAktoerIdent());
   }
 
   @Test
@@ -149,7 +145,7 @@ public class AktoerregisterServiceTest {
       throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
     Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1, KONTO1, "Testgate 1", true);
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerId(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
     when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer));
     aktoerregisterService.hentAktoer(aktoerIdDTO);
@@ -170,7 +166,7 @@ public class AktoerregisterServiceTest {
 
     Aktoer aktoer2 = createTSSAktoerDTO(SAMHANDLER2, KONTO1, "Testgate 1", true);
     AktoerIdDTO aktoerIdDTO2 =
-        new AktoerIdDTO(aktoer2.getAktoerId(), IdenttypeDTO.valueOf(aktoer2.getAktoerType()));
+        new AktoerIdDTO(aktoer2.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer2.getAktoerType()));
 
     when(tssService.hentAktoer(any())).thenReturn(aktoerMapper.toDomain(aktoer2));
     aktoerregisterService.hentAktoer(aktoerIdDTO2);
@@ -222,7 +218,7 @@ public class AktoerregisterServiceTest {
     Adresse adresseDTO = new Adresse();
     adresseDTO.setAdresselinje1(adresselinje1);
 
-    aktoer.setAktoerId(samhandler.getSamhandlerIdent());
+    aktoer.setAktoerIdent(samhandler.getSamhandlerIdent());
     aktoer.setAktoerType(IdenttypeDTO.AKTOERNUMMER.name());
     aktoer.setAdresse(adresseDTO);
     aktoer.setKontonummer(kontonummerDTO);

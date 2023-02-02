@@ -8,4 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AktoerJpaRepository extends JpaRepository<Aktoer, String> {
 
   Page<Aktoer> findAllByAktoerType(String aktoerType, Pageable pageable);
+
+  Aktoer findByAktoerIdent(String aktoerIdent);
+
+  void deleteAktoerByAktoerIdent(String aktoerIdent);
 }

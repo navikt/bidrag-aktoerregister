@@ -21,13 +21,18 @@ public class Hendelse {
   private int sekvensnummer;
 
   @ManyToOne
-  @JoinColumn(name = "aktoerid", referencedColumnName = "aktoerid")
+  @JoinColumn(name = "aktoer_id", referencedColumnName = "id")
   private Aktoer aktoer;
 
-  public Hendelse() {}
+  @Column(name = "aktoer_ident")
+  private String aktoerIdent;
+
+  public Hendelse() {
+  }
 
   public Hendelse(Aktoer aktoer) {
     this.aktoer = aktoer;
+    this.aktoerIdent = aktoer.getAktoerIdent();
   }
 
   public Hendelse(int sekvensnummer, Aktoer aktoer) {

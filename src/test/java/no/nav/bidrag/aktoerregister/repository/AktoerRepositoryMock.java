@@ -11,7 +11,7 @@ public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
   @Override
   public Aktoer insertOrUpdateAktoer(Aktoer aktoer) {
     aktoer.addHendelse(createHendelse(aktoer));
-    mockDB.aktoerMap.put(aktoer.getAktoerId(), aktoer);
+    mockDB.aktoerMap.put(aktoer.getAktoerIdent(), aktoer);
     for (Hendelse hendelse : aktoer.getHendelser()) {
       insertHendelse(hendelse);
     }
@@ -27,8 +27,8 @@ public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
   }
 
   @Override
-  public Aktoer getAktoer(String aktoerId) {
-    return mockDB.aktoerMap.get(aktoerId);
+  public Aktoer getAktoer(String aktoerIdent) {
+    return mockDB.aktoerMap.get(aktoerIdent);
   }
 
   @Override

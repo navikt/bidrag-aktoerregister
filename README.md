@@ -98,7 +98,7 @@ Nå vil PostgreSQL, PgAdmin og IBM MQ starte. Åpne PgAdmin på localhost:5050 o
 host: localhost eller host.docker.internal
 port: 5432
 database: test_db
-username: root
+username: cloudsqliamuser
 password: root
 ```
 

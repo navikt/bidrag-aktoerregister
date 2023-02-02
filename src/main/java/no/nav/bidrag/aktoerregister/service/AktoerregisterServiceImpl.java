@@ -65,8 +65,8 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   }
 
   @Override
-  public Aktoer hentAktoerFromDB(String aktoerId) {
-    return aktoerRepository.getAktoer(aktoerId);
+  public Aktoer hentAktoerFromDB(String aktoerIdent) {
+    return aktoerRepository.getAktoer(aktoerIdent);
   }
 
   @Override
@@ -78,7 +78,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
               HendelseDTO hendelseDTO = new HendelseDTO();
               hendelseDTO.setSekvensnummer(hendelse.getSekvensnummer());
               AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
-              aktoerIdDTO.setAktoerId(hendelse.getAktoer().getAktoerId());
+              aktoerIdDTO.setAktoerId(hendelse.getAktoer().getAktoerIdent());
               aktoerIdDTO.setIdenttype(IdenttypeDTO.valueOf(hendelse.getAktoer().getAktoerType()));
               hendelseDTO.setAktoerId(aktoerIdDTO);
               return hendelseDTO;
@@ -98,7 +98,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   @Transactional
   @Override
   public void oppdaterAktoer(Aktoer updatedAktoer) {
-    Aktoer existingAktoer = hentAktoerFromDB(updatedAktoer.getAktoerId());
+    Aktoer existingAktoer = hentAktoerFromDB(updatedAktoer.getAktoerIdent());
     existingAktoer.setOffentligId(updatedAktoer.getOffentligId());
     existingAktoer.setOffentligIdType(updatedAktoer.getOffentligIdType());
     existingAktoer.setAdresse(updatedAktoer.getAdresse());
@@ -115,7 +115,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   }
 
   @Override
-  public void slettAktoer(String aktoerId) {
-    aktoerRepository.deleteAktoer(aktoerId);
+  public void slettAktoer(String aktoerIdent) {
+    aktoerRepository.deleteAktoer(aktoerIdent);
   }
 }
