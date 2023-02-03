@@ -92,20 +92,24 @@ public class TSSServiceImpl implements AktoerService {
   }
 
   private AktoerDTO mapToAktoer(TssSamhandlerData tssSamhandlerData, AktoerIdDTO aktoerId) {
-    Samhandler samhandler =
-        getFirst(
-                tssSamhandlerData.getTssOutputData().getSamhandlerODataB910(),
-                TypeOD910::getEnkeltSamhandler)
-            .orElse(null);
+    Samhandler samhandler = hentSamhandler(tssSamhandlerData);
     if (samhandler != null) {
+      String avdelingsnummer = hentAvdelingsnummer(aktoerId, samhandler);
       AktoerDTO aktoer = new AktoerDTO(aktoerId);
       aktoer.setOffentligId(hentOffentligId(samhandler));
       aktoer.setOffentligIdType(hentOffentligIdType(samhandler));
-      aktoer.setAdresse(mapTilAdresse(samhandler));
-      aktoer.setKontonummer(mapTilKontonummer(samhandler, aktoerId));
+      aktoer.setAdresse(mapTilAdresse(samhandler, avdelingsnummer));
+      aktoer.setKontonummer(mapTilKontonummer(samhandler, avdelingsnummer));
       return aktoer;
     }
     return null;
+  }
+
+  private Samhandler hentSamhandler(TssSamhandlerData tssSamhandlerData) {
+    return getFirst(
+            tssSamhandlerData.getTssOutputData().getSamhandlerODataB910(),
+            TypeOD910::getEnkeltSamhandler)
+        .orElse(null);
   }
 
   private String hentAvdelingsnummer(AktoerIdDTO aktoerId, Samhandler samhandler) {
@@ -128,23 +132,26 @@ public class TSSServiceImpl implements AktoerService {
         .orElse(null);
   }
 
-  private AdresseDTO mapTilAdresse(Samhandler samhandler) {
+  private AdresseDTO mapTilAdresse(Samhandler samhandler, String avdelingsnummer) {
     TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
     if (typeSamhAdr != null) {
       AdresseDTO adresse = new AdresseDTO();
       settNavnFraSamhandler(samhandler, adresse);
       for (AdresseSamhType adresseSamhType : typeSamhAdr.getAdresseSamh()) {
-        adresse.setLand(trimToNull(adresseSamhType.getKodeLand()));
-        adresse.setPoststed(trimToNull(adresseSamhType.getPoststed()));
-        adresse.setPostnr(trimToNull(adresseSamhType.getPostNr()));
-        settAdresselinjer(adresse, adresseSamhType);
-        return adresse;
+        if (erGyldigOgHarRiktigAvdelingsnummer(
+            avdelingsnummer, adresseSamhType.getGyldigAdresse(), adresseSamhType.getAvdNr())) {
+          adresse.setLand(trimToNull(adresseSamhType.getKodeLand()));
+          adresse.setPoststed(trimToNull(adresseSamhType.getPoststed()));
+          adresse.setPostnr(trimToNull(adresseSamhType.getPostNr()));
+          settAdresselinjer(adresse, adresseSamhType);
+          return adresse;
+        }
       }
     }
     return null;
   }
 
-  private static void settAdresselinjer(AdresseDTO adresse, AdresseSamhType adresseSamhType) {
+  private void settAdresselinjer(AdresseDTO adresse, AdresseSamhType adresseSamhType) {
     if (adresseSamhType.getAdrLinjeInfo() != null) {
       List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
       if (adresselinjer.size() >= 1) {
@@ -165,11 +172,12 @@ public class TSSServiceImpl implements AktoerService {
         .ifPresent(adresse::setNavn);
   }
 
-  private KontonummerDTO mapTilKontonummer(Samhandler samhandler, AktoerIdDTO aktoerId) {
+  private KontonummerDTO mapTilKontonummer(Samhandler samhandler, String avdelingsnummer) {
     TypeSamhKonto typeSamhKonto = samhandler.getKonto140();
     if (typeSamhKonto != null) {
       for (KontoType kontoType : typeSamhKonto.getKonto()) {
-        if (erKontonummerGyldigOgHarRiktigAvdelingsnummer(aktoerId, kontoType, samhandler)) {
+        if (erGyldigOgHarRiktigAvdelingsnummer(
+            avdelingsnummer, kontoType.getGyldigKonto(), kontoType.getAvdNr())) {
           KontonummerDTO kontonummer = new KontonummerDTO();
           kontonummer.setBankLandkode(trimToNull(kontoType.getKodeLand()));
           kontonummer.setBankNavn(trimToNull(kontoType.getBankNavn()));
@@ -185,10 +193,9 @@ public class TSSServiceImpl implements AktoerService {
     return null;
   }
 
-  private boolean erKontonummerGyldigOgHarRiktigAvdelingsnummer(
-      AktoerIdDTO aktoerIdDTO, KontoType kontoType, Samhandler samhandler) {
-    return kontoType.getGyldigKonto().equals(ER_GYLDIG)
-        && kontoType.getAvdNr().equals(hentAvdelingsnummer(aktoerIdDTO, samhandler));
+  private boolean erGyldigOgHarRiktigAvdelingsnummer(
+      String avdelingsnummer, String gyldig, String avdNr) {
+    return gyldig.equals(ER_GYLDIG) && avdNr.equals(avdelingsnummer);
   }
 
   private void validerResponse(TssSamhandlerData tssSamhandlerData, String aktoerId) {
