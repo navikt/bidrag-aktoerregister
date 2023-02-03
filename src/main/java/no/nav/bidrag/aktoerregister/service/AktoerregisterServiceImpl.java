@@ -7,16 +7,13 @@ import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
-import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
-import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
-import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +23,16 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
 
   private final AktoerRepository aktoerRepository;
   private final HendelseRepository hendelseRepository;
-  private final TPSService tpsService;
-  private final TSSService tssService;
+  private final AktoerService tpsService;
+  private final AktoerService tssService;
   private final AktoerMapper aktoerMapper;
 
   @Autowired
   public AktoerregisterServiceImpl(
       AktoerRepository aktoerRepository,
       HendelseRepository hendelseRepository,
-      TPSService tpsService,
-      TSSService tssService) {
+      @Qualifier("TPSServiceImpl") AktoerService tpsService,
+      @Qualifier("TSSServiceImpl") AktoerService tssService) {
     this.aktoerRepository = aktoerRepository;
     this.hendelseRepository = hendelseRepository;
     this.tpsService = tpsService;
@@ -44,8 +41,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   }
 
   @Override
-  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId)
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
+  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) {
     Aktoer aktoerDTOFromDB = hentAktoerFromDB(aktoerId.getAktoerId());
     if (aktoerDTOFromDB != null) {
       log.trace("Aktør {} funnet i databasen", aktoerId.getAktoerId());

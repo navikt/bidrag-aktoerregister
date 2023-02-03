@@ -1,6 +1,9 @@
 package no.nav.bidrag.aktoerregister.service;
 
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import no.nav.bidrag.aktoerregister.domene.AdresseDTO;
@@ -9,13 +12,13 @@ import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.mq.MQService;
 import no.rtv.namespacetss.AdresseSamhType;
 import no.rtv.namespacetss.KontoType;
 import no.rtv.namespacetss.ObjectFactory;
+import no.rtv.namespacetss.SamhAvdPraType;
 import no.rtv.namespacetss.Samhandler;
 import no.rtv.namespacetss.SamhandlerIDataB910Type;
 import no.rtv.namespacetss.SamhandlerType;
@@ -32,8 +35,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TSSServiceImpl implements TSSService {
+public class TSSServiceImpl implements AktoerService {
 
+  public static final String ER_GYLDIG = "J";
   private final MQService mqService;
 
   private final MQProperties mqProperties;
@@ -44,9 +48,12 @@ public class TSSServiceImpl implements TSSService {
     this.mqProperties = mqProperties;
   }
 
+  private static <I, O> Optional<O> getFirst(I input, Function<I, ? extends List<O>> transformer) {
+    return input != null ? transformer.apply(input).stream().findFirst() : Optional.empty();
+  }
+
   @Override
-  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId)
-      throws MQServiceException, AktoerNotFoundException, TSSServiceException {
+  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) {
     TssSamhandlerData request = createTssSamhandlerRequest(aktoerId);
 
     TssSamhandlerData response =
@@ -56,7 +63,7 @@ public class TSSServiceImpl implements TSSService {
             TssSamhandlerData.class,
             TssSamhandlerData.class);
 
-    validateResponse(response, aktoerId.getAktoerId());
+    validerResponse(response, aktoerId.getAktoerId());
     return mapToAktoer(response, aktoerId);
   }
 
@@ -91,91 +98,100 @@ public class TSSServiceImpl implements TSSService {
                 TypeOD910::getEnkeltSamhandler)
             .orElse(null);
     if (samhandler != null) {
-
       AktoerDTO aktoer = new AktoerDTO(aktoerId);
-      aktoer.setOffentligId(getOffentligId(samhandler).orElse(null));
-      aktoer.setOffentligIdType(getOffentligIdType(samhandler).orElse(null));
-      aktoer.setAdresse(mapToAdresse(samhandler));
-      aktoer.setKontonummer(mapToKontonummer(samhandler));
+      aktoer.setOffentligId(hentOffentligId(samhandler));
+      aktoer.setOffentligIdType(hentOffentligIdType(samhandler));
+      aktoer.setAdresse(mapTilAdresse(samhandler));
+      aktoer.setKontonummer(mapTilKontonummer(samhandler, aktoerId));
       return aktoer;
     }
     return null;
   }
 
-  private Optional<String> getOffentligId(Samhandler samhandler) {
-    return getFirst(samhandler.getSamhandler110(), TypeSamhandler::getSamhandler)
-        .map(SamhandlerType::getIdOff);
+  private String hentAvdelingsnummer(AktoerIdDTO aktoerId, Samhandler samhandler) {
+    return samhandler.getSamhandlerAvd125().getSamhAvd().stream()
+        .filter(avdeling -> Objects.equals(avdeling.getIdOffTSS(), aktoerId.getAktoerId()))
+        .map(SamhAvdPraType::getAvdNr)
+        .findFirst()
+        .orElseThrow();
   }
 
-  private Optional<String> getOffentligIdType(Samhandler samhandler) {
+  private String hentOffentligId(Samhandler samhandler) {
     return getFirst(samhandler.getSamhandler110(), TypeSamhandler::getSamhandler)
-        .map(SamhandlerType::getKodeIdentType);
+        .map(SamhandlerType::getIdOff)
+        .orElse(null);
   }
 
-  private AdresseDTO mapToAdresse(Samhandler samhandler) {
+  private String hentOffentligIdType(Samhandler samhandler) {
+    return getFirst(samhandler.getSamhandler110(), TypeSamhandler::getSamhandler)
+        .map(SamhandlerType::getKodeIdentType)
+        .orElse(null);
+  }
+
+  private AdresseDTO mapTilAdresse(Samhandler samhandler) {
     TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
     if (typeSamhAdr != null) {
       AdresseDTO adresse = new AdresseDTO();
-      getFirst(samhandler.getSamhandler110(), TypeSamhandler::getSamhandler)
-          .map(SamhandlerType::getNavnSamh)
-          .ifPresent(adresse::setNavn);
-
+      settNavnFraSamhandler(samhandler, adresse);
       for (AdresseSamhType adresseSamhType : typeSamhAdr.getAdresseSamh()) {
-        adresse.setLand(trim(adresseSamhType.getKodeLand()));
-        adresse.setPoststed(trim(adresseSamhType.getPoststed()));
-        adresse.setPostnr(trim(adresseSamhType.getPostNr()));
-        if (adresseSamhType.getAdrLinjeInfo() != null) {
-          List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
-          if (adresselinjer.size() >= 1) {
-            adresse.setAdresselinje1(trim(adresselinjer.get(0)));
-          }
-          if (adresselinjer.size() >= 2) {
-            adresse.setAdresselinje2(trim(adresselinjer.get(1)));
-          }
-          if (adresselinjer.size() >= 3) {
-            adresse.setAdresselinje3(trim(adresselinjer.get(2)));
-          }
-        }
+        adresse.setLand(trimToNull(adresseSamhType.getKodeLand()));
+        adresse.setPoststed(trimToNull(adresseSamhType.getPoststed()));
+        adresse.setPostnr(trimToNull(adresseSamhType.getPostNr()));
+        settAdresselinjer(adresse, adresseSamhType);
         return adresse;
       }
     }
     return null;
   }
 
-  private KontonummerDTO mapToKontonummer(Samhandler samhandler) {
-    KontonummerDTO kontonummerNorsk = null;
-    KontonummerDTO kontonummerUtlandsk = null;
+  private static void settAdresselinjer(AdresseDTO adresse, AdresseSamhType adresseSamhType) {
+    if (adresseSamhType.getAdrLinjeInfo() != null) {
+      List<String> adresselinjer = adresseSamhType.getAdrLinjeInfo().getAdresseLinje();
+      if (adresselinjer.size() >= 1) {
+        adresse.setAdresselinje1(trimToNull(adresselinjer.get(0)));
+      }
+      if (adresselinjer.size() >= 2) {
+        adresse.setAdresselinje2(trimToNull(adresselinjer.get(1)));
+      }
+      if (adresselinjer.size() >= 3) {
+        adresse.setAdresselinje3(trimToNull(adresselinjer.get(2)));
+      }
+    }
+  }
+
+  private void settNavnFraSamhandler(Samhandler samhandler, AdresseDTO adresse) {
+    getFirst(samhandler.getSamhandler110(), TypeSamhandler::getSamhandler)
+        .map(SamhandlerType::getNavnSamh)
+        .ifPresent(adresse::setNavn);
+  }
+
+  private KontonummerDTO mapTilKontonummer(Samhandler samhandler, AktoerIdDTO aktoerId) {
     TypeSamhKonto typeSamhKonto = samhandler.getKonto140();
     if (typeSamhKonto != null) {
       for (KontoType kontoType : typeSamhKonto.getKonto()) {
-        KontonummerDTO kontonummer = new KontonummerDTO();
-        kontonummer.setBankLandkode(trim(kontoType.getKodeLand()));
-        kontonummer.setBankNavn(trim(kontoType.getBankNavn()));
-        kontonummer.setNorskKontonr(trim(kontoType.getGironrInnland()));
-        kontonummer.setSwift(trim(kontoType.getSwiftKode()));
-        kontonummer.setValutaKode(trim(kontoType.getKodeValuta()));
-        kontonummer.setBankCode(trim(kontoType.getBankKode()));
-        kontonummer.setIban(trim(kontoType.getGironrUtland()));
-        if (kontonummer.getNorskKontonr() != null) {
-          kontonummerNorsk = kontonummer;
-        }
-        if (kontonummer.getIban() != null) {
-          kontonummerUtlandsk = kontonummer;
+        if (erKontonummerGyldigOgHarRiktigAvdelingsnummer(aktoerId, kontoType, samhandler)) {
+          KontonummerDTO kontonummer = new KontonummerDTO();
+          kontonummer.setBankLandkode(trimToNull(kontoType.getKodeLand()));
+          kontonummer.setBankNavn(trimToNull(kontoType.getBankNavn()));
+          kontonummer.setNorskKontonr(trimToNull(kontoType.getGironrInnland()));
+          kontonummer.setSwift(trimToNull(kontoType.getSwiftKode()));
+          kontonummer.setValutaKode(trimToNull(kontoType.getKodeValuta()));
+          kontonummer.setBankCode(trimToNull(kontoType.getBankKode()));
+          kontonummer.setIban(trimToNull(kontoType.getGironrUtland()));
+          return kontonummer;
         }
       }
     }
-    if (kontonummerNorsk != null) {
-      return kontonummerNorsk;
-    }
-    return kontonummerUtlandsk;
+    return null;
   }
 
-  private static String trim(String input) {
-    return input != null && !input.isBlank() ? input.trim() : null;
+  private boolean erKontonummerGyldigOgHarRiktigAvdelingsnummer(
+      AktoerIdDTO aktoerIdDTO, KontoType kontoType, Samhandler samhandler) {
+    return kontoType.getGyldigKonto().equals(ER_GYLDIG)
+        && kontoType.getAvdNr().equals(hentAvdelingsnummer(aktoerIdDTO, samhandler));
   }
 
-  private void validateResponse(TssSamhandlerData tssSamhandlerData, String aktoerId)
-      throws AktoerNotFoundException, TSSServiceException {
+  private void validerResponse(TssSamhandlerData tssSamhandlerData, String aktoerId) {
     SvarStatusType svarStatusType = tssSamhandlerData.getTssOutputData().getSvarStatus();
     if (svarStatusType.getAlvorligGrad().equals("00")) {
       return;
@@ -185,15 +201,5 @@ public class TSSServiceImpl implements TSSService {
     }
     throw new TSSServiceException(
         svarStatusType.getBeskrMelding() + " " + svarStatusType.getKodeMelding());
-  }
-
-  private static <I, O> Optional<O> getFirst(I input, Function<I, ? extends List<O>> transformer) {
-    if (input != null) {
-      List<O> list = transformer.apply(input);
-      if (!list.isEmpty()) {
-        return Optional.ofNullable(list.get(0));
-      }
-    }
-    return Optional.empty();
   }
 }

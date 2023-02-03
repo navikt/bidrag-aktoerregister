@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import jakarta.xml.bind.JAXBException;
-import javax.jms.JMSException;
 import no.nav.bidrag.felles.test.data.person.TestPerson;
 import no.rtv.namespacetps.ObjectFactory;
 import no.rtv.namespacetps.SRnavn;
@@ -16,10 +15,10 @@ import org.junit.jupiter.api.Test;
 
 public class XmlUtilTests {
 
-  private static TestPerson PERSON1 = person().opprett();
+  private static final TestPerson PERSON1 = person().opprett();
 
   @Test
-  public void TestThatXMLStringIsCorrectlyMappedBackToObject() throws JAXBException, JMSException {
+  public void TestThatXMLStringIsCorrectlyMappedBackToObject() throws JAXBException {
     ObjectFactory objectFactory = new ObjectFactory();
     TpsPersonData tpsPersonData = objectFactory.createTpsPersonData();
 

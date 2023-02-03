@@ -1,10 +1,11 @@
 package no.nav.bidrag.aktoerregister.service;
 
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.mq.MQService;
@@ -20,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TPSServiceImpl implements TPSService {
+public class TPSServiceImpl implements AktoerService {
 
   private final MQService mqService;
 
@@ -33,8 +34,7 @@ public class TPSServiceImpl implements TPSService {
   }
 
   @Override
-  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId)
-      throws MQServiceException, AktoerNotFoundException, TPSServiceException {
+  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) {
     TpsPersonData request = createTpsPersonDataRequest(aktoerId);
 
     TpsPersonData response =
@@ -73,36 +73,29 @@ public class TPSServiceImpl implements TPSService {
   private KontonummerDTO mapToKontonummer(PersondataFraTpsS102 persondataFraTpsS102) {
     TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
     TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
-
-    if (giroInfoNorsk != null
-        && giroInfoNorsk.getGiroNummer() != null
-        && !giroInfoNorsk.getGiroNummer().isBlank()) {
+    if (giroInfoNorsk != null && finnesGiroInfo(giroInfoNorsk.getGiroNummer())) {
       KontonummerDTO kontonummer = new KontonummerDTO();
-      kontonummer.setNorskKontonr(trim(giroInfoNorsk.getGiroNummer()));
+      kontonummer.setNorskKontonr(trimToNull(giroInfoNorsk.getGiroNummer()));
       return kontonummer;
     }
-    if (giroInfoUtlandsk != null
-        && giroInfoUtlandsk.getGiroNrUtland() != null
-        && !giroInfoUtlandsk.getGiroNrUtland().isBlank()) {
+    if (giroInfoUtlandsk != null && finnesGiroInfo(giroInfoUtlandsk.getGiroNrUtland())) {
       KontonummerDTO kontonummer = new KontonummerDTO();
-      kontonummer.setIban(trim(giroInfoUtlandsk.getGiroNrUtland()));
-      kontonummer.setSwift(trim(giroInfoUtlandsk.getSwiftKodeUtland()));
-      kontonummer.setValutaKode(trim(giroInfoUtlandsk.getBankValuta()));
-      kontonummer.setBankNavn(trim(giroInfoUtlandsk.getBankNavnUtland()));
-      kontonummer.setBankLandkode(trim(giroInfoUtlandsk.getBankLandKode()));
-      kontonummer.setBankCode(trim(giroInfoUtlandsk.getBankKodeUtland()));
+      kontonummer.setIban(trimToNull(giroInfoUtlandsk.getGiroNrUtland()));
+      kontonummer.setSwift(trimToNull(giroInfoUtlandsk.getSwiftKodeUtland()));
+      kontonummer.setValutaKode(trimToNull(giroInfoUtlandsk.getBankValuta()));
+      kontonummer.setBankNavn(trimToNull(giroInfoUtlandsk.getBankNavnUtland()));
+      kontonummer.setBankLandkode(trimToNull(giroInfoUtlandsk.getBankLandKode()));
+      kontonummer.setBankCode(trimToNull(giroInfoUtlandsk.getBankKodeUtland()));
       return kontonummer;
     }
-
     return null;
   }
 
-  private static String trim(String input) {
-    return input != null && !input.isBlank() ? input.trim() : null;
+  private boolean finnesGiroInfo(String giroInfoNorsk1) {
+    return giroInfoNorsk1 != null && !giroInfoNorsk1.isBlank();
   }
 
-  private void validateResponse(TpsPersonData tpsPersonData, String aktoerId)
-      throws AktoerNotFoundException, TPSServiceException {
+  private void validateResponse(TpsPersonData tpsPersonData, String aktoerId) {
     StatusFraTPS statusFraTPS = tpsPersonData.getTpsSvar().getSvarStatus();
     String returStatus = statusFraTPS.getReturStatus();
     if (returStatus.equals("00") || returStatus.equals("04")) {
