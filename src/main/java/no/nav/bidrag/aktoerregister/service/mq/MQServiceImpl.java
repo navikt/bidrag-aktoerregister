@@ -32,8 +32,7 @@ public class MQServiceImpl implements MQService {
 
   @Override
   public <Request, Response> Response performRequestResponse(
-      String queue, Request request, Class<Request> requestClass, Class<Response> responseClass)
-      throws MQServiceException {
+      String queue, Request request, Class<Request> requestClass, Class<Response> responseClass) {
     try {
       JMSContext jmsContext = connectionFactory.createContext();
 

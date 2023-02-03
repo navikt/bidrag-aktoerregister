@@ -1,5 +1,6 @@
 package no.nav.bidrag.aktoerregister.persistence.entities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,6 +48,10 @@ public class Aktoer {
 
   @OneToMany(mappedBy = "aktoer", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Hendelse> hendelser = new ArrayList<>();
+
+  @Version
+  @Column(name = "sist_endret")
+  private Timestamp sistEndret;
 
   public void addHendelse(Hendelse hendelse) {
     hendelser.add(hendelse);

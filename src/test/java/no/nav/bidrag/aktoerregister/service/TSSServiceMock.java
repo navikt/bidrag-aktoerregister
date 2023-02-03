@@ -4,7 +4,7 @@ import no.nav.bidrag.aktoerregister.domene.AdresseDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 
-public class TSSServiceMock implements TSSService {
+public class TSSServiceMock implements AktoerService {
 
   @Override
   public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) {

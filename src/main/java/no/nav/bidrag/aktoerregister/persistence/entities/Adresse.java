@@ -1,10 +1,12 @@
 package no.nav.bidrag.aktoerregister.persistence.entities;
 
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,4 +40,8 @@ public class Adresse {
 
   @Column(name = "land")
   private String land;
+
+  @Version
+  @Column(name = "sist_endret")
+  private Timestamp sistEndret;
 }

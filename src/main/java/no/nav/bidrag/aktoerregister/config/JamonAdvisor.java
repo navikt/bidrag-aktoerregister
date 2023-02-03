@@ -2,8 +2,7 @@ package no.nav.bidrag.aktoerregister.config;
 
 import java.lang.reflect.Method;
 import no.nav.bidrag.aktoerregister.api.AktoerregisterController;
-import no.nav.bidrag.aktoerregister.service.TPSService;
-import no.nav.bidrag.aktoerregister.service.TSSService;
+import no.nav.bidrag.aktoerregister.service.AktoerService;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.interceptor.JamonPerformanceMonitorInterceptor;
@@ -18,8 +17,7 @@ public class JamonAdvisor extends AbstractPointcutAdvisor {
         @Override
         public boolean matches(Method method, Class<?> targetClass) {
           return AktoerregisterController.class.isAssignableFrom(targetClass)
-              || TSSService.class.isAssignableFrom(targetClass)
-              || TPSService.class.isAssignableFrom(targetClass);
+              || AktoerService.class.isAssignableFrom(targetClass);
         }
       };
 

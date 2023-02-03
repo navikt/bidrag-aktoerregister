@@ -9,32 +9,33 @@ import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
 import no.nav.bidrag.aktoerregister.mapper.Mapper;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
-import no.nav.bidrag.aktoerregister.service.TSSService;
+import no.nav.bidrag.aktoerregister.service.AktoerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProcessorResult> {
 
-  private final TSSService tssService;
+  private final AktoerService tssService;
 
   private final Mapper<AktoerDTO, Aktoer> aktoerMapper;
 
   private final Logger logger = LoggerFactory.getLogger(TSSAktoerProcessor.class);
 
   @Autowired
-  public TSSAktoerProcessor(TSSService tssService) {
+  public TSSAktoerProcessor(@Qualifier("TSSServiceImpl") AktoerService tssService) {
     this.tssService = tssService;
     this.aktoerMapper = new AktoerMapper();
   }
 
   @Override
-  public TSSAktoerProcessorResult process(Aktoer aktoer)
-      throws MQServiceException, TSSServiceException {
-    AktoerIdDTO aktoerIdDTO = new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+  public TSSAktoerProcessorResult process(Aktoer aktoer) {
+    AktoerIdDTO aktoerIdDTO =
+        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
     try {
       AktoerDTO tssAktoerDTO = tssService.hentAktoer(aktoerIdDTO);
       AktoerDTO dbAktoerDTO = aktoerMapper.toDomain(aktoer);

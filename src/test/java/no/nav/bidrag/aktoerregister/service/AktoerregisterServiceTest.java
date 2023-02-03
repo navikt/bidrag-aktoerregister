@@ -16,10 +16,6 @@ import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
-import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
-import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
-import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
 import no.nav.bidrag.aktoerregister.mapper.Mapper;
 import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
@@ -46,9 +42,9 @@ public class AktoerregisterServiceTest {
 
   private MockDB mockDB;
 
-  @Mock private TPSService tpsService;
+  @Mock private AktoerService tpsService;
 
-  @Mock private TSSService tssService;
+  @Mock private AktoerService tssService;
 
   private AktoerregisterService aktoerregisterService;
 
@@ -66,8 +62,7 @@ public class AktoerregisterServiceTest {
   }
 
   @Test
-  public void TestHentAktoerWithPersonnummerAndAktoerDoesNotExist()
-      throws MQServiceException, AktoerNotFoundException, TPSServiceException, TSSServiceException {
+  public void TestHentAktoerWithPersonnummerAndAktoerDoesNotExist() {
     AktoerDTO aktoerDTO =
         createTPSAktoerDTO(PERSON1.getPersonIdent(), KONTO1.getNorskKontonummer(), true);
 
@@ -87,9 +82,8 @@ public class AktoerregisterServiceTest {
   }
 
   @Test
-  public void TestHentAktoerWithAktoernummerAndAktoerDoesNotExist()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1, KONTO1, "Testgate 1", true);
+  public void TestHentAktoerWithAktoernummerAndAktoerDoesNotExist() {
+    Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1);
     AktoerIdDTO aktoerIdDTO =
         new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
@@ -111,9 +105,8 @@ public class AktoerregisterServiceTest {
   }
 
   @Test
-  public void TestOppdaterAktoer()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1, KONTO1, "Testgate 1", true);
+  public void TestOppdaterAktoer() {
+    Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1);
     AktoerIdDTO aktoerIdDTO =
         new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
@@ -141,9 +134,8 @@ public class AktoerregisterServiceTest {
   }
 
   @Test
-  public void TestHentHendelser()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
-    Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1, KONTO1, "Testgate 1", true);
+  public void TestHentHendelser() {
+    Aktoer aktoer = createTSSAktoerDTO(SAMHANDLER1);
     AktoerIdDTO aktoerIdDTO =
         new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
 
@@ -164,7 +156,7 @@ public class AktoerregisterServiceTest {
     assertEquals(1, hendelseDTOList.size());
     assertEquals(4, hendelseDTOList.get(0).getSekvensnummer());
 
-    Aktoer aktoer2 = createTSSAktoerDTO(SAMHANDLER2, KONTO1, "Testgate 1", true);
+    Aktoer aktoer2 = createTSSAktoerDTO(SAMHANDLER2);
     AktoerIdDTO aktoerIdDTO2 =
         new AktoerIdDTO(aktoer2.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer2.getAktoerType()));
 
@@ -204,19 +196,15 @@ public class AktoerregisterServiceTest {
   }
 
   private Aktoer createTSSAktoerDTO(
-      TestSamhandler samhandler, TestKonto konto, String adresselinje1, boolean norsk) {
+      TestSamhandler samhandler) {
     Aktoer aktoer = new Aktoer();
     AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
     aktoerIdDTO.setAktoerId(samhandler.getSamhandlerIdent());
     aktoerIdDTO.setIdenttype(IdenttypeDTO.AKTOERNUMMER);
     Kontonummer kontonummerDTO = new Kontonummer();
-    if (norsk) {
-      kontonummerDTO.setNorskKontonr(konto.getNorskKontonummer());
-    } else {
-      kontonummerDTO.setIban(konto.getNorskKontonummer());
-    }
+    kontonummerDTO.setNorskKontonr(AktoerregisterServiceTest.KONTO1.getNorskKontonummer());
     Adresse adresseDTO = new Adresse();
-    adresseDTO.setAdresselinje1(adresselinje1);
+    adresseDTO.setAdresselinje1("Testgate 1");
 
     aktoer.setAktoerIdent(samhandler.getSamhandlerIdent());
     aktoer.setAktoerType(IdenttypeDTO.AKTOERNUMMER.name());

@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.exception;
 
-public class MQServiceException extends Exception {
+public class MQServiceException extends RuntimeException {
 
   public MQServiceException(String message) {
     super(message);

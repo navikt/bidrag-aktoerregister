@@ -5,19 +5,14 @@ import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
-import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
-import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
-import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterServiceImpl;
-import no.nav.bidrag.aktoerregister.service.TPSService;
+import no.nav.bidrag.aktoerregister.service.AktoerService;
 import no.nav.bidrag.aktoerregister.service.TPSServiceMock;
-import no.nav.bidrag.aktoerregister.service.TSSService;
 import no.nav.bidrag.aktoerregister.service.TSSServiceMock;
 import no.nav.security.token.support.core.api.Unprotected;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +32,14 @@ public class AktoerRegisterControllerMock {
   @Autowired
   public AktoerRegisterControllerMock(
       AktoerRepository aktoerRepository, HendelseRepository hendelseRepository) {
-    TSSService tssService = new TSSServiceMock();
-    TPSService tpsService = new TPSServiceMock();
+    AktoerService tssService = new TSSServiceMock();
+    AktoerService tpsService = new TPSServiceMock();
     this.aktoerregisterService =
         new AktoerregisterServiceImpl(aktoerRepository, hendelseRepository, tpsService, tssService);
   }
 
   @GetMapping("/{fnr}")
-  public ResponseEntity<AktoerDTO> hentAktoer(@PathVariable(name = "fnr") String fnr)
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException, TPSServiceException {
+  public ResponseEntity<AktoerDTO> hentAktoer(@PathVariable(name = "fnr") String fnr) {
     AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
     aktoerIdDTO.setAktoerId(fnr);
     aktoerIdDTO.setIdenttype(IdenttypeDTO.PERSONNUMMER);

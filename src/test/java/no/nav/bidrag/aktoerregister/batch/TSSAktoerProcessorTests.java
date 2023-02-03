@@ -10,11 +10,9 @@ import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
-import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
-import no.nav.bidrag.aktoerregister.service.TSSService;
+import no.nav.bidrag.aktoerregister.service.AktoerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TSSAktoerProcessorTests {
 
-  @Mock private TSSService tssService;
+  @Mock private AktoerService tssService;
 
   private TSSAktoerProcessor tssAktoerProcessor;
 
@@ -35,8 +33,7 @@ public class TSSAktoerProcessorTests {
   }
 
   @Test
-  public void TestAktoerFromTssUpdated()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException {
+  public void TestAktoerFromTssUpdated() {
 
     Aktoer aktoer = new Aktoer();
     aktoer.setAktoerIdent("1234");
@@ -60,8 +57,7 @@ public class TSSAktoerProcessorTests {
   }
 
   @Test
-  public void TestAktoerFromTssNotUpdated()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException {
+  public void TestAktoerFromTssNotUpdated() {
     Aktoer aktoer = new Aktoer();
     aktoer.setAktoerIdent("1234");
     aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
@@ -88,8 +84,7 @@ public class TSSAktoerProcessorTests {
   }
 
   @Test
-  public void TestAkterNotFound()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException {
+  public void TestAkterNotFound() {
     Aktoer aktoer = new Aktoer();
     aktoer.setAktoerIdent("1234");
     aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());

@@ -55,9 +55,7 @@ public class AktoerregisterController {
         content = @Content())
   })
   @PostMapping(path = "/aktoer", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AktoerDTO> hentAktoer(@RequestBody AktoerIdDTO request)
-      throws ResponseStatusException {
-
+  public ResponseEntity<AktoerDTO> hentAktoer(@RequestBody AktoerIdDTO request) {
     try {
       AktoerDTO aktoer = aktoerregisterService.hentAktoer(request);
       return ResponseEntity.ok(aktoer);
@@ -77,12 +75,14 @@ public class AktoerregisterController {
   @Operation(
       summary = "Tilbyr en liste over aktøroppdateringer.",
       description =
-          "Ingen informasjon om aktøren leveres av denne tjenesten utover aktørId'n. Hendelsene legges inn med stigende sekvensnummer."
-              + "Klienten må selv ta vare på hvilke sekvensnummer som sist er behandlet, og be om å få hendelser fra det neste sekvensnummeret ved neste kall."
-              + "Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall."
-              + "\n\n"
-              + "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser. Det kan forekomme hull i sekvensnummer-rekken."
-              + "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres.")
+          """
+              Ingen informasjon om aktøren leveres av denne tjenesten utover aktørId'n.
+              Hendelsene legges inn med stigende sekvensnummer. Klienten må selv ta vare på hvilke sekvensnummer som sist er behandlet, og be om å få hendelser fra det neste sekvensnummeret ved neste kall.
+              Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall.
+
+              Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser.
+              Det kan forekomme hull i sekvensnummer-rekken.
+              Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres.""")
   @GetMapping(path = "/hendelser", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<HendelseDTO>> hentHendelser(
       @Parameter(description = "Angir første sekvensnummer som ønskes hentet. Default-verdi er 0")
@@ -91,9 +91,7 @@ public class AktoerregisterController {
       @Parameter(
               description = "Maksimalt antall hendelser som ønskes hentet. Default-verdi er 1000.")
           @RequestParam(name = "antall", defaultValue = "1000")
-          Integer antall)
-      throws ResponseStatusException {
-
+          Integer antall) {
     try {
       List<HendelseDTO> hendelser = aktoerregisterService.hentHendelser(fraSekvensnummer, antall);
 

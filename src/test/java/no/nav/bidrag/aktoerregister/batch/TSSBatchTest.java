@@ -12,14 +12,11 @@ import javax.jms.ConnectionFactory;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
-import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
-import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Kontonummer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
-import no.nav.bidrag.aktoerregister.service.TSSService;
+import no.nav.bidrag.aktoerregister.service.TSSServiceImpl;
 import no.nav.bidrag.aktoerregister.service.mq.TPSConsumer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +51,7 @@ public class TSSBatchTest {
 
   @Autowired private AktoerRepository aktoerRepository;
 
-  @MockBean private TSSService tssService;
+  @MockBean private TSSServiceImpl tssService;
 
   @MockBean private TPSConsumer tpsConsumer;
 
@@ -100,8 +97,7 @@ public class TSSBatchTest {
         50, updateTSSAktoererStep.getExecutionContext().getLong(TSSBatchConfig.NR_UPDATED));
   }
 
-  private void createAktoererAndSetupMocks()
-      throws MQServiceException, TSSServiceException, AktoerNotFoundException {
+  private void createAktoererAndSetupMocks() {
     List<Aktoer> aktoerList = new ArrayList<>();
     for(int i = 0; i < 150; i++) {
       Aktoer aktoer = new Aktoer();
