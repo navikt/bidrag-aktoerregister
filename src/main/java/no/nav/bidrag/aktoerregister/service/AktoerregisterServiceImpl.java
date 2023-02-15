@@ -6,14 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
 import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
 import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
-import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
-import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
+import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,39 +25,37 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
   private final HendelseRepository hendelseRepository;
   private final AktoerService tpsService;
   private final AktoerService tssService;
-  private final AktoerMapper aktoerMapper;
+  private final ConversionService conversionService;
 
   @Autowired
   public AktoerregisterServiceImpl(
       AktoerRepository aktoerRepository,
       HendelseRepository hendelseRepository,
       @Qualifier("TPSServiceImpl") AktoerService tpsService,
-      @Qualifier("TSSServiceImpl") AktoerService tssService) {
+      @Qualifier("TSSServiceImpl") AktoerService tssService,
+      ConversionService conversionService) {
+    this.conversionService = conversionService;
     this.aktoerRepository = aktoerRepository;
     this.hendelseRepository = hendelseRepository;
     this.tpsService = tpsService;
     this.tssService = tssService;
-    aktoerMapper = new AktoerMapper();
   }
 
   @Override
   public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) {
-    Aktoer aktoerDTOFromDB = hentAktoerFromDB(aktoerId.getAktoerId());
-    if (aktoerDTOFromDB != null) {
-      log.trace("Aktør {} funnet i databasen", aktoerId.getAktoerId());
-      return aktoerMapper.toDomain(aktoerDTOFromDB);
-    }
+    String aktoerIdent = aktoerId.getAktoerId();
 
-    // Aktoer does not exist in our DB, and we need to fetch it from TSS or TPS
-    AktoerDTO aktoerDTO;
-    if (aktoerId.getIdenttype().equals(IdenttypeDTO.AKTOERNUMMER)) {
-      log.trace("Henter aktør {} fra TSS", aktoerId.getAktoerId());
-      aktoerDTO = tssService.hentAktoer(aktoerId);
+    Aktoer aktoer = hentAktoerFromDB(aktoerIdent);
+    if (aktoer != null) {
+      log.trace("Aktør {} funnet i databasen", aktoerIdent);
+    } else if (aktoerId.getIdenttype().equals(IdenttypeDTO.AKTOERNUMMER)) {
+      log.trace("Henter aktør {} fra TSS", aktoerIdent);
+      aktoer = lagreAktoer(tssService.hentAktoer(aktoerIdent));
     } else {
-      log.trace("Henter aktør {} fra TPS", aktoerId.getAktoerId());
-      aktoerDTO = tpsService.hentAktoer(aktoerId);
+      log.trace("Henter aktør {} fra TPS", aktoerIdent);
+      aktoer = lagreAktoer(tpsService.hentAktoer(aktoerIdent));
     }
-    return addAktoer(aktoerDTO);
+    return conversionService.convert(aktoer, AktoerDTO.class);
   }
 
   @Override
@@ -83,31 +81,21 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
         .toList();
   }
 
-  private AktoerDTO addAktoer(AktoerDTO aktoerDTO) {
-    Aktoer aktoer = aktoerMapper.toPersistence(aktoerDTO);
-
-    Aktoer savedAktoer = aktoerRepository.insertOrUpdateAktoer(aktoer);
-
-    return aktoerMapper.toDomain(savedAktoer);
+  private Aktoer lagreAktoer(Aktoer aktoer) {
+    return aktoerRepository.opprettEllerOppdaterAktoer(aktoer);
   }
 
   @Transactional
   @Override
-  public void oppdaterAktoer(Aktoer updatedAktoer) {
-    Aktoer existingAktoer = hentAktoerFromDB(updatedAktoer.getAktoerIdent());
-    existingAktoer.setOffentligId(updatedAktoer.getOffentligId());
-    existingAktoer.setOffentligIdType(updatedAktoer.getOffentligIdType());
-    existingAktoer.setAdresse(updatedAktoer.getAdresse());
-    existingAktoer.setKontonummer(updatedAktoer.getKontonummer());
-
-    aktoerRepository.insertOrUpdateAktoer(existingAktoer);
+  public void oppdaterAktoer(Aktoer aktoer) {
+    aktoerRepository.opprettEllerOppdaterAktoer(aktoer);
   }
 
   @Transactional
   @Override
-  public void oppdaterAktoerer(List<Aktoer> updatedAktoerList) {
-    aktoerRepository.insertOrUpdateAktoerer(updatedAktoerList);
-    hendelseRepository.insertHendelser(updatedAktoerList);
+  public void oppdaterAktoerer(List<Aktoer> aktoerliste) {
+    aktoerRepository.opprettEllerOppdaterAktoerer(aktoerliste);
+    hendelseRepository.opprettHendelser(aktoerliste);
   }
 
   @Override
