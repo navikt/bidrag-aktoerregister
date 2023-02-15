@@ -4,9 +4,9 @@ import java.util.List;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 
 public interface AktoerRepository {
-  Aktoer insertOrUpdateAktoer(Aktoer aktoer);
+  Aktoer opprettEllerOppdaterAktoer(Aktoer aktoer);
 
-  List<Aktoer> insertOrUpdateAktoerer(List<Aktoer> aktoerList);
+  List<Aktoer> opprettEllerOppdaterAktoerer(List<Aktoer> aktoerList);
 
   Aktoer getAktoer(String aktoerIdent);
 

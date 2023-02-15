@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.domene;
+package no.nav.bidrag.aktoerregister.domene.enumer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -13,5 +13,5 @@ public enum IdenttypeDTO {
   @Schema(
       description =
           "AKTOERNUMMER angir at identitetsnummeret er en TSS-ident. A.k.a. en samhandler-id.")
-  AKTOERNUMMER;
+  AKTOERNUMMER
 }

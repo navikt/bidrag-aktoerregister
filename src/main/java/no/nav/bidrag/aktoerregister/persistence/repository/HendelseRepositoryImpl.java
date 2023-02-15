@@ -26,7 +26,7 @@ public class HendelseRepositoryImpl implements HendelseRepository {
   }
 
   @Override
-  public void insertHendelser(List<Aktoer> updatedAktoerer) {
+  public void opprettHendelser(List<Aktoer> updatedAktoerer) {
     List<Hendelse> hendelser = updatedAktoerer.stream().map(Hendelse::new).toList();
     hendelseJpaRepository.saveAll(hendelser);
   }
