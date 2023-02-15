@@ -26,7 +26,7 @@ public record HendelseRepositoryMock(MockDB mockDB) implements HendelseRepositor
   }
 
   @Override
-  public void insertHendelser(List<Aktoer> updatedAktoerer) {
+  public void opprettHendelser(List<Aktoer> updatedAktoerer) {
     List<Hendelse> hendelser = updatedAktoerer.stream().map(Hendelse::new).toList();
     int max = mockDB.hendelseMap.keySet().stream().max(Integer::compareTo).orElse(0);
     for (Hendelse hendelse : hendelser) {

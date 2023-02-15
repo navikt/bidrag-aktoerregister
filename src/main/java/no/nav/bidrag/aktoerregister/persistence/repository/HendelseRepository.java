@@ -8,5 +8,5 @@ public interface HendelseRepository {
 
   List<Hendelse> hentHendelser(int fraSekvensnummer, int antallHendelser);
 
-  void insertHendelser(List<Aktoer> updatedAktoerer);
+  void opprettHendelser(List<Aktoer> updatedAktoerer);
 }

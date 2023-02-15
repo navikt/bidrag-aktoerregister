@@ -9,7 +9,7 @@ import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
 
   @Override
-  public Aktoer insertOrUpdateAktoer(Aktoer aktoer) {
+  public Aktoer opprettEllerOppdaterAktoer(Aktoer aktoer) {
     aktoer.addHendelse(createHendelse(aktoer));
     mockDB.aktoerMap.put(aktoer.getAktoerIdent(), aktoer);
     for (Hendelse hendelse : aktoer.getHendelser()) {
@@ -19,9 +19,9 @@ public record AktoerRepositoryMock(MockDB mockDB) implements AktoerRepository {
   }
 
   @Override
-  public List<Aktoer> insertOrUpdateAktoerer(List<Aktoer> aktoerList) {
+  public List<Aktoer> opprettEllerOppdaterAktoerer(List<Aktoer> aktoerList) {
     for (Aktoer aktoer : aktoerList) {
-      insertOrUpdateAktoer(aktoer);
+      opprettEllerOppdaterAktoer(aktoer);
     }
     return aktoerList;
   }
