@@ -10,15 +10,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest;
-import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
-import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
+import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
-import no.nav.bidrag.aktoerregister.persistence.entities.Kontonummer;
-import no.nav.bidrag.aktoerregister.persistence.repository.AdresseJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseJpaRepository;
-import no.nav.bidrag.aktoerregister.persistence.repository.KontonummerJpaRepository;
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,16 +52,10 @@ public class JpaRepositoryTests {
 
   @Autowired private AktoerJpaRepository aktoerJpaRepository;
 
-  @Autowired private AdresseJpaRepository adresseJpaRepository;
-
-  @Autowired private KontonummerJpaRepository kontonummerJpaRepository;
-
   @Test
   public void injectedRepositoriesIsNotNull() {
     assertNotNull(hendelseJpaRepository);
     assertNotNull(aktoerJpaRepository);
-    assertNotNull(adresseJpaRepository);
-    assertNotNull(kontonummerJpaRepository);
   }
 
   @BeforeEach
@@ -75,28 +65,20 @@ public class JpaRepositoryTests {
 
   @Test
   public void validateCascadeBetweenAktoerAndSubTables() {
-    List<Aktoer> aktoerer = generateAktoerList(20, 2);
+    List<Aktoer> aktoerer = generateAktoerList(2);
     aktoerJpaRepository.saveAll(aktoerer);
 
-    List<Adresse> adresser = adresseJpaRepository.findAll();
-    List<Kontonummer> kontonummer = kontonummerJpaRepository.findAll();
     List<Hendelse> hendelser = hendelseJpaRepository.findAll();
     List<Aktoer> savedAktoerer = aktoerJpaRepository.findAll();
 
-    assertEquals(20, adresser.size());
-    assertEquals(20, kontonummer.size());
     assertEquals(40, hendelser.size());
     assertEquals(20, savedAktoerer.size());
 
     aktoerJpaRepository.delete(savedAktoerer.get(0));
 
-    adresser = adresseJpaRepository.findAll();
-    kontonummer = kontonummerJpaRepository.findAll();
     hendelser = hendelseJpaRepository.findAll();
     savedAktoerer = aktoerJpaRepository.findAll();
 
-    assertEquals(19, adresser.size());
-    assertEquals(19, kontonummer.size());
     assertEquals(38, hendelser.size());
     assertEquals(19, savedAktoerer.size());
   }
@@ -104,7 +86,7 @@ public class JpaRepositoryTests {
   @Test
   public void validateHendelsePagination() {
     assertEquals(0, aktoerJpaRepository.count());
-    List<Aktoer> aktoerer = generateAktoerList(20, 3);
+    List<Aktoer> aktoerer = generateAktoerList(3);
     aktoerJpaRepository.saveAll(aktoerer);
 
     List<Hendelse> latestHendelser =
@@ -165,9 +147,9 @@ public class JpaRepositoryTests {
     assertTrue(latestHendelser.get(0).getSekvensnummer() > lastReceivedSekvensnummer);
   }
 
-  private List<Aktoer> generateAktoerList(int numberOfAktoers, int numberOfHendelser) {
+  private List<Aktoer> generateAktoerList(int numberOfHendelser) {
     List<Aktoer> aktoerList = new ArrayList<>();
-    for (int i = 0; i < numberOfAktoers; i++) {
+    for (int i = 0; i < 20; i++) {
       Aktoer aktoer = new Aktoer();
       aktoer.setAktoerIdent(UUID.randomUUID().toString());
       aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
@@ -190,17 +172,13 @@ public class JpaRepositoryTests {
   }
 
   private void addAdresse(Aktoer aktoer, int aktoerNr) {
-    Adresse adresse = new Adresse();
-    adresse.setLand("Norge");
-    adresse.setPostnr("0682");
-    adresse.setPoststed("Oslo");
-    adresse.setAdresselinje1("Testgate " + aktoerNr);
-    aktoer.setAdresse(adresse);
+    aktoer.setLand("Norge");
+    aktoer.setPostnr("0682");
+    aktoer.setPoststed("Oslo");
+    aktoer.setAdresselinje1("Testgate " + aktoerNr);
   }
 
   private void addKontonummer(Aktoer aktoer, int aktoerNr) {
-    Kontonummer kontonummer = new Kontonummer();
-    kontonummer.setNorskKontonr(String.valueOf(aktoerNr));
-    aktoer.setKontonummer(kontonummer);
+    aktoer.setNorskKontonr(String.valueOf(aktoerNr));
   }
 }

@@ -19,13 +19,13 @@ public class AktoerRepositoryImpl implements AktoerRepository {
   }
 
   @Override
-  public Aktoer insertOrUpdateAktoer(Aktoer aktoer) {
+  public Aktoer opprettEllerOppdaterAktoer(Aktoer aktoer) {
     aktoer.addHendelse(new Hendelse(aktoer));
     return aktoerJpaRepository.save(aktoer);
   }
 
   @Override
-  public List<Aktoer> insertOrUpdateAktoerer(List<Aktoer> aktoerList) {
+  public List<Aktoer> opprettEllerOppdaterAktoerer(List<Aktoer> aktoerList) {
     return aktoerJpaRepository.saveAll(aktoerList);
   }
 

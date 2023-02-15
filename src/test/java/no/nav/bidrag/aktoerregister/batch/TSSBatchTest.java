@@ -10,11 +10,8 @@ import java.util.List;
 import java.util.UUID;
 import javax.jms.ConnectionFactory;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
-import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
+import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
-import no.nav.bidrag.aktoerregister.persistence.entities.Kontonummer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.service.TSSServiceImpl;
 import no.nav.bidrag.aktoerregister.service.mq.TPSConsumer;
@@ -46,18 +43,11 @@ import org.springframework.test.context.ContextConfiguration;
 public class TSSBatchTest {
 
   @Autowired private JobLauncherTestUtils jobLauncherTestUtils;
-
   @Autowired private JobRepositoryTestUtils jobRepositoryTestUtils;
-
   @Autowired private AktoerRepository aktoerRepository;
-
   @MockBean private TSSServiceImpl tssService;
-
   @MockBean private TPSConsumer tpsConsumer;
-
   @MockBean private ConnectionFactory connectionFactory;
-
-  private final AktoerMapper aktoerMapper = new AktoerMapper();
 
   @AfterEach
   public void cleanUp() {
@@ -65,10 +55,8 @@ public class TSSBatchTest {
   }
 
   @Test
-  public void tssAktoerUpdateRunningSuccessfully() throws Exception {
-    // when
-
-    createAktoererAndSetupMocks();
+  public void skalKjoreTssBatchVellykket() throws Exception {
+    opprettAktoererOgMocks();
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     JobParameters jobParameters =
@@ -80,7 +68,6 @@ public class TSSBatchTest {
     JobInstance actualJobInstance = jobExecution.getJobInstance();
     ExitStatus actualJobExitStatus = jobExecution.getExitStatus();
 
-    // then
     assertEquals(TSSBatchConfig.TSS_AKTOER_UPDATES_JOB, actualJobInstance.getJobName());
     assertEquals("COMPLETED", actualJobExitStatus.getExitCode());
 
@@ -97,27 +84,24 @@ public class TSSBatchTest {
         50, updateTSSAktoererStep.getExecutionContext().getLong(TSSBatchConfig.NR_UPDATED));
   }
 
-  private void createAktoererAndSetupMocks() {
+  private void opprettAktoererOgMocks() {
     List<Aktoer> aktoerList = new ArrayList<>();
-    for(int i = 0; i < 150; i++) {
-      Aktoer aktoer = new Aktoer();
-      aktoer.setAktoerIdent(UUID.randomUUID().toString());
-      aktoer.setAktoerType(IdenttypeDTO.AKTOERNUMMER.name());
+    for (int i = 0; i < 150; i++) {
+      Aktoer aktoer =
+          Aktoer.builder()
+              .aktoerIdent(UUID.randomUUID().toString())
+              .aktoerType(IdenttypeDTO.AKTOERNUMMER.name())
+              .build();
       aktoerList.add(aktoer);
     }
-    aktoerRepository.insertOrUpdateAktoerer(aktoerList);
+    aktoerRepository.opprettEllerOppdaterAktoerer(aktoerList);
 
     for (int i = 0; i < aktoerList.size(); i++) {
       Aktoer aktoer = aktoerList.get(i);
       if (i < 50) {
-        Kontonummer kontonummer = new Kontonummer();
-        kontonummer.setNorskKontonr("12345678910");
-        aktoer.setKontonummer(kontonummer);
+        aktoer.setNorskKontonr("12345678910");
       }
-      AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
-      aktoerIdDTO.setIdenttype(IdenttypeDTO.AKTOERNUMMER);
-      aktoerIdDTO.setAktoerId(aktoer.getAktoerIdent());
-      Mockito.when(tssService.hentAktoer(aktoerIdDTO)).thenReturn(aktoerMapper.toDomain(aktoer));
+      Mockito.when(tssService.hentAktoer(aktoer.getAktoerIdent())).thenReturn(aktoer);
     }
   }
 }

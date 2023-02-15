@@ -2,11 +2,10 @@ package no.nav.bidrag.aktoerregister.service;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.KontonummerDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.TPSServiceException;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.AktoerBuilder;
 import no.nav.bidrag.aktoerregister.properties.MQProperties;
 import no.nav.bidrag.aktoerregister.service.mq.MQService;
 import no.rtv.namespacetps.ObjectFactory;
@@ -34,24 +33,55 @@ public class TPSServiceImpl implements AktoerService {
   }
 
   @Override
-  public AktoerDTO hentAktoer(AktoerIdDTO aktoerId) {
-    TpsPersonData request = createTpsPersonDataRequest(aktoerId);
+  public Aktoer hentAktoer(String aktoerIdent) {
+    TpsPersonData request = opprettTpsPersonDataRequest(aktoerIdent);
 
-    TpsPersonData response =
+    TpsPersonData tpsPersonData =
         mqService.performRequestResponse(
             mqProperties.getTpsRequestQueue(), request, TpsPersonData.class, TpsPersonData.class);
 
-    validateResponse(response, aktoerId.getAktoerId());
-    return mapToAktoer(response, aktoerId);
+    validerTpsPersonData(tpsPersonData, aktoerIdent);
+    return mapTilAktoer(tpsPersonData, aktoerIdent);
   }
 
-  private TpsPersonData createTpsPersonDataRequest(AktoerIdDTO aktoerId) {
+  private Aktoer mapTilAktoer(TpsPersonData tpsPersonData, String aktoerIdent) {
+    AktoerBuilder aktoerBuilder =
+        Aktoer.builder().aktoerIdent(aktoerIdent).aktoerType("PERSONNUMMER");
+
+    PersondataFraTpsS102 persondataFraTpsS102 = tpsPersonData.getTpsSvar().getPersonDataS102();
+    TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
+    TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
+
+    if (giroInfoNorsk != null && finnesGiroInfo(giroInfoNorsk.getGiroNummer()))
+      byggNorsktKontonummer(aktoerBuilder, giroInfoNorsk);
+    else if (giroInfoUtlandsk != null && finnesGiroInfo(giroInfoUtlandsk.getGiroNrUtland())) {
+      byggUtenlandskKontonummer(aktoerBuilder, giroInfoUtlandsk);
+    }
+    return aktoerBuilder.build();
+  }
+
+  private void byggNorsktKontonummer(AktoerBuilder aktoerBuilder, TgiroNummer giroInfoNorsk) {
+    aktoerBuilder.norskKontonr(trimToNull(giroInfoNorsk.getGiroNummer()));
+  }
+
+  private void byggUtenlandskKontonummer(
+      AktoerBuilder aktoerBuilder, TgiroNrUtland giroInfoUtlandsk) {
+    aktoerBuilder
+        .iban(trimToNull(giroInfoUtlandsk.getGiroNrUtland()))
+        .swift(trimToNull(giroInfoUtlandsk.getSwiftKodeUtland()))
+        .valutaKode(trimToNull(giroInfoUtlandsk.getBankValuta()))
+        .bankNavn(trimToNull(giroInfoUtlandsk.getBankNavnUtland()))
+        .bankLandkode(trimToNull(giroInfoUtlandsk.getBankLandKode()))
+        .bankCode(trimToNull(giroInfoUtlandsk.getBankKodeUtland()));
+  }
+
+  private TpsPersonData opprettTpsPersonDataRequest(String aktoerIdent) {
     ObjectFactory objectFactory = new ObjectFactory();
     TpsPersonData tpsPersonData = objectFactory.createTpsPersonData();
 
     TpsServiceRutine tpsServiceRutine = objectFactory.createTpsPersonDataTpsServiceRutine();
     tpsServiceRutine.setServiceRutinenavn(SRnavn.FS_03_FDNUMMER_GIRONUMR_O);
-    tpsServiceRutine.setFnr(aktoerId.getAktoerId());
+    tpsServiceRutine.setFnr(aktoerIdent);
     tpsServiceRutine.setAksjonsKode("A");
     tpsServiceRutine.setAksjonsKode2("0");
 
@@ -59,43 +89,11 @@ public class TPSServiceImpl implements AktoerService {
     return tpsPersonData;
   }
 
-  private AktoerDTO mapToAktoer(TpsPersonData tpsPersonData, AktoerIdDTO aktoerId) {
-    PersondataFraTpsS102 persondataFraTpsS102 = tpsPersonData.getTpsSvar().getPersonDataS102();
-    if (persondataFraTpsS102 != null) {
-
-      AktoerDTO aktoer = new AktoerDTO(aktoerId);
-      aktoer.setKontonummer(mapToKontonummer(persondataFraTpsS102));
-      return aktoer;
-    }
-    return null;
-  }
-
-  private KontonummerDTO mapToKontonummer(PersondataFraTpsS102 persondataFraTpsS102) {
-    TgiroNummer giroInfoNorsk = persondataFraTpsS102.getGiroInfoNorsk();
-    TgiroNrUtland giroInfoUtlandsk = persondataFraTpsS102.getGiroInfoUtlandsk();
-    if (giroInfoNorsk != null && finnesGiroInfo(giroInfoNorsk.getGiroNummer())) {
-      KontonummerDTO kontonummer = new KontonummerDTO();
-      kontonummer.setNorskKontonr(trimToNull(giroInfoNorsk.getGiroNummer()));
-      return kontonummer;
-    }
-    if (giroInfoUtlandsk != null && finnesGiroInfo(giroInfoUtlandsk.getGiroNrUtland())) {
-      KontonummerDTO kontonummer = new KontonummerDTO();
-      kontonummer.setIban(trimToNull(giroInfoUtlandsk.getGiroNrUtland()));
-      kontonummer.setSwift(trimToNull(giroInfoUtlandsk.getSwiftKodeUtland()));
-      kontonummer.setValutaKode(trimToNull(giroInfoUtlandsk.getBankValuta()));
-      kontonummer.setBankNavn(trimToNull(giroInfoUtlandsk.getBankNavnUtland()));
-      kontonummer.setBankLandkode(trimToNull(giroInfoUtlandsk.getBankLandKode()));
-      kontonummer.setBankCode(trimToNull(giroInfoUtlandsk.getBankKodeUtland()));
-      return kontonummer;
-    }
-    return null;
-  }
-
   private boolean finnesGiroInfo(String giroInfoNorsk1) {
     return giroInfoNorsk1 != null && !giroInfoNorsk1.isBlank();
   }
 
-  private void validateResponse(TpsPersonData tpsPersonData, String aktoerId) {
+  private void validerTpsPersonData(TpsPersonData tpsPersonData, String aktoerId) {
     StatusFraTPS statusFraTPS = tpsPersonData.getTpsSvar().getSvarStatus();
     String returStatus = statusFraTPS.getReturStatus();
     if (returStatus.equals("00") || returStatus.equals("04")) {

@@ -4,97 +4,75 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-import no.nav.bidrag.aktoerregister.domene.AdresseDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.persistence.entities.Adresse;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.AktoerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class TSSAktoerProcessorTests {
 
+  private final String adresse = "Testgate 1";
   @Mock private AktoerService tssService;
-
-  private TSSAktoerProcessor tssAktoerProcessor;
+  @InjectMocks private TSSAktoerProcessor tssAktoerProcessor;
+  private Aktoer aktoer;
+  private Aktoer aktoerFraTss;
 
   @BeforeEach
-  public void SetUp() {
-    this.tssAktoerProcessor = new TSSAktoerProcessor(tssService);
+  public void setUp() {
+    String ident = "1234";
+    aktoer =
+        Aktoer.builder().aktoerIdent(ident).aktoerType(IdenttypeDTO.PERSONNUMMER.name()).build();
+
+    aktoerFraTss =
+        Aktoer.builder()
+            .aktoerIdent(ident)
+            .aktoerType(IdenttypeDTO.PERSONNUMMER.name())
+            .adresselinje1(adresse)
+            .build();
   }
 
   @Test
-  public void TestAktoerFromTssUpdated() {
-
-    Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerIdent("1234");
-    aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
-
-    AktoerDTO tssAktoer = new AktoerDTO();
-    AktoerIdDTO tssAktoerIdDTO = new AktoerIdDTO("1234", IdenttypeDTO.PERSONNUMMER);
-    tssAktoer.setAktoerId(tssAktoerIdDTO);
-    AdresseDTO adresseDTO = new AdresseDTO();
-    adresseDTO.setAdresselinje1("Testgate 1");
-    tssAktoer.setAdresse(adresseDTO);
-
-    Mockito.when(tssService.hentAktoer(any())).thenReturn(tssAktoer);
+  public void skalOppdatereAktoerFraTss() {
+    when(tssService.hentAktoer(any())).thenReturn(aktoerFraTss);
 
     TSSAktoerProcessorResult tssAktoerProcessorResult = tssAktoerProcessor.process(aktoer);
-    Aktoer updatedAktoer = tssAktoerProcessorResult.getAktoer();
 
-    assertNotNull(updatedAktoer);
-    assertEquals("Testgate 1", updatedAktoer.getAdresse().getAdresselinje1());
+    assertNotNull(tssAktoerProcessorResult);
+    assertNotNull(tssAktoerProcessorResult.getAktoer());
+    assertEquals(adresse, tssAktoerProcessorResult.getAktoer().getAdresselinje1());
     assertEquals(AktoerStatus.UPDATED, tssAktoerProcessorResult.getAktoerStatus());
   }
 
   @Test
-  public void TestAktoerFromTssNotUpdated() {
-    Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerIdent("1234");
-    aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
+  public void skalIkkeOppdatereAktoerFraTss() {
+    aktoer.setAdresselinje1(adresse);
 
-    Adresse adresse = new Adresse();
-    adresse.setAdresselinje1("Testgate 1");
-
-    aktoer.setAdresse(adresse);
-
-    AktoerDTO tssAktoer = new AktoerDTO();
-    AktoerIdDTO tssAktoerIdDTO = new AktoerIdDTO("1234", IdenttypeDTO.PERSONNUMMER);
-    tssAktoer.setAktoerId(tssAktoerIdDTO);
-    AdresseDTO adresseDTO = new AdresseDTO();
-    adresseDTO.setAdresselinje1("Testgate 1");
-    tssAktoer.setAdresse(adresseDTO);
-
-    Mockito.when(tssService.hentAktoer(any())).thenReturn(tssAktoer);
+    when(tssService.hentAktoer(any())).thenReturn(aktoerFraTss);
 
     TSSAktoerProcessorResult tssAktoerProcessorResult = tssAktoerProcessor.process(aktoer);
-    Aktoer updatedAktoer = tssAktoerProcessorResult.getAktoer();
 
-    assertNull(updatedAktoer);
+    assertNotNull(tssAktoerProcessorResult);
+    assertNull(tssAktoerProcessorResult.getAktoer());
     assertEquals(AktoerStatus.NOT_UPDATED, tssAktoerProcessorResult.getAktoerStatus());
   }
 
   @Test
   public void TestAkterNotFound() {
-    Aktoer aktoer = new Aktoer();
-    aktoer.setAktoerIdent("1234");
-    aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
-
-    Mockito.when(tssService.hentAktoer(any())).thenThrow(new AktoerNotFoundException(""));
+    when(tssService.hentAktoer(any())).thenThrow(new AktoerNotFoundException(""));
 
     TSSAktoerProcessorResult tssAktoerProcessorResult = tssAktoerProcessor.process(aktoer);
-    Aktoer updatedAktoer = tssAktoerProcessorResult.getAktoer();
 
-    assertNull(updatedAktoer);
+    assertNotNull(tssAktoerProcessorResult);
+    assertNull(tssAktoerProcessorResult.getAktoer());
     assertEquals(AktoerStatus.NOT_FOUND, tssAktoerProcessorResult.getAktoerStatus());
   }
 }
