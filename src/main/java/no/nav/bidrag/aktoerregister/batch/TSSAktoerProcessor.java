@@ -1,13 +1,8 @@
 package no.nav.bidrag.aktoerregister.batch;
 
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.IdenttypeDTO;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.exception.MQServiceException;
 import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
-import no.nav.bidrag.aktoerregister.mapper.AktoerMapper;
-import no.nav.bidrag.aktoerregister.mapper.Mapper;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.AktoerService;
 import org.slf4j.Logger;
@@ -21,32 +16,19 @@ import org.springframework.stereotype.Component;
 public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProcessorResult> {
 
   private final AktoerService tssService;
-
-  private final Mapper<AktoerDTO, Aktoer> aktoerMapper;
-
   private final Logger logger = LoggerFactory.getLogger(TSSAktoerProcessor.class);
 
   @Autowired
   public TSSAktoerProcessor(@Qualifier("TSSServiceImpl") AktoerService tssService) {
     this.tssService = tssService;
-    this.aktoerMapper = new AktoerMapper();
   }
 
   @Override
   public TSSAktoerProcessorResult process(Aktoer aktoer) {
-    AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
     try {
-      AktoerDTO tssAktoerDTO = tssService.hentAktoer(aktoerIdDTO);
-      AktoerDTO dbAktoerDTO = aktoerMapper.toDomain(aktoer);
-      if (!tssAktoerDTO.equals(dbAktoerDTO)) {
-        // Oppdaterer eksisterende Aktoer
-        Aktoer updatedAktoer = aktoerMapper.toPersistence(tssAktoerDTO);
-        aktoer.setOffentligId(updatedAktoer.getOffentligId());
-        aktoer.setOffentligIdType(updatedAktoer.getOffentligIdType());
-        aktoer.setAdresse(updatedAktoer.getAdresse());
-        aktoer.setKontonummer(updatedAktoer.getKontonummer());
-        return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
+      Aktoer tssAktoer = tssService.hentAktoer(aktoer.getAktoerIdent());
+      if (!tssAktoer.equals(aktoer)) {
+        return new TSSAktoerProcessorResult(tssAktoer, AktoerStatus.UPDATED);
       }
     } catch (MQServiceException | TSSServiceException e) {
       logger.error(e.getMessage(), e);

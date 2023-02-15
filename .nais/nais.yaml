@@ -35,7 +35,7 @@ spec:
       memory: 1024Mi
   replicas:
     cpuThresholdPercentage: 50
-    min: 3
+    min: 1
   maskinporten:
     enabled: true
     scopes:
