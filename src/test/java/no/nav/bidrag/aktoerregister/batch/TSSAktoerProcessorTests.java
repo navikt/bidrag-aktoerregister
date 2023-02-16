@@ -53,16 +53,14 @@ public class TSSAktoerProcessorTests {
   }
 
   @Test
-  public void skalIkkeOppdatereAktoerFraTss() {
+  public void skalIkkeOppdatereAktoerFraTssOgSkippe() {
     aktoer.setAdresselinje1(adresse);
 
     when(tssService.hentAktoer(any())).thenReturn(aktoerFraTss);
 
     TSSAktoerProcessorResult tssAktoerProcessorResult = tssAktoerProcessor.process(aktoer);
 
-    assertNotNull(tssAktoerProcessorResult);
-    assertNull(tssAktoerProcessorResult.getAktoer());
-    assertEquals(AktoerStatus.NOT_UPDATED, tssAktoerProcessorResult.getAktoerStatus());
+    assertNull(tssAktoerProcessorResult);
   }
 
   @Test

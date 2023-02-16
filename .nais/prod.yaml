@@ -4,5 +4,4 @@ dbname: bidrag-aktoerregister-db
 ingresses:
   - https://bidrag-aktoerregister.nav.no/
 env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: prod
+  SPRING_PROFILES_ACTIVE: prod

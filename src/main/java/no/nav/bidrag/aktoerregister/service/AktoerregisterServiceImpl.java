@@ -69,13 +69,14 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     return hendelser.stream()
         .map(
             hendelse -> {
-              HendelseDTO hendelseDTO = new HendelseDTO();
-              hendelseDTO.setSekvensnummer(hendelse.getSekvensnummer());
-              AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
-              aktoerIdDTO.setAktoerId(hendelse.getAktoer().getAktoerIdent());
-              aktoerIdDTO.setIdenttype(IdenttypeDTO.valueOf(hendelse.getAktoer().getAktoerType()));
-              hendelseDTO.setAktoerId(aktoerIdDTO);
-              return hendelseDTO;
+              AktoerIdDTO aktoerIdDTO = AktoerIdDTO.builder()
+                  .aktoerId(hendelse.getAktoer().getAktoerIdent())
+                  .identtype(IdenttypeDTO.valueOf(hendelse.getAktoer().getAktoerType()))
+                  .build();
+              return HendelseDTO.builder()
+                  .sekvensnummer(hendelse.getSekvensnummer())
+                  .aktoerId(aktoerIdDTO)
+                  .build();
             })
         .sorted(Comparator.comparingInt(HendelseDTO::getSekvensnummer))
         .toList();
