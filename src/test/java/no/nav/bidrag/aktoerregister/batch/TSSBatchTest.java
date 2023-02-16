@@ -79,7 +79,7 @@ public class TSSBatchTest {
             .findFirst()
             .orElse(null);
     assertNotNull(updateTSSAktoererStep);
-    assertEquals(150, updateTSSAktoererStep.getExecutionContext().getLong(TSSBatchConfig.NR_TOTAL));
+    assertEquals(100, updateTSSAktoererStep.getFilterCount());
     assertEquals(
         50, updateTSSAktoererStep.getExecutionContext().getLong(TSSBatchConfig.NR_UPDATED));
   }

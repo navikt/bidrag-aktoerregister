@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 public class Aktoer {
 
@@ -97,5 +96,27 @@ public class Aktoer {
 
   public void addHendelse(Hendelse hendelse) {
     hendelser.add(hendelse);
+  }
+
+  public void oppdaterAlleFelter(Aktoer aktoer) {
+    this.setAktoerIdent(aktoer.getAktoerIdent());
+    this.setAktoerType(aktoer.getAktoerType());
+    this.setOffentligId(aktoer.getOffentligId());
+    this.setOffentligIdType(aktoer.getOffentligIdType());
+    this.setNorskKontonr(aktoer.getNorskKontonr());
+    this.setIban(aktoer.getIban());
+    this.setSwift(aktoer.getSwift());
+    this.setBankNavn(aktoer.getBankNavn());
+    this.setBankLandkode(aktoer.getBankLandkode());
+    this.setBankCode(aktoer.getBankCode());
+    this.setValutaKode(aktoer.getValutaKode());
+    this.setNavn(aktoer.getNavn());
+    this.setAdresselinje1(aktoer.getAdresselinje1());
+    this.setAdresselinje2(aktoer.getAdresselinje2());
+    this.setAdresselinje3(aktoer.getAdresselinje3());
+    this.setValutaKode(aktoer.getValutaKode());
+    this.setPoststed(aktoer.getPoststed());
+    this.setPostnr(aktoer.getPostnr());
+    this.setLand(aktoer.getLand());
   }
 }

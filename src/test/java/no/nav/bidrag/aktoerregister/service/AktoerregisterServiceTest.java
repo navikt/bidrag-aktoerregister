@@ -84,7 +84,10 @@ public class AktoerregisterServiceTest {
   public void skalHenteAktoerMedAktoernummerOgAktoerIkkeFinnes() {
     Aktoer aktoer = opprettTSSAktoerDTO(SAMHANDLER1);
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        AktoerIdDTO.builder()
+            .aktoerId(aktoer.getAktoerIdent())
+            .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+            .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer);
     when(conversionService.convert(any(Aktoer.class), eq(AktoerDTO.class)))
@@ -106,7 +109,10 @@ public class AktoerregisterServiceTest {
   public void skalOppdatereAktoer() {
     Aktoer aktoer = opprettTSSAktoerDTO(SAMHANDLER1);
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        AktoerIdDTO.builder()
+            .aktoerId(aktoer.getAktoerIdent())
+            .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+            .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer);
     when(conversionService.convert(any(Aktoer.class), eq(AktoerDTO.class)))
@@ -140,7 +146,10 @@ public class AktoerregisterServiceTest {
   public void TestHentHendelser() {
     Aktoer aktoer = opprettTSSAktoerDTO(SAMHANDLER1);
     AktoerIdDTO aktoerIdDTO =
-        new AktoerIdDTO(aktoer.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer.getAktoerType()));
+        AktoerIdDTO.builder()
+            .aktoerId(aktoer.getAktoerIdent())
+            .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+            .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer);
     when(conversionService.convert(any(Aktoer.class), eq(AktoerDTO.class)))
@@ -164,7 +173,10 @@ public class AktoerregisterServiceTest {
 
     Aktoer aktoer2 = opprettTSSAktoerDTO(SAMHANDLER2);
     AktoerIdDTO aktoerIdDTO2 =
-        new AktoerIdDTO(aktoer2.getAktoerIdent(), IdenttypeDTO.valueOf(aktoer2.getAktoerType()));
+        AktoerIdDTO.builder()
+            .aktoerId(aktoer2.getAktoerIdent())
+            .identtype(IdenttypeDTO.valueOf(aktoer2.getAktoerType()))
+            .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer2);
     aktoerregisterService.hentAktoer(aktoerIdDTO2);

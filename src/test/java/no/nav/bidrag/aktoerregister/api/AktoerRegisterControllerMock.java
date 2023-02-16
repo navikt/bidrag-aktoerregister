@@ -43,9 +43,8 @@ public class AktoerRegisterControllerMock {
 
   @GetMapping("/{fnr}")
   public ResponseEntity<AktoerDTO> hentAktoer(@PathVariable(name = "fnr") String fnr) {
-    AktoerIdDTO aktoerIdDTO = new AktoerIdDTO();
-    aktoerIdDTO.setAktoerId(fnr);
-    aktoerIdDTO.setIdenttype(IdenttypeDTO.PERSONNUMMER);
+    AktoerIdDTO aktoerIdDTO =
+        AktoerIdDTO.builder().aktoerId(fnr).identtype(IdenttypeDTO.PERSONNUMMER).build();
     return ResponseEntity.ok(aktoerregisterService.hentAktoer(aktoerIdDTO));
   }
 

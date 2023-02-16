@@ -28,7 +28,8 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
     try {
       Aktoer tssAktoer = tssService.hentAktoer(aktoer.getAktoerIdent());
       if (!tssAktoer.equals(aktoer)) {
-        return new TSSAktoerProcessorResult(tssAktoer, AktoerStatus.UPDATED);
+        aktoer.oppdaterAlleFelter(tssAktoer);
+        return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
       }
     } catch (MQServiceException | TSSServiceException e) {
       logger.error(e.getMessage(), e);
@@ -36,6 +37,6 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
     } catch (AktoerNotFoundException e) {
       return new TSSAktoerProcessorResult(null, AktoerStatus.NOT_FOUND);
     }
-    return new TSSAktoerProcessorResult(null, AktoerStatus.NOT_UPDATED);
+    return null;
   }
 }
