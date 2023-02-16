@@ -27,6 +27,7 @@ public class Aktoer {
 
   @Id
   @Column(name = "id")
+  @EqualsAndHashCode.Exclude
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
