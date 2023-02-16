@@ -43,3 +43,6 @@ ALTER TABLE aktoerregister.aktoer
 DROP TABLE aktoerregister.adresse;
 
 DROP TABLE aktoerregister.kontonummer;
+
+ALTER TABLE aktoerregister.aktoer
+    ADD CONSTRAINT aktoer_ident_unique_constraint UNIQUE (aktoer_ident);
