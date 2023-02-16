@@ -80,8 +80,7 @@ public class TSSBatchTest {
             .orElse(null);
     assertNotNull(updateTSSAktoererStep);
     assertEquals(100, updateTSSAktoererStep.getFilterCount());
-    assertEquals(
-        50, updateTSSAktoererStep.getExecutionContext().getLong(TSSBatchConfig.NR_UPDATED));
+    assertEquals(50, updateTSSAktoererStep.getWriteCount());
   }
 
   private void opprettAktoererOgMocks() {

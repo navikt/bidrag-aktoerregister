@@ -20,20 +20,13 @@ import org.springframework.core.task.TaskExecutor;
 @EnableBatchProcessing
 public class TSSBatchConfig {
 
-  public final JobBuilderFactory jobBuilderFactory;
-
-  public final StepBuilderFactory stepBuilderFactory;
-
-  private final TSSAktoerReader tssAktoerReader;
-
-  private final TSSAktoerWriter tssAktoerWriter;
-
-  private final TSSAktoerProcessor tssAktoerProcessor;
-
-  public static final String NR_UPDATED = "NR_UPDATED";
-  public static final String NR_TOTAL = "NR_TOTAL";
   public static final String TSS_AKTOER_UPDATES_JOB = "TSS_AKTOER_UPDATES_JOB";
   public static final String TSS_UPDATE_AKTOERER_STEP = "TSS_UPDATE_AKTOERER_STEP";
+  public final JobBuilderFactory jobBuilderFactory;
+  public final StepBuilderFactory stepBuilderFactory;
+  private final TSSAktoerReader tssAktoerReader;
+  private final TSSAktoerWriter tssAktoerWriter;
+  private final TSSAktoerProcessor tssAktoerProcessor;
 
   @Autowired
   public TSSBatchConfig(
@@ -65,7 +58,6 @@ public class TSSBatchConfig {
     return stepBuilderFactory
         .get(TSS_UPDATE_AKTOERER_STEP)
         .<Aktoer, TSSAktoerProcessorResult>chunk(100)
-        .listener(new TSSStepListener())
         .reader(tssAktoerReader)
         .processor(tssAktoerProcessor)
         .writer(tssAktoerWriter)
