@@ -146,7 +146,7 @@ public class TSSServiceImpl implements AktoerService {
     SamhandlerIDataB910Type samhandlerIDataB910 = objectFactory.createSamhandlerIDataB910Type();
     TidOFF1 tidOFF1 = objectFactory.createTidOFF1();
     tidOFF1.setIdOff(aktoerIdent);
-    samhandlerIDataB910.setOFFid(tidOFF1);
+    samhandlerIDataB910.setIdOffTSS(aktoerIdent);
     samhandlerIDataB910.setHistorikk("N");
     samhandlerIDataB910.setBrukerID("RTV9999");
     servicerutiner.setSamhandlerIDataB910(samhandlerIDataB910);
