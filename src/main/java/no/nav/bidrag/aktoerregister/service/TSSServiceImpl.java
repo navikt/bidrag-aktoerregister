@@ -212,7 +212,7 @@ public class TSSServiceImpl implements AktoerService {
       return;
     } else if (svarStatusType.getAlvorligGrad().equals("04")
         && svarStatusType.getKodeMelding().equals("B9XX008F")) {
-      throw new AktoerNotFoundException("Aktoer med aktoerId (" + aktoerId + ") ikke funnet.");
+      throw new AktoerNotFoundException("Aktoer med aktoerId (" + aktoerId + ") ikke funnet i TSS.");
     }
     throw new TSSServiceException(
         svarStatusType.getBeskrMelding() + " " + svarStatusType.getKodeMelding());

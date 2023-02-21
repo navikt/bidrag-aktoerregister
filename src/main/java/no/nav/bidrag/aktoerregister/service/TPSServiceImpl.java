@@ -99,7 +99,7 @@ public class TPSServiceImpl implements AktoerService {
     if (returStatus.equals("00") || returStatus.equals("04")) {
       return;
     } else if (returStatus.equals("08") && statusFraTPS.getReturMelding().equals("S102002F")) {
-      throw new AktoerNotFoundException("Aktoer med aktoerId (" + aktoerId + ") ikke funnet.");
+      throw new AktoerNotFoundException("Aktoer med aktoerId (" + aktoerId + ") ikke funnet i TPS.");
     }
     throw new TPSServiceException(
         statusFraTPS.getUtfyllendeMelding() + " " + statusFraTPS.getReturMelding());
