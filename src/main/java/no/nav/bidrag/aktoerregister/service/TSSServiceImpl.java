@@ -22,7 +22,6 @@ import no.rtv.namespacetss.SamhandlerIDataB910Type;
 import no.rtv.namespacetss.SamhandlerType;
 import no.rtv.namespacetss.SvarStatusType;
 import no.rtv.namespacetss.TServicerutiner;
-import no.rtv.namespacetss.TidOFF1;
 import no.rtv.namespacetss.TssSamhandlerData;
 import no.rtv.namespacetss.TssSamhandlerData.TssInputData;
 import no.rtv.namespacetss.TypeOD910;
@@ -163,8 +162,6 @@ public class TSSServiceImpl implements AktoerService {
     TServicerutiner servicerutiner = objectFactory.createTServicerutiner();
 
     SamhandlerIDataB910Type samhandlerIDataB910 = objectFactory.createSamhandlerIDataB910Type();
-    TidOFF1 tidOFF1 = objectFactory.createTidOFF1();
-    tidOFF1.setIdOff(aktoerIdent);
     samhandlerIDataB910.setIdOffTSS(aktoerIdent);
     samhandlerIDataB910.setHistorikk("N");
     samhandlerIDataB910.setBrukerID("RTV9999");
