@@ -1,8 +1,5 @@
 package no.nav.bidrag.aktoerregister.batch;
 
-import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
-import no.nav.bidrag.aktoerregister.exception.MQServiceException;
-import no.nav.bidrag.aktoerregister.exception.TSSServiceException;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.AktoerService;
 import org.slf4j.Logger;
@@ -16,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProcessorResult> {
 
   private final AktoerService tssService;
-  private final Logger logger = LoggerFactory.getLogger(TSSAktoerProcessor.class);
+  private final Logger LOGGER = LoggerFactory.getLogger(TSSAktoerProcessor.class);
 
   @Autowired
   public TSSAktoerProcessor(@Qualifier("TSSServiceImpl") AktoerService tssService) {
@@ -25,15 +22,11 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
 
   @Override
   public TSSAktoerProcessorResult process(Aktoer aktoer) {
-    try {
-      Aktoer tssAktoer = tssService.hentAktoer(aktoer.getAktoerIdent());
-      if (!tssAktoer.equals(aktoer)) {
-        aktoer.oppdaterAlleFelter(tssAktoer);
-        return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
-      }
-    } catch (MQServiceException | TSSServiceException | AktoerNotFoundException e) {
-      logger.error(e.getMessage(), e);
-      throw e;
+    Aktoer tssAktoer = tssService.hentAktoer(aktoer.getAktoerIdent());
+    if (!tssAktoer.equals(aktoer)) {
+      LOGGER.debug("Oppdaterer aktør med ident: {}", aktoer.getAktoerIdent());
+      aktoer.oppdaterAlleFelter(tssAktoer);
+      return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
     }
     return null;
   }
