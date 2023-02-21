@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.service;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +22,6 @@ import no.rtv.namespacetss.SamhandlerIDataB910Type;
 import no.rtv.namespacetss.SamhandlerType;
 import no.rtv.namespacetss.SvarStatusType;
 import no.rtv.namespacetss.TServicerutiner;
-import no.rtv.namespacetss.TidOFF1;
 import no.rtv.namespacetss.TssSamhandlerData;
 import no.rtv.namespacetss.TssSamhandlerData.TssInputData;
 import no.rtv.namespacetss.TypeOD910;
@@ -85,36 +85,54 @@ public class TSSServiceImpl implements AktoerService {
     TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
     if (typeSamhAdr != null) {
       aktoerBuilder.navn(hentSamhandlerNavn(samhandler));
-
-      for (AdresseSamhType adresseSamhType : typeSamhAdr.getAdresseSamh()) {
-        if (erGyldigOgHarRiktigAvdelingsnummer(
-            avdelingsnummer, adresseSamhType.getGyldigAdresse(), adresseSamhType.getAvdNr())) {
-          aktoerBuilder.land(trimToNull(adresseSamhType.getKodeLand()));
-          aktoerBuilder.poststed(trimToNull(adresseSamhType.getPoststed()));
-          aktoerBuilder.postnr(trimToNull(adresseSamhType.getPostNr()));
-          settAdresselinjer(aktoerBuilder, adresseSamhType);
-        }
+      AdresseSamhType adresse = finnNyesteGyldigeAdresse(avdelingsnummer, typeSamhAdr);
+      if (adresse != null) {
+        aktoerBuilder.land(trimToNull(adresse.getKodeLand()));
+        aktoerBuilder.poststed(trimToNull(adresse.getPoststed()));
+        aktoerBuilder.postnr(trimToNull(adresse.getPostNr()));
+        settAdresselinjer(aktoerBuilder, adresse);
       }
     }
   }
 
-  private void mapSamhandlerKontonummerTilAktoer(Samhandler samhandler, String avdelingsnummer,
-      AktoerBuilder aktoerBuilder) {
+  private AdresseSamhType finnNyesteGyldigeAdresse(
+      String avdelingsnummer, TypeSamhAdr typeSamhAdr) {
+    return typeSamhAdr.getAdresseSamh().stream()
+        .filter(
+            adresseSamhType ->
+                erGyldigOgHarRiktigAvdelingsnummer(
+                    avdelingsnummer,
+                    adresseSamhType.getGyldigAdresse(),
+                    adresseSamhType.getAvdNr()))
+        .max(Comparator.comparing(AdresseSamhType::getDatoAdresseFom))
+        .orElse(null);
+  }
+
+  private void mapSamhandlerKontonummerTilAktoer(
+      Samhandler samhandler, String avdelingsnummer, AktoerBuilder aktoerBuilder) {
     TypeSamhKonto typeSamhKonto = samhandler.getKonto140();
     if (typeSamhKonto != null) {
-      for (KontoType kontoType : typeSamhKonto.getKonto()) {
-        if (erGyldigOgHarRiktigAvdelingsnummer(
-            avdelingsnummer, kontoType.getGyldigKonto(), kontoType.getAvdNr())) {
-          aktoerBuilder.bankLandkode(trimToNull(kontoType.getKodeLand()));
-          aktoerBuilder.bankNavn(trimToNull(kontoType.getBankNavn()));
-          aktoerBuilder.norskKontonr(trimToNull(kontoType.getGironrInnland()));
-          aktoerBuilder.swift(trimToNull(kontoType.getSwiftKode()));
-          aktoerBuilder.valutaKode(trimToNull(kontoType.getKodeValuta()));
-          aktoerBuilder.bankCode(trimToNull(kontoType.getBankKode()));
-          aktoerBuilder.iban(trimToNull(kontoType.getGironrUtland()));
-        }
+      KontoType konto = finnNyesteGyldigeKonto(avdelingsnummer, typeSamhKonto);
+      if (konto != null) {
+        aktoerBuilder.bankLandkode(trimToNull(konto.getKodeLand()));
+        aktoerBuilder.bankNavn(trimToNull(konto.getBankNavn()));
+        aktoerBuilder.norskKontonr(trimToNull(konto.getGironrInnland()));
+        aktoerBuilder.swift(trimToNull(konto.getSwiftKode()));
+        aktoerBuilder.valutaKode(trimToNull(konto.getKodeValuta()));
+        aktoerBuilder.bankCode(trimToNull(konto.getBankKode()));
+        aktoerBuilder.iban(trimToNull(konto.getGironrUtland()));
       }
     }
+  }
+
+  private KontoType finnNyesteGyldigeKonto(String avdelingsnummer, TypeSamhKonto typeSamhKonto) {
+    return typeSamhKonto.getKonto().stream()
+        .filter(
+            kontoType ->
+                erGyldigOgHarRiktigAvdelingsnummer(
+                    avdelingsnummer, kontoType.getGyldigKonto(), kontoType.getAvdNr()))
+        .max(Comparator.comparing(KontoType::getDatoKontoFom))
+        .orElse(null);
   }
 
   private String hentSamhandlerNavn(Samhandler samhandler) {
@@ -144,8 +162,6 @@ public class TSSServiceImpl implements AktoerService {
     TServicerutiner servicerutiner = objectFactory.createTServicerutiner();
 
     SamhandlerIDataB910Type samhandlerIDataB910 = objectFactory.createSamhandlerIDataB910Type();
-    TidOFF1 tidOFF1 = objectFactory.createTidOFF1();
-    tidOFF1.setIdOff(aktoerIdent);
     samhandlerIDataB910.setIdOffTSS(aktoerIdent);
     samhandlerIDataB910.setHistorikk("N");
     samhandlerIDataB910.setBrukerID("RTV9999");
