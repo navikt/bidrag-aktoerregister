@@ -31,11 +31,9 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
         aktoer.oppdaterAlleFelter(tssAktoer);
         return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
       }
-    } catch (MQServiceException | TSSServiceException e) {
+    } catch (MQServiceException | TSSServiceException | AktoerNotFoundException e) {
       logger.error(e.getMessage(), e);
       throw e;
-    } catch (AktoerNotFoundException e) {
-      return new TSSAktoerProcessorResult(null, AktoerStatus.NOT_FOUND);
     }
     return null;
   }

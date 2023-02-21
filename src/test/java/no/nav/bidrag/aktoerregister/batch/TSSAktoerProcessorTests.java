@@ -3,6 +3,7 @@ package no.nav.bidrag.aktoerregister.batch;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -67,10 +68,6 @@ public class TSSAktoerProcessorTests {
   public void TestAkterNotFound() {
     when(tssService.hentAktoer(any())).thenThrow(new AktoerNotFoundException(""));
 
-    TSSAktoerProcessorResult tssAktoerProcessorResult = tssAktoerProcessor.process(aktoer);
-
-    assertNotNull(tssAktoerProcessorResult);
-    assertNull(tssAktoerProcessorResult.getAktoer());
-    assertEquals(AktoerStatus.NOT_FOUND, tssAktoerProcessorResult.getAktoerStatus());
+    assertThrows(AktoerNotFoundException.class, () -> tssAktoerProcessor.process(aktoer));
   }
 }
