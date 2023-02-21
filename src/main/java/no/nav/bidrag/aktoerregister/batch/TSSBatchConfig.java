@@ -22,6 +22,7 @@ public class TSSBatchConfig {
 
   public static final String TSS_AKTOER_UPDATES_JOB = "TSS_AKTOER_UPDATES_JOB";
   public static final String TSS_UPDATE_AKTOERER_STEP = "TSS_UPDATE_AKTOERER_STEP";
+  private static final int SKIP_LIMIT = 50;
   public final JobBuilderFactory jobBuilderFactory;
   public final StepBuilderFactory stepBuilderFactory;
   private final TSSAktoerReader tssAktoerReader;
@@ -61,6 +62,8 @@ public class TSSBatchConfig {
         .reader(tssAktoerReader)
         .processor(tssAktoerProcessor)
         .writer(tssAktoerWriter)
+        .faultTolerant()
+        .skipPolicy(new TSSSkipPolicy(SKIP_LIMIT))
         .build();
   }
 
