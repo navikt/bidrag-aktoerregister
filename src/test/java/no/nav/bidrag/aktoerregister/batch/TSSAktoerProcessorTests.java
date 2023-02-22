@@ -68,6 +68,8 @@ public class TSSAktoerProcessorTests {
   public void TestAkterNotFound() {
     when(tssService.hentAktoer(any())).thenThrow(new AktoerNotFoundException(""));
 
-    assertThrows(AktoerNotFoundException.class, () -> tssAktoerProcessor.process(aktoer));
+    TSSAktoerProcessorResult tssAktoerProcessorResult = tssAktoerProcessor.process(aktoer);
+
+    assertNull(tssAktoerProcessorResult);
   }
 }
