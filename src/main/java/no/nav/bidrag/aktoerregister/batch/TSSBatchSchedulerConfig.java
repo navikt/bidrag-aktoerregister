@@ -30,11 +30,11 @@ public class TSSBatchSchedulerConfig {
     this.job = job;
   }
 
-  @Scheduled(cron = "0 0/30 * * * *")
+  @Scheduled(cron = "0 0 20 * * *")
   @SchedulerLock(
       name = TSSBatchConfig.TSS_AKTOER_UPDATES_JOB,
-      lockAtMostFor = "30s",
-      lockAtLeastFor = "30s")
+      lockAtMostFor = "30m",
+      lockAtLeastFor = "5m")
   public void scheduleTSSBatch()
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {

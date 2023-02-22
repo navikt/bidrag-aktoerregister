@@ -29,6 +29,5 @@ public class TSSAktoerWriter implements ItemWriter<TSSAktoerProcessorResult> {
     if (!updatedAktoerList.isEmpty()) {
       aktoerregisterService.oppdaterAktoerer(updatedAktoerList);
     }
-    // TODO: We might need to delete from db if id not found in TSS.
   }
 }

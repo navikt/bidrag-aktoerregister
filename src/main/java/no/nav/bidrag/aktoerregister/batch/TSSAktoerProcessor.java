@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.batch;
 
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.AktoerService;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -21,13 +22,18 @@ public class TSSAktoerProcessor implements ItemProcessor<Aktoer, TSSAktoerProces
   }
 
   @Override
-  public TSSAktoerProcessorResult process(Aktoer aktoer) {
-    Aktoer tssAktoer = tssService.hentAktoer(aktoer.getAktoerIdent());
-    if (!tssAktoer.equals(aktoer)) {
-      LOGGER.debug("Oppdaterer aktør med ident: {}", aktoer.getAktoerIdent());
-      aktoer.oppdaterAlleFelter(tssAktoer);
-      return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
+  public TSSAktoerProcessorResult process(@NotNull Aktoer aktoer) {
+    try {
+      Aktoer tssAktoer = tssService.hentAktoer(aktoer.getAktoerIdent());
+      if (!tssAktoer.equals(aktoer)) {
+        LOGGER.debug("Oppdaterer aktør med ident: {}", aktoer.getAktoerIdent());
+        aktoer.oppdaterAlleFelter(tssAktoer);
+        return new TSSAktoerProcessorResult(aktoer, AktoerStatus.UPDATED);
+      }
+      return null;
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage(), e);
+      return null;
     }
-    return null;
   }
 }
