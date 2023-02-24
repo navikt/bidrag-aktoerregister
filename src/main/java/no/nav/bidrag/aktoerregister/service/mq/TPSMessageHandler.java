@@ -1,5 +1,6 @@
 package no.nav.bidrag.aktoerregister.service.mq;
 
+import javax.transaction.Transactional;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
 import no.rtv.namespacetps.DistribusjonsMelding;
@@ -20,6 +21,7 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
   }
 
   @Override
+  @Transactional
   public void onMessage(DistribusjonsMelding distribusjonsMelding) {
     if (distribusjonsMelding.getGiroNrNorge() != null) {
       oppdaterAktoerMedNorsktKontonummer(distribusjonsMelding.getGiroNrNorge());
