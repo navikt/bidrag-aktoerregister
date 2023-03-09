@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.nimbusds.jose.JOSEObjectType;
 import java.util.Collections;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO;
+import no.nav.bidrag.aktoerregister.dto.HendelseDTO;
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService;
 import no.nav.security.mock.oauth2.MockOAuth2Server;
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback;

@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.domene;
+package no.nav.bidrag.aktoerregister.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -8,27 +8,25 @@ import lombok.Data;
 
 @Data
 @Builder
-@Schema(
-    description =
-        "Representerer navn og/eller adresse for en bidragsaktør. TODO: Beskrivelse av felter må kvalitetssikres.")
+@Schema(description = "Representerer navn og/eller adresse for en bidragsaktør. TODO: Beskrivelse av felter må kvalitetssikres.")
 @JsonInclude(Include.NON_NULL)
 public class AdresseDTO {
 
   @Schema(description = "Aktørens navn")
+  @Deprecated(since = "Skal fases ut til fordel for navn i NavnDTO. Dette feltet benyttes kun for etternavn på personer og nan på samhandlere.")
   private String navn;
 
-  @Schema(
-      description =
-          "Første adresselinje inneholder normalt gatenavn, men kan også innehold f.eks c/o.")
+  @Schema(description = "Første adresselinje inneholder normalt gatenavn, men kan også innehold f.eks c/o.")
   private String adresselinje1;
 
-  @Schema(
-      description =
-          "Andre adresselinje brukes primært i utlandsadresser, hvor postnr og poststed ikke er tilgjengelig som strukturerte data.")
+  @Schema(description = "Andre adresselinje brukes primært i utlandsadresser, hvor postnr og poststed ikke er tilgjengelig som strukturerte data.")
   private String adresselinje2;
 
   @Schema(description = "Tredje adresselinje brukes i noen tilfeller til region.")
   private String adresselinje3;
+
+  @Schema(description = "Leilighetsnummer dersom dette er tilgjengelig som strukturerte data.")
+  private String leilighetsnummer;
 
   @Schema(description = "Postnr dersom dette er tilgjengelig som strukturerte data.")
   private String postnr;

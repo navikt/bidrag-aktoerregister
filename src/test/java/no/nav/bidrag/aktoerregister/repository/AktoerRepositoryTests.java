@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
@@ -94,7 +94,7 @@ public class AktoerRepositoryTests {
 
     List<Aktoer> lagredeAktoerer =
         aktoerJpaRepository
-            .findAllByAktoerType(IdenttypeDTO.PERSONNUMMER.name(), Pageable.ofSize(100))
+            .findAllByAktoerType(Identtype.PERSONNUMMER.name(), Pageable.ofSize(100))
             .stream()
             .toList();
     List<Hendelse> lagredeHendelser = hendelseJpaRepository.findAll();
@@ -109,7 +109,7 @@ public class AktoerRepositoryTests {
 
     lagredeAktoerer =
         aktoerJpaRepository
-            .findAllByAktoerType(IdenttypeDTO.PERSONNUMMER.name(), Pageable.ofSize(100))
+            .findAllByAktoerType(Identtype.PERSONNUMMER.name(), Pageable.ofSize(100))
             .stream()
             .toList();
     lagredeHendelser = hendelseJpaRepository.findAll();
@@ -142,7 +142,7 @@ public class AktoerRepositoryTests {
     for (int i = 0; i < numberOfAktoers; i++) {
       Aktoer aktoer = new Aktoer();
       aktoer.setAktoerIdent(UUID.randomUUID().toString());
-      aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
+      aktoer.setAktoerType(Identtype.PERSONNUMMER.name());
 
       leggTilAdresse(aktoer, i);
       leggTilKontonummer(aktoer, i);

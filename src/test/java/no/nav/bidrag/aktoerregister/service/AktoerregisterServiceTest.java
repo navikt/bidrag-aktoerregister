@@ -13,10 +13,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import no.nav.bidrag.aktoerregister.converter.AktoerTilAktoerDTOConverter;
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.dto.HendelseDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.repository.AktoerRepositoryMock;
 import no.nav.bidrag.aktoerregister.repository.HendelseRepositoryMock;
@@ -68,7 +68,7 @@ public class AktoerregisterServiceTest {
         aktoerregisterService.hentAktoer(
             AktoerIdDTO.builder()
                 .aktoerId(aktoer.getAktoerIdent())
-                .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+                .identtype(Identtype.valueOf(aktoer.getAktoerType()))
                 .build());
 
     verify(tpsService, times(1)).hentAktoer(aktoer.getAktoerIdent());
@@ -86,7 +86,7 @@ public class AktoerregisterServiceTest {
     AktoerIdDTO aktoerIdDTO =
         AktoerIdDTO.builder()
             .aktoerId(aktoer.getAktoerIdent())
-            .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+            .identtype(Identtype.valueOf(aktoer.getAktoerType()))
             .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer);
@@ -111,7 +111,7 @@ public class AktoerregisterServiceTest {
     AktoerIdDTO aktoerIdDTO =
         AktoerIdDTO.builder()
             .aktoerId(aktoer.getAktoerIdent())
-            .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+            .identtype(Identtype.valueOf(aktoer.getAktoerType()))
             .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer);
@@ -148,7 +148,7 @@ public class AktoerregisterServiceTest {
     AktoerIdDTO aktoerIdDTO =
         AktoerIdDTO.builder()
             .aktoerId(aktoer.getAktoerIdent())
-            .identtype(IdenttypeDTO.valueOf(aktoer.getAktoerType()))
+            .identtype(Identtype.valueOf(aktoer.getAktoerType()))
             .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer);
@@ -175,7 +175,7 @@ public class AktoerregisterServiceTest {
     AktoerIdDTO aktoerIdDTO2 =
         AktoerIdDTO.builder()
             .aktoerId(aktoer2.getAktoerIdent())
-            .identtype(IdenttypeDTO.valueOf(aktoer2.getAktoerType()))
+            .identtype(Identtype.valueOf(aktoer2.getAktoerType()))
             .build();
 
     when(tssService.hentAktoer(any())).thenReturn(aktoer2);
@@ -200,7 +200,7 @@ public class AktoerregisterServiceTest {
   private Aktoer opprettTPSAktoerDTOMedNorskKontonr(String fnr, String kontonummer) {
     Aktoer aktoer = new Aktoer();
     aktoer.setAktoerIdent(fnr);
-    aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
+    aktoer.setAktoerType(Identtype.PERSONNUMMER.name());
     aktoer.setNorskKontonr(kontonummer);
     return aktoer;
   }
@@ -208,7 +208,7 @@ public class AktoerregisterServiceTest {
   private Aktoer opprettTSSAktoerDTO(TestSamhandler samhandler) {
     return Aktoer.builder()
         .aktoerIdent(samhandler.getSamhandlerIdent())
-        .aktoerType(IdenttypeDTO.AKTOERNUMMER.name())
+        .aktoerType(Identtype.AKTOERNUMMER.name())
         .norskKontonr(AktoerregisterServiceTest.KONTO1.getNorskKontonummer())
         .adresselinje1("Testgate 1")
         .build();

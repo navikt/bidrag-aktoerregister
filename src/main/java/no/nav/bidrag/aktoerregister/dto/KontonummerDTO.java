@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.domene;
+package no.nav.bidrag.aktoerregister.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -7,9 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Schema(
-    description =
-        "Representerer kontonummer for en bidragsaktør. For norske kontonummer er det kun norskKontornr som er utfyllt, ellers benyttes de andre feltene for utlandske kontonummer.")
+@Schema(description = "Representerer kontonummer for en bidragsaktør. For norske kontonummer er det kun norskKontornr som er utfyllt, ellers benyttes de andre feltene for utlandske kontonummer.")
 @JsonInclude(Include.NON_NULL)
 @Builder
 public class KontonummerDTO {
@@ -26,8 +24,7 @@ public class KontonummerDTO {
   @Schema(description = "Bankens navn.")
   private String bankNavn;
 
-  @Schema(
-      description = "Bankens landkode. TODO: Bestemme representasjon av land. 3-sifret land-kode?")
+  @Schema(description = "Bankens landkode. TODO: Bestemme representasjon av land. 3-sifret land-kode?")
   private String bankLandkode;
 
   @Schema(description = "BankCode. Format varierer.")

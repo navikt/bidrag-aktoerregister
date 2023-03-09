@@ -1,10 +1,10 @@
 package no.nav.bidrag.aktoerregister.api;
 
 import java.util.List;
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.dto.HendelseDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository;
@@ -44,7 +44,7 @@ public class AktoerRegisterControllerMock {
   @GetMapping("/{fnr}")
   public ResponseEntity<AktoerDTO> hentAktoer(@PathVariable(name = "fnr") String fnr) {
     AktoerIdDTO aktoerIdDTO =
-        AktoerIdDTO.builder().aktoerId(fnr).identtype(IdenttypeDTO.PERSONNUMMER).build();
+        AktoerIdDTO.builder().aktoerId(fnr).identtype(Identtype.PERSONNUMMER).build();
     return ResponseEntity.ok(aktoerregisterService.hentAktoer(aktoerIdDTO));
   }
 
@@ -59,7 +59,7 @@ public class AktoerRegisterControllerMock {
     Aktoer aktoer =
         Aktoer.builder()
             .aktoerIdent(fnr)
-            .aktoerType(IdenttypeDTO.PERSONNUMMER.name())
+            .aktoerType(Identtype.PERSONNUMMER.name())
             .adresselinje1("Testgate 1")
             .build();
     aktoerregisterService.oppdaterAktoer(aktoer);

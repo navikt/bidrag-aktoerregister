@@ -84,7 +84,7 @@ public class TSSServiceImpl implements AktoerService {
       Samhandler samhandler, String avdelingsnummer, AktoerBuilder aktoerBuilder) {
     TypeSamhAdr typeSamhAdr = samhandler.getAdresse130();
     if (typeSamhAdr != null) {
-      aktoerBuilder.navn(hentSamhandlerNavn(samhandler));
+      aktoerBuilder.etternavn(hentSamhandlerNavn(samhandler));
       AdresseSamhType adresse = finnNyesteGyldigeAdresse(avdelingsnummer, typeSamhAdr);
       if (adresse != null) {
         aktoerBuilder.land(trimToNull(adresse.getKodeLand()));

@@ -1,9 +1,9 @@
-package no.nav.bidrag.aktoerregister.domene;
+package no.nav.bidrag.aktoerregister.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 
 @Data
 @Builder
@@ -21,5 +21,5 @@ public class AktoerIdDTO {
           "Angir hvilken type ident som er angitt. "
               + "For personer vil dette være FNR eller DNR, som angis med PERSONNUMMER. "
               + "Utover dette benyttes AKTOERNUMMER.")
-  private IdenttypeDTO identtype;
+  private Identtype identtype;
 }

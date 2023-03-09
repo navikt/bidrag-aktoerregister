@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.jms.ConnectionFactory;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplication;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
 import no.nav.bidrag.aktoerregister.service.TSSServiceImpl;
@@ -89,7 +89,7 @@ public class TSSBatchTest {
       Aktoer aktoer =
           Aktoer.builder()
               .aktoerIdent(UUID.randomUUID().toString())
-              .aktoerType(IdenttypeDTO.AKTOERNUMMER.name())
+              .aktoerType(Identtype.AKTOERNUMMER.name())
               .build();
       aktoerList.add(aktoer);
     }

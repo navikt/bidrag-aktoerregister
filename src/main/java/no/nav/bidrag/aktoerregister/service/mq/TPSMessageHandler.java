@@ -23,7 +23,7 @@ public class TPSMessageHandler implements MQMessageHandler<DistribusjonsMelding>
   @Override
   @Transactional
   public void onMessage(DistribusjonsMelding distribusjonsMelding) {
-    if (distribusjonsMelding.getGiroNrNorge() != null) {
+    if (distribusjonsMelding.getGiroNrNorge() != null) { //TODO() Må kalle TPS fremfor å bruke distrubisjonsmeldingen som vi mottar.
       oppdaterAktoerMedNorsktKontonummer(distribusjonsMelding.getGiroNrNorge());
     } else if (distribusjonsMelding.getGiroNrUtland() != null) {
       oppdaterAktoerMedUtenlandskKontonummer(distribusjonsMelding.getGiroNrUtland());

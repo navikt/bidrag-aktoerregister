@@ -3,10 +3,10 @@ package no.nav.bidrag.aktoerregister.service;
 import java.util.Comparator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.bidrag.aktoerregister.domene.AktoerDTO;
-import no.nav.bidrag.aktoerregister.domene.AktoerIdDTO;
-import no.nav.bidrag.aktoerregister.domene.HendelseDTO;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO;
+import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO;
+import no.nav.bidrag.aktoerregister.dto.HendelseDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerRepository;
@@ -48,7 +48,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
     Aktoer aktoer = hentAktoerFromDB(aktoerIdent);
     if (aktoer != null) {
       log.trace("Aktør {} funnet i databasen", aktoerIdent);
-    } else if (aktoerId.getIdenttype().equals(IdenttypeDTO.AKTOERNUMMER)) {
+    } else if (aktoerId.getIdenttype().equals(Identtype.AKTOERNUMMER)) {
       log.trace("Henter aktør {} fra TSS", aktoerIdent);
       aktoer = lagreAktoer(tssService.hentAktoer(aktoerIdent));
     } else {
@@ -71,7 +71,7 @@ public class AktoerregisterServiceImpl implements AktoerregisterService {
             hendelse -> {
               AktoerIdDTO aktoerIdDTO = AktoerIdDTO.builder()
                   .aktoerId(hendelse.getAktoer().getAktoerIdent())
-                  .identtype(IdenttypeDTO.valueOf(hendelse.getAktoer().getAktoerType()))
+                  .identtype(Identtype.valueOf(hendelse.getAktoer().getAktoerType()))
                   .build();
               return HendelseDTO.builder()
                   .sekvensnummer(hendelse.getSekvensnummer())

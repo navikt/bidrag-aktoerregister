@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest;
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse;
 import no.nav.bidrag.aktoerregister.persistence.repository.AktoerJpaRepository;
@@ -152,7 +152,7 @@ public class JpaRepositoryTests {
     for (int i = 0; i < 20; i++) {
       Aktoer aktoer = new Aktoer();
       aktoer.setAktoerIdent(UUID.randomUUID().toString());
-      aktoer.setAktoerType(IdenttypeDTO.PERSONNUMMER.name());
+      aktoer.setAktoerType(Identtype.PERSONNUMMER.name());
 
       addHendelser(numberOfHendelser, aktoer);
       addAdresse(aktoer, i);
