@@ -3,11 +3,10 @@ package no.nav.bidrag.aktoerregister.batch;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import no.nav.bidrag.aktoerregister.domene.enumer.IdenttypeDTO;
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype;
 import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException;
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer;
 import no.nav.bidrag.aktoerregister.service.AktoerService;
@@ -31,12 +30,12 @@ public class TSSAktoerProcessorTests {
   public void setUp() {
     String ident = "1234";
     aktoer =
-        Aktoer.builder().aktoerIdent(ident).aktoerType(IdenttypeDTO.PERSONNUMMER.name()).build();
+        Aktoer.builder().aktoerIdent(ident).aktoerType(Identtype.PERSONNUMMER.name()).build();
 
     aktoerFraTss =
         Aktoer.builder()
             .aktoerIdent(ident)
-            .aktoerType(IdenttypeDTO.PERSONNUMMER.name())
+            .aktoerType(Identtype.PERSONNUMMER.name())
             .adresselinje1(adresse)
             .build();
   }

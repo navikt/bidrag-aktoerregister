@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.persistence.entities;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,8 +65,23 @@ public class Aktoer {
   @Column(name = "valutakode")
   private String valutaKode;
 
-  @Column(name = "navn")
-  private String navn;
+  @Column(name = "fornavn")
+  private String fornavn;
+
+  @Column(name = "etternavn")
+  private String etternavn;
+
+  @Column(name = "fodt_dato")
+  private LocalDate fodtDato;
+
+  @Column(name = "dod_dato")
+  private LocalDate dodDato;
+
+  @Column(name = "gradering")
+  private String gradering;
+
+  @Column(name = "sprakkode")
+  private String sprakkode;
 
   @Column(name = "adresselinje1")
   private String adresselinje1;
@@ -75,6 +92,9 @@ public class Aktoer {
   @Column(name = "adresselinje3")
   private String adresselinje3;
 
+  @Column(name = "leilighetsnummer")
+  private String leilighetsnummer;
+
   @Column(name = "postnr")
   private String postnr;
 
@@ -83,6 +103,14 @@ public class Aktoer {
 
   @Column(name = "land")
   private String land;
+
+  @EqualsAndHashCode.Exclude
+  @OneToMany(mappedBy = "aktoer", cascade = CascadeType.ALL)
+  private List<TidligereIdenter> tidligereIdenter;
+
+  @EqualsAndHashCode.Exclude
+  @OneToOne(mappedBy = "aktoer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Dodsbo dodsbo;
 
   @Builder.Default
   @EqualsAndHashCode.Exclude
@@ -110,7 +138,7 @@ public class Aktoer {
     this.setBankLandkode(aktoer.getBankLandkode());
     this.setBankCode(aktoer.getBankCode());
     this.setValutaKode(aktoer.getValutaKode());
-    this.setNavn(aktoer.getNavn());
+    this.setEtternavn(aktoer.getEtternavn());
     this.setAdresselinje1(aktoer.getAdresselinje1());
     this.setAdresselinje2(aktoer.getAdresselinje2());
     this.setAdresselinje3(aktoer.getAdresselinje3());
