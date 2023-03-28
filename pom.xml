@@ -19,11 +19,17 @@
 	<properties>
 		<revision>1.0-SNAPSHOT</revision>
 		<java.version>17</java.version>
-		<token-support.version>1.3.19</token-support.version>
+    <kotlin.version>1.7.22</kotlin.version>
+    <token-support.version>2.1.9</token-support.version>
 		<bidrag-commons.version>0.7.45</bidrag-commons.version>
 		<!-- token-validation-spring-test krever denne versjonen -->
 		<okhttp3.version>4.9.1</okhttp3.version>
 		<bidrag-felles-testdata.version>1.3</bidrag-felles-testdata.version>
+		<bidrag-domain.version>1.20230217084842_f5279fd</bidrag-domain.version>
+		<bidrag-transport.version>20230324104039_0a2bc6e</bidrag-transport.version>
+		<kotlin-logging-jwv.version>4.0.0-beta-22</kotlin-logging-jwv.version>
+		<kotest.version>5.5.4</kotest.version>
+		<mockk.version>1.13.2</mockk.version>
 	</properties>
 
 	<dependencies>
@@ -65,6 +71,11 @@
 		</dependency>
 		<dependency>
 			<groupId>no.nav.security</groupId>
+			<artifactId>token-client-spring</artifactId>
+			<version>${token-support.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.security</groupId>
 			<artifactId>token-validation-spring-test</artifactId>
 			<version>${token-support.version}</version>
 			<scope>test</scope>
@@ -74,12 +85,49 @@
 			<artifactId>bidrag-commons</artifactId>
 			<version>${bidrag-commons.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>no.nav.bidrag</groupId>
+			<artifactId>bidrag-transport</artifactId>
+			<version>${bidrag-transport.version}</version>
+		</dependency>
+		<dependency >
+			<groupId>no.nav.bidrag</groupId>
+			<artifactId>bidrag-domain</artifactId>
+			<version>${bidrag-domain.version}</version>
+		</dependency>
+
+    <!--Kotlin-->
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-coroutines-core</artifactId>
+			<version>${kotlin-coroutines.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test-junit5</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!--Logging dependency in addition to spring boot starter logging deps-->
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
 			<artifactId>logstash-logback-encoder</artifactId>
 			<version>7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.oshai</groupId>
+			<artifactId>kotlin-logging-jvm</artifactId>
+			<version>${kotlin-logging-jwv.version}</version>
 		</dependency>
 
 		<!--MQ dependencies-->
@@ -165,20 +213,19 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Performance monitoring -->
-		<dependency>
-			<groupId>com.jamonapi</groupId>
-			<artifactId>jamon</artifactId>
-			<version>2.82</version>
-		</dependency>
-
 		<!-- Test -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit5-jvm</artifactId>
+			<version>${kotest.version}</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>io.mockk</groupId>
+			<artifactId>mockk</artifactId>
+			<version>${mockk.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>no.nav.bidrag</groupId>
 			<artifactId>bidrag-felles-testdata</artifactId>
@@ -264,6 +311,59 @@
 						<artifactId>jaxb-impl</artifactId>
 						<version>3.0.2</version>
 						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<sourceDirs>
+								<source>src/main/kotlin</source>
+							</sourceDirs>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<args>
+						<arg>-Xjsr305=strict</arg>
+					</args>
+					<compilerPlugins>
+						<plugin>spring</plugin>
+						<plugin>jpa</plugin>
+					</compilerPlugins>
+					<jvmTarget>1.8</jvmTarget>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-allopen</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-noarg</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-noarg</artifactId>
+						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>

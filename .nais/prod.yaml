@@ -5,3 +5,7 @@ ingresses:
   - https://bidrag-aktoerregister.nav.no/
 env:
   SPRING_PROFILES_ACTIVE: prod
+  BIDRAG_PERSON_URL: https://bidrag-person.intern.nav.no/bidrag-person
+  BIDRAG_PERSON_SCOPE: prod-fss.bidrag.bidrag-person
+  BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler.intern.nav.no
+  BIDRAG_SAMHANDLER_SCOPE: prod-gcp.bidrag.bidrag-samhandler
