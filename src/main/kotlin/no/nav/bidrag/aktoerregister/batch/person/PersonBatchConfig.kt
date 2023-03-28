@@ -1,7 +1,7 @@
-package no.nav.bidrag.aktoerregister.batch.samhandler
+package no.nav.bidrag.aktoerregister.batch.person
 
-import no.nav.bidrag.aktoerregister.batch.AktørBatchWriter
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
+import no.nav.bidrag.aktoerregister.batch.AktørBatchWriter
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -14,35 +14,35 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableBatchProcessing
-class SamhandlerBatchConfig(
+class PersonBatchConfig(
     private val jobBuilderFactory: JobBuilderFactory,
     private val stepBuilderFactory: StepBuilderFactory,
-    private val samhandlerBatchReader: SamhandlerBatchReader,
+    private val personBatchReader: PersonBatchReader,
     private val aktørBatchWriter: AktørBatchWriter,
-    private val samhandlerBatchProcessor: SamhandlerBatchProcessor
+    private val personBatchProcessor: PersonBatchProcessor,
 ) {
 
     companion object {
-        const val SAMHANDLER_BATCH_OPPDATERING_JOB = "SAMHANDLER_BATCH_OPPDATERING_JOB"
-        const val SAMHANDLER_OPPDATER_AKTOERER_STEP = "SAMHANDLER_OPPDATER_AKTOERER_STEP"
+        const val PERSON_BATCH_OPPDATERING_JOB = "PERSON_BATCH_OPPDATERING_JOB"
+        const val PERSON_OPPDATER_AKTOERER_STEP = "PERSON_OPPDATER_AKTOERER_STEP"
     }
 
     @Bean
-    fun samhandlerJob(): Job {
-        return jobBuilderFactory[SAMHANDLER_BATCH_OPPDATERING_JOB]
-            .listener(SamhandlerJobListener())
+    fun personJob(): Job {
+        return jobBuilderFactory[PERSON_BATCH_OPPDATERING_JOB]
+            .listener(PersonJobListener())
             .incrementer(RunIdIncrementer())
-            .flow(samhandlerStep())
+            .flow(personStep())
             .end()
             .build()
     }
 
     @Bean
-    fun samhandlerStep(): Step {
-        return stepBuilderFactory[SAMHANDLER_OPPDATER_AKTOERER_STEP]
+    fun personStep(): Step {
+        return stepBuilderFactory[PERSON_OPPDATER_AKTOERER_STEP]
             .chunk<Aktør, AktørBatchProcessorResult>(100)
-            .reader(samhandlerBatchReader)
-            .processor(samhandlerBatchProcessor)
+            .reader(personBatchReader)
+            .processor(personBatchProcessor)
             .writer(aktørBatchWriter)
             .build()
     }

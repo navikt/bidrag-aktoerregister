@@ -106,7 +106,7 @@ internal class AktørTilAkteorDTOConverterTest {
         aktoerDTO.fodtDato shouldBe foddato.toString()
         aktoerDTO.dodDato shouldBe doddato.toString()
         aktoerDTO.tidligereIdenter!![0].aktoerId shouldBe tidligereAktoerIdent
-        aktoerDTO.tidligereIdenter[0].identtype shouldBe aktoerType
+        aktoerDTO.tidligereIdenter!![0].identtype shouldBe aktoerType
         aktoerDTO.dodsbo?.kontaktpersion shouldBe kontaktperson
         aktoerDTO.dodsbo?.adresse?.adresselinje1 shouldBe adresselinje1
     }

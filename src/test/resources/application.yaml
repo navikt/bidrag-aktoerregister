@@ -63,15 +63,3 @@ no.nav.security.jwt:
 
 aktoerregister:
   scope: nav:bidrag:aktoerregister.read
-
-mq:
-  tssRequestQueue: DEV.QUEUE.1
-  channel: DEV.APP.SVRCONN
-  applicationName: bidrag-aktorregister
-  queueManager: QM1
-  password: passw0rd
-  timeout: '15000'
-  port: '1414'
-  tpsRequestQueue: TEST
-  username: app
-  tpsEventQueue: DEV.QUEUE.1

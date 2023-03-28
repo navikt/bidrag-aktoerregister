@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.batch
 
-enum class AktoerStatus {
+enum class AktørStatus {
     UPDATED,
     NOT_UPDATED,
     NOT_FOUND

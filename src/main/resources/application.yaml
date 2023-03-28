@@ -53,18 +53,3 @@ no.nav.security.jwt:
       validation:
         optional-claims: aud,sub,nbf
       accepted_audience: ${MASKINPORTEN_AUDIENCE}
-
-mq:
-  tssRequestQueue: ${MQ_TSS_REQUEST_QUEUE}
-  channel: ${MQ_CHANNEL}
-  applicationName: ${MQ_APPLICATION_NAME}
-  queueManager: ${MQ_QUEUE_MANAGER}
-  password: ${MQ_PASSWORD}
-  timeout: ${MQ_TIMEOUT}
-  backOffMaxInterval: '300000'
-  port: ${MQ_PORT}
-  tpsRequestQueue: ${MQ_TPS_REQUEST_QUEUE}
-  username: ${MQ_USERNAME}
-  host: ${MQ_HOST}
-  backOffInitialInterval: '15000'
-  tpsEventQueue: ${MQ_TPS_EVENT_QUEUE}

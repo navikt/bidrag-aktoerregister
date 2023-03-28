@@ -1,7 +1,6 @@
-package no.nav.bidrag.aktoerregister.batch.samhandler
+package no.nav.bidrag.aktoerregister.batch
 
 import io.github.oshai.KotlinLogging
-import no.nav.bidrag.aktoerregister.batch.AktoerStatus
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService
 import org.springframework.batch.item.ItemWriter
 import org.springframework.stereotype.Component
@@ -9,12 +8,12 @@ import org.springframework.stereotype.Component
 private val LOGGER = KotlinLogging.logger { }
 
 @Component
-class SamhandlerBatchWriter(private val aktoerregisterService: AktoerregisterService) : ItemWriter<SamhandlerBatchProcessorResult> {
+class AktørBatchWriter(private val aktoerregisterService: AktoerregisterService) : ItemWriter<AktørBatchProcessorResult> {
 
-    override fun write(samhandlerBatchProcessorResults: List<SamhandlerBatchProcessorResult>) {
+    override fun write(aktørBatchProcessorResults: List<AktørBatchProcessorResult>) {
 
-        samhandlerBatchProcessorResults
-            .filter { it.aktoerStatus == AktoerStatus.UPDATED }
+        aktørBatchProcessorResults
+            .filter { it.aktørStatus == AktørStatus.UPDATED }
             .map { it.aktør }
             .let {
                 LOGGER.trace { "Oppdaterer ${it.size} aktører.." }
