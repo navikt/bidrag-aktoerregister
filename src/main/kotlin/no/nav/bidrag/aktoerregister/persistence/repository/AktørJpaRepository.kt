@@ -1,15 +1,15 @@
-package no.nav.bidrag.aktoerregister.persistence.repository;
+package no.nav.bidrag.aktoerregister.persistence.repository
 
-import no.nav.bidrag.aktoerregister.persistence.entities.Aktør;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.JpaRepository
 
-public interface AktørJpaRepository extends JpaRepository<Aktør, String> {
+interface AktørJpaRepository : JpaRepository<Aktør, String> {
 
-  Page<Aktør> findAllByAktørType(String aktørType, Pageable pageable);
+    fun findAllByAktørType(aktørType: String, pageable: Pageable): Page<Aktør>
 
-  Aktør findByAktørIdent(String aktørIdent);
+    fun findByAktørIdent(aktørIdent: String): Aktør?
 
-  void deleteAktørByAktørIdent(String aktørIdent);
+    fun deleteAktørByAktørIdent(aktørIdent: String)
 }

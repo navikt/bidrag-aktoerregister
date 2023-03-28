@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
-import no.nav.bidrag.aktoerregister.exception.AktoerNotFoundException
+import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.service.AktoerregisterService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpStatus
@@ -45,8 +45,8 @@ class AktoerregisterController(
         return try {
             val aktoer = aktoerregisterService.hentAktoer(request)
             ResponseEntity.ok(aktoer)
-        } catch (e: AktoerNotFoundException) {
-            LOGGER.info { "Aktoer ${request.aktoerId} ikke funnet." }
+        } catch (e: AktørNotFoundException) {
+            LOGGER.info { "Aktør ${request.aktoerId} ikke funnet." }
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e)
         } catch (e: Exception) {
             LOGGER.error(e) { "Feil ved henting av aktør ${request.aktoerId}" }

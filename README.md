@@ -53,19 +53,18 @@ GET /hendelser?fraSekvensnummer=1001&antall=1000
 
 ## Integrasjoner
 
-### TSS
+### Bidrag-samhandler
 
-Ved forespørsel etter aktør på ident med identtype `AKTOERNUMMER` vil applikasjonen hente aktørinformasjon fra TSS dersom vi ikke allerede har informasjonen i databasen. Informasjonen hentes ved hjelp av en request kø i MQ som TSS lytter på. Respons skrives deretter tilbake på en midlertidig respons-kø som applikasjonen lytter på. Den mottatte aktøren lagres så i egen database før den returneres. Aktørinformasjon fra TSS inneholder både konto- og adresse-informasjon.
+Ved forespørsel etter aktør på ident med identtype `AKTOERNUMMER` vil applikasjonen hente aktørinformasjon fra bidrag-samhandler dersom vi ikke allerede har informasjonen i databasen. 
+Den mottatte aktøren lagres så i egen database før den returneres. Aktørinformasjon fra bidrag-samhandler inneholder både konto- og adresse-informasjon.
 
-I tillegg til at applikasjonen henter aktørinformasjon om forespurte aktører dersom de ikke allerede finnes i databasen, er det også satt opp en batch-jobb som sjekker om aktørene med identtype `AKTOERNUMMER` har blitt oppdatert i TSS siden sist de ble hentet. Aktørene som er endret vil oppdateres i applikasjonens database. Dette medfører også nye hendelser for de oppdaterte aktørene.
+I tillegg til at applikasjonen henter aktørinformasjon om forespurte aktører dersom de ikke allerede finnes i databasen, er det også satt opp en batch-jobb som sjekker om aktørene med identtype `AKTOERNUMMER` har blitt oppdatert i bidrag-samhandler siden sist de ble hentet. Aktørene som er endret vil oppdateres i applikasjonens database. Dette medfører også nye hendelser for de oppdaterte aktørene.
 
-### TPS
+### Bidrag-person
 
-Ved forespørsel etter aktør med identtype `PERSONNUMMER` vil applikasjonen hente aktørinformasjon fra TPS dersom vi ikke allerede har informasjonen i databasen. Informasjonen hentes på samme måte som mot TSS, ved hjelp av request- og respons-køer. Aktørinformasjon fra TPS inneholder kun kontoinformasjon.
+Ved forespørsel etter aktør med identtype `PERSONNUMMER` vil applikasjonen hente aktørinformasjon fra bidrag-person dersom vi ikke allerede har informasjonen i databasen. 
+Aktørinformasjon fra bidrag-person inneholder kontoinformasjon, adresseinformasjon, navn, dødsbo m.m.
 
-For å sørge for at aktører med identtype `PERSONNUMMER` holdes oppdatert abonnerer applikasjonen på endringsmeldinger relatert til kontoinformasjon. Endringsmeldingene dukker opp på en egen MQ-kø som applikasjonen kontinuerlig lytter på. Dersom endringsmeldingen gjelder en aktør vi har lagret i databasen oppdaterer vi informasjonen i henhold til endringsmeldingen. For TPS er vi derfor ikke avhengig av en batch-jobb slik vi er for TSS.
-
-![System oversikt](./img/bidrag-aktoerregister.drawio.png)
 
 ## Database
 
@@ -73,45 +72,21 @@ Applikasjonen benytter `PostgreSQL` i GCP for lagring av aktører og hendelser. 
 
 `Flyway` migrerings-script ligger under `/resources/db/migration/` og følger en bestemt navn-konvensjon. Dersom man skal endre på tabeller i en eksisterende database må man opprette nye scripts/filer for dette. Hvis man forsøker å endre i eksisterende filer vil man få feil ved oppstart.
 
-## XSD's og genererte klasser
-
-For dataobjektene vi bruker i integrasjonene mot TSS og TPS bruker vi Java-klasser generert basert på XSD filer (`TPSSkjema.xsd` og `TSSSkjema.xsd`) for henholdsvis TSS og TPS. Java-klassene genereres ved bygg.
-
 ## Maskinporten
 
-Endepunktene i applikasjonen krever maskinporten-tokens med scope `nav:bidrag:aktoerregister.read`. Foreløpig kan token med riktig scope genereres av NAV og Skatteetaten. Dette er også konfigurert i `nais.yaml`.
-
-## Kubernetes secrets
-Applikasjonen benytter én egendefinert Kubernetes secret i henholdsvis `dev-gcp` og `prod-gcp`. Passordet til IBM MQ. Passordet er representert gjennom miljøvariabelen `MQ_PASSWORD` i `application.properties`. I Kubernetes er den lagret på nøkkelen `bidrag-aktoerregister-mqpassword`, men når vi leser den ut i `nais.yaml` gjøres den tilgjengelig i pod'ene som miljøvariabelen `MQ_PASSWORD`.
+Endepunktene i applikasjonen som utleverer aktør- og hendelseinformasjon krever maskinporten-tokens med scope `nav:bidrag:aktoerregister.read`. 
+Foreløpig kan token med riktig scope genereres av NAV og Skatteetaten. Dette er også konfigurert i `nais.yaml`.
 
 ## Kjør applikasjon lokalt
 
-Å kjøre opp applikasjonen lokalt med all funksjonalitet lar seg dessverre ikke gjøre. Man kan kjøre opp applikasjonen, men vi vil ikke ha noen kobling mot MQ for forespørsler mot TSS og TPS. Ved hjelp av `docker-compose.yaml` kan man kjøre opp en IBM MQ instans samt en PostgreSQL instans som gjør at tjenesten ihvertfall starter ved bruk av profilen `local`. Dette krever imidlertid at du har Docker kjørende på maskina. Man kan derfor ihvertfall få testet `Flyway`-script og slike ting.
-
-For å bruke `docker-compose.yaml` til å kjøre opp PostgreSQL og IBM MQ må man stå på rotnivå av prosjektet i terminalen og kjøre 
+For å bruke `docker-compose.yaml` til å kjøre opp PostgreSQL må man stå på rotnivå av prosjektet i terminalen og kjøre 
 
 ```docker-compose up -d```
 
-Nå vil PostgreSQL, PgAdmin og IBM MQ starte. Åpne PgAdmin på localhost:5050 og logg inn med brukernavn `admin@admin.com` og passord `root`. På forsiden av PgAdmin, legg til en ny server og koble til. 
+Nå vil PostgreSQL starte. 
 
-```
-host: localhost eller host.docker.internal
-port: 5432
-database: test_db
-username: cloudsqliamuser
-password: root
-```
-
-Deretter må man inn på IBM MQ instansen og gi applikasjonen noen rettigheter:
-
-```
-docker exec -it ibmmq_container bin/bash
-
-setmqaut -m QM1 -t queue -n SYSTEM.DEFAULT.MODEL.QUEUE -p app +put +inq
-```
-
-Nå kan man kjøre opp applikasjonen med spring profilen `local`. Applikasjonen vil da starte uten problemer, og db tabeller vil opprettes.
+Nå kan man kjøre opp applikasjonen med spring profilen `local`.
 
 ## Kjøring av tester
 
-Noen av testene benytter `testcontainers` som krever at Docker kjører på maskina.
+Noen av testene benytter `testcontainers` som krever at Docker kjører på maskinen.

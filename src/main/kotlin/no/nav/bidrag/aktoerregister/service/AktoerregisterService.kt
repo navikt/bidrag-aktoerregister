@@ -7,6 +7,7 @@ import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
@@ -33,17 +34,19 @@ class AktoerregisterService(
         return conversionService.convert(aktør, AktoerDTO::class.java) ?: error("Konvertering av aktør til AktoerDTO feilet!")
     }
 
-    fun hentAktørFraSamhandler(aktoerIdent: String): Aktør {
-        LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra Bidrag-Samhandler")
-        conversionService.convert(samhandlerConsumer.hentSamhandler(aktoerIdent), Aktør::class.java)?.let {
+    fun hentAktørFraSamhandler(aktørIdent: String): Aktør {
+        LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
+        val samhandler = samhandlerConsumer.hentSamhandler(aktørIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-samhandler")
+        conversionService.convert(samhandler, Aktør::class.java)?.let {
             lagreAktoer(it)
             return it
         } ?: error("Konvertering av samhandler til aktør feilet!")
     }
 
     private fun hentAktørFraPerson(aktørIdent: String): Aktør {
-        LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra Bidrag-Person")
-        conversionService.convert(personConsumer.hentPerson(aktørIdent), Aktør::class.java)?.let {
+        LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-person")
+        val person = personConsumer.hentPerson(aktørIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-person")
+        conversionService.convert(person, Aktør::class.java)?.let {
             lagreAktoer(it)
             return it
         } ?: error("Konvertering av person til aktør feilet!")

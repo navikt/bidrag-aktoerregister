@@ -6,11 +6,10 @@ import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.security.SecurityScheme
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock
-import no.nav.bidrag.aktoerregister.properties.MQProperties
 import no.nav.bidrag.commons.web.CorrelationIdFilter
 import no.nav.bidrag.commons.web.DefaultCorsFilter
 import no.nav.bidrag.commons.web.UserMdcFilter
-import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.retry.annotation.EnableRetry
@@ -27,7 +26,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableRetry
 @Configuration
 @EnableScheduling
+@ConfigurationPropertiesScan
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
-@EnableConfigurationProperties(MQProperties::class)
 @Import(CorrelationIdFilter::class, DefaultCorsFilter::class, UserMdcFilter::class)
-class DefaultConfiguration
+class DefaultConfig
