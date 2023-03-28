@@ -28,7 +28,7 @@
 		<kotlin-logging-jwv.version>4.0.0-beta-22</kotlin-logging-jwv.version>
 		<kotest.version>5.5.4</kotest.version>
 		<mockk.version>1.13.2</mockk.version>
-		<testcontainers.version>1.17.6</testcontainers.version>
+		<testcontainers.version>1.17.3</testcontainers.version>
 		<shedlock.version>5.2.0</shedlock.version>
 	</properties>
 
