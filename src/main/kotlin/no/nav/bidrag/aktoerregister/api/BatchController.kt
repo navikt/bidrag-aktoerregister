@@ -25,7 +25,7 @@ class BatchController(
         description = "Samhandler batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
     )
     @ApiResponse(responseCode = "200", description = "Samhandler batchen ble startet.")
-    @PostMapping( "/samhandlerBatch")
+    @PostMapping("/samhandlerBatch")
     fun startSamhandlerBatch(): ResponseEntity<*> {
         CompletableFuture.runAsync {
             try {
@@ -42,7 +42,7 @@ class BatchController(
         description = "Person batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
     )
     @ApiResponse(responseCode = "200", description = "Person batchen ble startet.")
-    @PostMapping( "/personBatch")
+    @PostMapping("/personBatch")
     fun startPersonBatch(): ResponseEntity<*> {
         CompletableFuture.runAsync {
             try {

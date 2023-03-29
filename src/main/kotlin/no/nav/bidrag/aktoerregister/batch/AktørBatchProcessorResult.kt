@@ -1,6 +1,5 @@
 package no.nav.bidrag.aktoerregister.batch
 
-
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 
 data class AktørBatchProcessorResult(

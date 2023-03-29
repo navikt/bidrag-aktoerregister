@@ -27,7 +27,7 @@ data class Hendelse(
 
     @Version
     @Column(name = "sist_endret")
-    val sistEndret: Timestamp? = null,
+    val sistEndret: Timestamp? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -49,10 +49,10 @@ data class Hendelse(
 
     override fun toString(): String {
         return "Hendelse(" +
-                "sekvensnummer=$sekvensnummer," +
-                "aktør=${aktør.id}, " +
-                "aktoerIdent='$aktørIdent', " +
-                "sistEndret=$sistEndret)"
+            "sekvensnummer=$sekvensnummer," +
+            "aktør=${aktør.id}, " +
+            "aktoerIdent='$aktørIdent', " +
+            "sistEndret=$sistEndret)"
     }
 
     constructor(sekvensnummer: Int, aktør: Aktør) : this(sekvensnummer = sekvensnummer, aktør = aktør, aktørIdent = aktør.aktørIdent)

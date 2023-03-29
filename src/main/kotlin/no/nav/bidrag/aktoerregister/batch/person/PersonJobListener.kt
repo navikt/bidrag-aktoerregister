@@ -5,7 +5,6 @@ import org.springframework.batch.core.JobExecution
 import org.springframework.batch.core.StepExecution
 import org.springframework.batch.core.annotation.AfterJob
 
-
 private val LOGGER = KotlinLogging.logger { }
 
 class PersonJobListener {
@@ -15,9 +14,8 @@ class PersonJobListener {
             .let { stepExecution ->
                 LOGGER.info(
                     "Av totalt ${stepExecution.readCount} person-aktører var ${stepExecution.writeCount} blitt endret siden forrige kjøring. " +
-                            "${stepExecution.writeCount} aktører ble dermed oppdatert i databasen."
+                        "${stepExecution.writeCount} aktører ble dermed oppdatert i databasen."
                 )
             }
-
     }
 }

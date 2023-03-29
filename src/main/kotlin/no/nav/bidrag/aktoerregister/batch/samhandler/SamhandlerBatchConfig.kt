@@ -1,7 +1,7 @@
 package no.nav.bidrag.aktoerregister.batch.samhandler
 
-import no.nav.bidrag.aktoerregister.batch.AktørBatchWriter
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
+import no.nav.bidrag.aktoerregister.batch.AktørBatchWriter
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step

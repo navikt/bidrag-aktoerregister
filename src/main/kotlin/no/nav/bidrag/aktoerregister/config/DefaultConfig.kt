@@ -20,7 +20,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
         title = "bidrag-aktørregister",
         version = "v1",
         description = "Inneholder adresse- og kontoinformasjon om aktører i Bidragssaker."
-    ), security = [SecurityRequirement(name = "bearer-key")]
+    ),
+    security = [SecurityRequirement(name = "bearer-key")]
 )
 @SecurityScheme(bearerFormat = "JWT", name = "bearer-key", scheme = "bearer", type = SecuritySchemeType.HTTP)
 @EnableRetry

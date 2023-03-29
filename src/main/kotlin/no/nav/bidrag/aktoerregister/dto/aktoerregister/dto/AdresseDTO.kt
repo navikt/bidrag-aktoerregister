@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "Representerer navn og/eller adresse for en bidragsaktør. TODO: Beskrivelse av felter må kvalitetssikres.")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class AdresseDTO (
+data class AdresseDTO(
 
     @Schema(description = "Aktørens navn")
     @Deprecated("Flyttet til NavnDTO.")

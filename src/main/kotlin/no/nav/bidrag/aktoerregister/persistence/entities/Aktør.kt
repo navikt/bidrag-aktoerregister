@@ -206,31 +206,31 @@ data class Aktør(
 
     override fun toString(): String {
         return "Aktoer(id=$id, " +
-                "aktoerIdent='$aktørIdent', " +
-                "aktoerType='$aktørType', " +
-                "offentligId=$offentligId, " +
-                "offentligIdType=$offentligIdType, " +
-                "norskKontonr=$norskKontonr, " +
-                "iban=$iban, " +
-                "swift=$swift, " +
-                "bankNavn=$bankNavn, " +
-                "bankLandkode=$bankLandkode, " +
-                "bankCode=$bankCode, " +
-                "valutaKode=$valutaKode, " +
-                "fornavn=$fornavn, " +
-                "etternavn=$etternavn, " +
-                "fodtDato=$fødtDato, " +
-                "dodDato=$dødDato, " +
-                "gradering=$gradering, " +
-                "sprakkode=$språkkode, " +
-                "adresselinje1=$adresselinje1, " +
-                "adresselinje2=$adresselinje2, " +
-                "adresselinje3=$adresselinje3, " +
-                "leilighetsnummer=$leilighetsnummer, " +
-                "postnr=$postnr, " +
-                "poststed=$poststed, land=$land, " +
-                "tidligereIdenter=$tidligereIdenter, " +
-                "dodsbo=$dødsbo, " +
-                "sistEndret=$sistEndret)"
+            "aktoerIdent='$aktørIdent', " +
+            "aktoerType='$aktørType', " +
+            "offentligId=$offentligId, " +
+            "offentligIdType=$offentligIdType, " +
+            "norskKontonr=$norskKontonr, " +
+            "iban=$iban, " +
+            "swift=$swift, " +
+            "bankNavn=$bankNavn, " +
+            "bankLandkode=$bankLandkode, " +
+            "bankCode=$bankCode, " +
+            "valutaKode=$valutaKode, " +
+            "fornavn=$fornavn, " +
+            "etternavn=$etternavn, " +
+            "fodtDato=$fødtDato, " +
+            "dodDato=$dødDato, " +
+            "gradering=$gradering, " +
+            "sprakkode=$språkkode, " +
+            "adresselinje1=$adresselinje1, " +
+            "adresselinje2=$adresselinje2, " +
+            "adresselinje3=$adresselinje3, " +
+            "leilighetsnummer=$leilighetsnummer, " +
+            "postnr=$postnr, " +
+            "poststed=$poststed, land=$land, " +
+            "tidligereIdenter=$tidligereIdenter, " +
+            "dodsbo=$dødsbo, " +
+            "sistEndret=$sistEndret)"
     }
 }

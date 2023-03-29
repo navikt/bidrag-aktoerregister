@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Gradering
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class AktoerDTO (
+data class AktoerDTO(
 
     @Schema(description = "Id for aktøren")
     val aktoerId: AktoerIdDTO,
