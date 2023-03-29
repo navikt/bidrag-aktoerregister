@@ -8,11 +8,12 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @Primary
-class HendelseRepositoryImpl (private val hendelseJpaRepository: HendelseJpaRepository) : HendelseRepository {
+class HendelseRepositoryImpl(private val hendelseJpaRepository: HendelseJpaRepository) : HendelseRepository {
 
     override fun hentHendelser(fraSekvensnummer: Int, antallHendelser: Int): List<Hendelse> {
         return hendelseJpaRepository.hentHendelserMedUnikAktoer(
-            fraSekvensnummer, Pageable.ofSize(antallHendelser)
+            fraSekvensnummer,
+            Pageable.ofSize(antallHendelser)
         )
     }
 

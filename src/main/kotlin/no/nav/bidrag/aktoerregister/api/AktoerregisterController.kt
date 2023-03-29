@@ -50,25 +50,27 @@ class AktoerregisterController(
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e)
         } catch (e: Exception) {
             LOGGER.error(e) { "Feil ved henting av aktør ${request.aktoerId}" }
-            throw ResponseStatusException(INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem med oppkobling mot MQ. Prøv igjen senere.", e) //TODO() Oppdatere feilmelding
+            throw ResponseStatusException(INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem med oppkobling mot MQ. Prøv igjen senere.", e) // TODO() Oppdatere feilmelding
         }
     }
 
     @Operation(
         summary = "Tilbyr en liste over aktøroppdateringer.",
-        description = "Ingen informasjon om aktøren leveres av denne tjenesten utover aktørIden\n."
-                + "Hendelsene legges inn med stigende sekvensnummer. Klienten må selv ta vare på hvilke sekvensnummer som sist er behandlet, og be om å få hendelser fra det neste sekvensnummeret ved neste kall.\n"
-                + "Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall.\n\n"
-                + "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser.\n"
-                + "Det kan forekomme hull i sekvensnummer-rekken.\n"
-                + "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres."
+        description = "Ingen informasjon om aktøren leveres av denne tjenesten utover aktørIden\n." +
+            "Hendelsene legges inn med stigende sekvensnummer. Klienten må selv ta vare på hvilke sekvensnummer som sist er behandlet, og be om å få hendelser fra det neste sekvensnummeret ved neste kall.\n" +
+            "Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall.\n\n" +
+            "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser.\n" +
+            "Det kan forekomme hull i sekvensnummer-rekken.\n" +
+            "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres."
     )
     @GetMapping(path = ["/hendelser"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentHendelser(
         @Parameter(description = "Angir første sekvensnummer som ønskes hentet. Default-verdi er 0")
-        @RequestParam(name = "fraSekvensnummer", defaultValue = "0") fraSekvensnummer: Int = 0,
+        @RequestParam(name = "fraSekvensnummer", defaultValue = "0")
+        fraSekvensnummer: Int = 0,
         @Parameter(description = "Maksimalt antall hendelser som ønskes hentet. Default-verdi er 1000.")
-        @RequestParam(name = "antall", defaultValue = "1000") antall: Int = 1000
+        @RequestParam(name = "antall", defaultValue = "1000")
+        antall: Int = 1000
     ): ResponseEntity<List<HendelseDTO>> {
         return try {
             ResponseEntity.ok(aktoerregisterService.hentHendelser(fraSekvensnummer, antall))

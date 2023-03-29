@@ -2,8 +2,8 @@ package no.nav.bidrag.aktoerregister.batch.samhandler
 
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
-import no.nav.bidrag.aktoerregister.batch.AktørStatus
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
+import no.nav.bidrag.aktoerregister.batch.AktørStatus
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import org.springframework.batch.item.ItemProcessor

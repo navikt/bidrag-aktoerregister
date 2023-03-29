@@ -104,7 +104,8 @@ class AktørRepositoryTest {
             hendelseMap[hendelse.aktør.aktørIdent] = hendelser
         }
         sublist.forEach(
-            Consumer { (_, aktørIdent): Aktør -> Assertions.assertEquals(2, hendelseMap[aktørIdent]!!.size) })
+            Consumer { (_, aktørIdent): Aktør -> Assertions.assertEquals(2, hendelseMap[aktørIdent]!!.size) }
+        )
     }
 
     private fun opprettAktoerListeMed20Aktører(): List<Aktør> {

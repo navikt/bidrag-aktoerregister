@@ -5,16 +5,16 @@ import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
 
 data class AktoerIdDTO(
     @Schema(
-        description = "Identen for aktøren. "
-                + "For personer vil dette være FNR eller DNR. "
-                + "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8 eller 9."
+        description = "Identen for aktøren. " +
+            "For personer vil dette være FNR eller DNR. " +
+            "Ellers benyttes aktørnummer på elleve siffer hvor første siffer er 8 eller 9."
     )
     val aktoerId: String,
 
     @Schema(
-        description = "Angir hvilken type ident som er angitt. "
-                + "For personer vil dette være FNR eller DNR, som angis med PERSONNUMMER. "
-                + "Utover dette benyttes AKTOERNUMMER."
+        description = "Angir hvilken type ident som er angitt. " +
+            "For personer vil dette være FNR eller DNR, som angis med PERSONNUMMER. " +
+            "Utover dette benyttes AKTOERNUMMER."
     )
     val identtype: Identtype
 )

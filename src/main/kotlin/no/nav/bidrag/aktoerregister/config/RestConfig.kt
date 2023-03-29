@@ -21,5 +21,4 @@ class RestConfig {
             .failOnUnknownProperties(false)
             .serializationInclusion(JsonInclude.Include.NON_NULL)
     }
-
 }

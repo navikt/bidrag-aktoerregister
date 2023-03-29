@@ -11,7 +11,6 @@ private val LOGGER = KotlinLogging.logger { }
 class AktørBatchWriter(private val aktoerregisterService: AktoerregisterService) : ItemWriter<AktørBatchProcessorResult> {
 
     override fun write(aktørBatchProcessorResults: List<AktørBatchProcessorResult>) {
-
         aktørBatchProcessorResults
             .filter { it.aktørStatus == AktørStatus.UPDATED }
             .map { it.aktør }

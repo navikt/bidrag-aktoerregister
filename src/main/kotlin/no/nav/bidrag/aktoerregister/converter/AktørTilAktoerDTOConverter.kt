@@ -84,7 +84,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
                     leilighetsnummer = aktør.dødsbo?.leilighetsnummer,
                     postnr = aktør.dødsbo?.postnr,
                     poststed = aktør.dødsbo?.poststed,
-                    land = aktør.dødsbo?.land,
+                    land = aktør.dødsbo?.land
                 )
             )
         } ?: DodsboDTO()

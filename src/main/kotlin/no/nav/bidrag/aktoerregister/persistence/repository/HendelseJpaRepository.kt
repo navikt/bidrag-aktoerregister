@@ -14,6 +14,4 @@ interface HendelseJpaRepository : JpaRepository<Hendelse, Int> {
      */
     @Query(value = "SELECT new Hendelse(max(h.sekvensnummer), h.aktør) FROM Hendelse h WHERE h.sekvensnummer >= :sekvensnummer GROUP BY h.aktør.id ORDER BY max(h.sekvensnummer)")
     fun hentHendelserMedUnikAktoer(@Param("sekvensnummer") sekvensnummer: Int, pageable: Pageable): List<Hendelse>
-
-
 }

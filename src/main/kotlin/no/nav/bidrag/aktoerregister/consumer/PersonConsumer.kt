@@ -13,9 +13,8 @@ import java.net.URI
 
 private val LOGGER = KotlinLogging.logger {}
 
-
 @Service
-class PersonConsumer    (
+class PersonConsumer(
     @Value("\${BIDRAG_PERSON_URL}") val url: URI,
     @Qualifier("azure") private val restTemplate: RestOperations
 ) : AbstractRestClient(restTemplate, "bidrag-aktoerregister-samhandler") {

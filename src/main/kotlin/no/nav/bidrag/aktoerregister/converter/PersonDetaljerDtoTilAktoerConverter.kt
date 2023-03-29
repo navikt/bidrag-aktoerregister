@@ -50,7 +50,7 @@ class PersonDetaljerDtoTilAktoerConverter : Converter<PersonDetaljerDto, Aktør>
                 adresselinje2 = it.kontaktadresse.adresselinje2,
                 postnr = it.kontaktadresse.postnummer,
                 poststed = it.kontaktadresse.poststed,
-                land = it.kontaktadresse.land3,
+                land = it.kontaktadresse.land3
             )
         }
     }

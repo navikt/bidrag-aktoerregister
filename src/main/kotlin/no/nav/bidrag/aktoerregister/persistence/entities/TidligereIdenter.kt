@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity(name = "tidligere_identer")
-data class TidligereIdenter (
+data class TidligereIdenter(
 
     @Id
     @Column(name = "id")
@@ -25,7 +25,6 @@ data class TidligereIdenter (
     @ManyToOne
     @JoinColumn(name = "aktoer_id")
     val aktør: Aktør? = null
-
 
 ) {
     override fun equals(other: Any?): Boolean {
@@ -50,11 +49,9 @@ data class TidligereIdenter (
 
     override fun toString(): String {
         return "TidligereIdenter(" +
-                "id=$id, " +
-                "tidligereAktoerIdent='$tidligereAktoerIdent', " +
-                "identtype='$identtype', " +
-                "aktør=${aktør?.id})"
+            "id=$id, " +
+            "tidligereAktoerIdent='$tidligereAktoerIdent', " +
+            "identtype='$identtype', " +
+            "aktør=${aktør?.id})"
     }
-
-
 }

@@ -36,7 +36,6 @@ class JpaRepositoryTests {
     @Autowired
     private lateinit var aktørJpaRepository: AktørJpaRepository
 
-
     @BeforeEach
     fun Setup() {
         aktørJpaRepository.deleteAll()
@@ -72,7 +71,7 @@ class JpaRepositoryTests {
 
         sisteHendelser.size shouldBe 5
         sisteHendelser.map { it.aktør.aktørIdent }.shouldNotContainDuplicates().size shouldBe 5
-        sisteHendelser[0].sekvensnummer shouldBeGreaterThan  0
+        sisteHendelser[0].sekvensnummer shouldBeGreaterThan 0
 
         var lastReceivedSekvensnummer = sisteHendelser[sisteHendelser.size - 1].sekvensnummer
         sisteHendelser = hendelseJpaRepository.hentHendelserMedUnikAktoer(lastReceivedSekvensnummer + 1, Pageable.ofSize(10))

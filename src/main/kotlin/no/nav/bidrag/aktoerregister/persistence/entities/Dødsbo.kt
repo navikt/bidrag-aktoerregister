@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.OneToOne
 
 @Entity(name = "dodsbo")
-data class Dødsbo (
+data class Dødsbo(
 
     @Id
     @Column(name = "id")
@@ -43,7 +43,6 @@ data class Dødsbo (
     @OneToOne
     @JoinColumn(name = "aktoer_id")
     val aktør: Aktør? = null
-
 
 ) {
     override fun equals(other: Any?): Boolean {
@@ -80,17 +79,15 @@ data class Dødsbo (
 
     override fun toString(): String {
         return "Dødsbo(" +
-                "id=$id, " +
-                "kontaktperson=$kontaktperson, " +
-                "adresselinje1=$adresselinje1, " +
-                "adresselinje2=$adresselinje2, " +
-                "adresselinje3=$adresselinje3, " +
-                "leilighetsnummer=$leilighetsnummer, " +
-                "postnr=$postnr, " +
-                "poststed=$poststed, " +
-                "land=$land, " +
-                "aktør=${aktør?.id})"
+            "id=$id, " +
+            "kontaktperson=$kontaktperson, " +
+            "adresselinje1=$adresselinje1, " +
+            "adresselinje2=$adresselinje2, " +
+            "adresselinje3=$adresselinje3, " +
+            "leilighetsnummer=$leilighetsnummer, " +
+            "postnr=$postnr, " +
+            "poststed=$poststed, " +
+            "land=$land, " +
+            "aktør=${aktør?.id})"
     }
-
-
 }

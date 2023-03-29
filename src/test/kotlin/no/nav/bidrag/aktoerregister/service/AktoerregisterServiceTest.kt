@@ -1,38 +1,38 @@
-//package no.nav.bidrag.aktoerregister.service
+// package no.nav.bidrag.aktoerregister.service
 //
-//import io.mockk.impl.annotations.InjectMockKs
-//import io.mockk.impl.annotations.MockK
-//import io.mockk.junit5.MockKExtension
-//import no.nav.bidrag.aktoerregister.converter.AktoerTilAktoerDTOConverter
-//import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AdresseDTO.adresselinje1
-//import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
-//import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
-//import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.KontonummerDTO.norskKontonr
-//import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
-//import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer
-//import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.adresselinje1
-//import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.aktoerIdent
-//import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.aktoerType
-//import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.norskKontonr
-//import no.nav.bidrag.aktoerregister.repository.AktoerRepositoryMock
-//import no.nav.bidrag.aktoerregister.repository.HendelseRepositoryMock
-//import no.nav.bidrag.aktoerregister.repository.MockDB
-//import no.nav.bidrag.felles.test.data.konto.TestKontoBuilder
-//import no.nav.bidrag.felles.test.data.person.TestPersonBuilder
-//import no.nav.bidrag.felles.test.data.samhandler.TestSamhandler
-//import no.nav.bidrag.felles.test.data.samhandler.TestSamhandlerBuilder
-//import org.junit.jupiter.api.Assertions
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.Test
-//import org.junit.jupiter.api.extension.ExtendWith
-//import org.mockito.ArgumentMatchers
-//import org.mockito.Mock
-//import org.mockito.Mockito
-//import org.mockito.junit.jupiter.MockitoExtension
-//import org.springframework.core.convert.ConversionService
+// import io.mockk.impl.annotations.InjectMockKs
+// import io.mockk.impl.annotations.MockK
+// import io.mockk.junit5.MockKExtension
+// import no.nav.bidrag.aktoerregister.converter.AktoerTilAktoerDTOConverter
+// import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AdresseDTO.adresselinje1
+// import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
+// import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
+// import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.KontonummerDTO.norskKontonr
+// import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
+// import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer
+// import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.adresselinje1
+// import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.aktoerIdent
+// import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.aktoerType
+// import no.nav.bidrag.aktoerregister.persistence.entities.Aktoer.norskKontonr
+// import no.nav.bidrag.aktoerregister.repository.AktoerRepositoryMock
+// import no.nav.bidrag.aktoerregister.repository.HendelseRepositoryMock
+// import no.nav.bidrag.aktoerregister.repository.MockDB
+// import no.nav.bidrag.felles.test.data.konto.TestKontoBuilder
+// import no.nav.bidrag.felles.test.data.person.TestPersonBuilder
+// import no.nav.bidrag.felles.test.data.samhandler.TestSamhandler
+// import no.nav.bidrag.felles.test.data.samhandler.TestSamhandlerBuilder
+// import org.junit.jupiter.api.Assertions
+// import org.junit.jupiter.api.BeforeEach
+// import org.junit.jupiter.api.Test
+// import org.junit.jupiter.api.extension.ExtendWith
+// import org.mockito.ArgumentMatchers
+// import org.mockito.Mock
+// import org.mockito.Mockito
+// import org.mockito.junit.jupiter.MockitoExtension
+// import org.springframework.core.convert.ConversionService
 //
-//@ExtendWith(MockKExtension::class)
-//class AktoerregisterServiceTest {
+// @ExtendWith(MockKExtension::class)
+// class AktoerregisterServiceTest {
 //    private val aktoerTilAktoerDTOConverter = AktoerTilAktoerDTOConverter()
 //    private var mockDB: MockDB? = null
 //
@@ -216,4 +216,4 @@
 //        private val SAMHANDLER1 = TestSamhandlerBuilder.samhandler().opprett()
 //        private val SAMHANDLER2 = TestSamhandlerBuilder.samhandler().opprett()
 //    }
-//}
+// }

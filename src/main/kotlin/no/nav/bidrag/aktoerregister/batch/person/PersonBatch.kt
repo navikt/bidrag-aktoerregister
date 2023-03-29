@@ -19,6 +19,5 @@ class PersonBatch(
             .addString("time", SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().time))
             .toJobParameters()
         jobLauncher.run(job, jobParameters)
-
     }
 }
