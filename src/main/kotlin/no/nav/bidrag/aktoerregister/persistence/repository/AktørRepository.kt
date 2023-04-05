@@ -16,6 +16,7 @@ class AktørRepository(
         aktør.tidligereIdenter.forEach {
             it.aktør = aktør
         }
+        aktør.dødsbo?.aktør = aktør
         aktør.addHendelse(Hendelse(aktørIdent = aktør.aktørIdent, aktør = aktør))
         return nyAktør
     }
@@ -24,6 +25,7 @@ class AktørRepository(
         val nyAktørListe = aktørJpaRepository.saveAll(aktørListe)
         aktørListe.forEach { aktør ->
             aktør.tidligereIdenter.forEach { it.aktør = aktør }
+            aktør.dødsbo?.aktør = aktør
         }
         return nyAktørListe
     }

@@ -42,7 +42,7 @@ data class Dødsbo(
 
     @OneToOne
     @JoinColumn(name = "aktoer_id")
-    val aktør: Aktør? = null
+    var aktør: Aktør? = null
 
 ) {
     override fun equals(other: Any?): Boolean {
