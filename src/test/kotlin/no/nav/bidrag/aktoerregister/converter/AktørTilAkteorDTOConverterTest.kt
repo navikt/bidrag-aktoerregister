@@ -63,7 +63,7 @@ internal class AktørTilAkteorDTOConverterTest {
             valutaKode = valutaKode,
             etternavn = etternavn,
             fornavn = fornavn,
-            tidligereIdenter = listOf(TidligereIdenter(tidligereAktoerIdent = tidligereAktoerIdent, identtype = aktoerType.name)),
+            tidligereIdenter = mutableSetOf(TidligereIdenter(tidligereAktoerIdent = tidligereAktoerIdent, identtype = aktoerType.name)),
             gradering = gradering.name,
             språkkode = sprakkode,
             fødtDato = foddato,

@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.api
+package no.nav.bidrag.aktoerregister.controller
 
 import io.github.oshai.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation

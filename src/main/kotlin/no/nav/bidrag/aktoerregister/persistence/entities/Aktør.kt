@@ -92,8 +92,8 @@ data class Aktør(
     @Column(name = "land")
     var land: String? = null,
 
-    @OneToMany(mappedBy = "aktør", cascade = [CascadeType.ALL])
-    val tidligereIdenter: List<TidligereIdenter> = emptyList(),
+    @OneToMany(mappedBy = "aktør", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var tidligereIdenter: MutableSet<TidligereIdenter> = mutableSetOf(),
 
     @OneToOne(mappedBy = "aktør", cascade = [CascadeType.ALL], orphanRemoval = true)
     var dødsbo: Dødsbo? = null,
@@ -138,6 +138,8 @@ data class Aktør(
         this.postnr = aktør.postnr
         this.land = aktør.land
         this.dødsbo = aktør.dødsbo
+        this.tidligereIdenter.clear()
+        this.tidligereIdenter.addAll(aktør.tidligereIdenter)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -171,8 +173,19 @@ data class Aktør(
         if (poststed != other.poststed) return false
         if (land != other.land) return false
         if (dødsbo != other.dødsbo) return false
+        if (!erTidligereIdenterLike(other)) return false
 
         return true
+    }
+
+    fun erTidligereIdenterLike(other: Aktør): Boolean {
+        return tidligereIdenter.size == other.tidligereIdenter.size &&
+            tidligereIdenter.all { a1 ->
+                other.tidligereIdenter.any { a2 -> a1.tidligereAktoerIdent == a2.tidligereAktoerIdent } &&
+                    other.tidligereIdenter.all { a2 ->
+                        tidligereIdenter.any { a1 -> a2.tidligereAktoerIdent == a1.tidligereAktoerIdent }
+                    }
+            }
     }
 
     override fun hashCode(): Int {

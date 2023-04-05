@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.consumer
 
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
+import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
 import no.nav.bidrag.domain.ident.Ident
@@ -25,9 +26,13 @@ class SamhandlerConsumer(
     }
 
     fun hentSamhandler(aktørIdent: Ident): SamhandlerDto? {
-        val response: SamhandlerDto? = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), aktørIdent)
-        LOGGER.debug { "Hentet samhandler med $aktørIdent fra bidrag-samhandler." }
-        SECURE_LOGGER.info { "Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler." }
-        return response
+        try {
+            val response: SamhandlerDto = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), aktørIdent)!!
+            LOGGER.debug { "Hentet samhandler med $aktørIdent fra bidrag-samhandler." }
+            SECURE_LOGGER.info { "Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler." }
+            return response
+        } catch (e: Exception) {
+            throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-samhandler")
+        }
     }
 }

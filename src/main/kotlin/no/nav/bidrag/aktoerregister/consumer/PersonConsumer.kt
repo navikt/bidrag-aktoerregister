@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.consumer
 
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
+import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
 import no.nav.bidrag.domain.ident.Ident
@@ -26,9 +27,13 @@ class PersonConsumer(
     }
 
     fun hentPerson(personIdent: Ident): PersondetaljerDto? {
-        val response: PersondetaljerDto? = postForEntity(leggTilPathPåUri(url, PERSON_PATH), PersonIdent(personIdent.verdi))
-        LOGGER.debug { "Hentet person fra bidrag-person." }
-        SECURE_LOGGER.info { "Hentet person med id: $personIdent fra bidrag-person." }
-        return response
+        try {
+            val response: PersondetaljerDto = postForEntity(leggTilPathPåUri(url, PERSON_PATH), PersonIdent(personIdent.verdi))!!
+            LOGGER.debug { "Hentet person fra bidrag-person." }
+            SECURE_LOGGER.info { "Hentet person med id: $personIdent fra bidrag-person." }
+            return response
+        } catch (e: Exception) {
+            throw AktørNotFoundException("fant ingen aktør med ident: $personIdent i bidrag-person")
+        }
     }
 }

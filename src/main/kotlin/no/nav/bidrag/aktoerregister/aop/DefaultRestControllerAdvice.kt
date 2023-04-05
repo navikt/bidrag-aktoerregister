@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.client.HttpStatusCodeException
+import org.springframework.web.server.ResponseStatusException
 
 private val LOGGER = KotlinLogging.logger {}
 
@@ -28,6 +29,13 @@ class DefaultRestControllerAdvice {
     fun handleUnauthorizedException(exception: JwtTokenUnauthorizedException?): ResponseEntity<*> {
         LOGGER.warn(exception) { "Ugyldig eller manglende sikkerhetstoken" }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header(HttpHeaders.WARNING, "Ugyldig eller manglende sikkerhetstoken").build<Any>()
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ResponseStatusException::class)
+    fun handlerResponseStatusException(exception: ResponseStatusException): ResponseEntity<*> {
+        LOGGER.warn(exception) { exception.message }
+        return ResponseEntity.status(exception.status).header(HttpHeaders.WARNING, exception.message).build<Any>()
     }
 
     @ResponseBody

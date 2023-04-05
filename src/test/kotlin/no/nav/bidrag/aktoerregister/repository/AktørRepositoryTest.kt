@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.transaction.annotation.Transactional
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -28,6 +29,7 @@ import java.util.function.Consumer
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @EnableMockOAuth2Server
+@Transactional
 class AktørRepositoryTest {
 
     @Autowired
@@ -120,7 +122,6 @@ class AktørRepositoryTest {
                     poststed = "Oslo",
                     adresselinje1 = "Testgate $i",
                     norskKontonr = i.toString()
-
                 )
             )
         }

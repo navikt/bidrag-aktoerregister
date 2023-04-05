@@ -7,15 +7,25 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @Primary
-class AktørRepository(private val aktørJpaRepository: AktørJpaRepository) {
+class AktørRepository(
+    private val aktørJpaRepository: AktørJpaRepository
+) {
 
     fun opprettEllerOppdaterAktør(aktør: Aktør): Aktør {
+        val nyAktør = aktørJpaRepository.save(aktør)
+        aktør.tidligereIdenter.forEach {
+            it.aktør = aktør
+        }
         aktør.addHendelse(Hendelse(aktørIdent = aktør.aktørIdent, aktør = aktør))
-        return aktørJpaRepository.save(aktør)
+        return nyAktør
     }
 
     fun opprettEllerOppdaterAktører(aktørListe: List<Aktør>): List<Aktør> {
-        return aktørJpaRepository.saveAll(aktørListe)
+        val nyAktørListe = aktørJpaRepository.saveAll(aktørListe)
+        aktørListe.forEach { aktør ->
+            aktør.tidligereIdenter.forEach { it.aktør = aktør }
+        }
+        return nyAktørListe
     }
 
     fun getAktør(aktørIdent: String): Aktør? {
