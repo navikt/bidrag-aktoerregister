@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class AdresseDTO(
 
-    @Schema(description = "Aktørens navn")
+    @Schema(description = "Aktørens navn", deprecated = true)
     @Deprecated("Flyttet til NavnDTO.")
     val navn: String? = null,
 

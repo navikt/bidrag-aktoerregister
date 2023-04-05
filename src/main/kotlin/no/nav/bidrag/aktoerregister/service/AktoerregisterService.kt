@@ -11,6 +11,7 @@ import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
+import no.nav.bidrag.domain.ident.Ident
 import org.springframework.core.convert.ConversionService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,33 +28,33 @@ class AktoerregisterService(
 ) {
 
     fun hentAktoer(aktørId: AktoerIdDTO): AktoerDTO {
-        val aktørIdent = aktørId.aktoerId
+        val aktørIdent = Ident(aktørId.aktoerId)
         val aktør = hentAktørFraDatabase(aktørIdent)
             ?: if (aktørId.identtype == Identtype.AKTOERNUMMER) hentAktørFraSamhandler(aktørIdent) else hentAktørFraPerson(aktørIdent)
 
         return conversionService.convert(aktør, AktoerDTO::class.java) ?: error("Konvertering av aktør til AktoerDTO feilet!")
     }
 
-    fun hentAktørFraSamhandler(aktørIdent: String): Aktør {
+    fun hentAktørFraSamhandler(aktørIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
         val samhandler = samhandlerConsumer.hentSamhandler(aktørIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-samhandler")
         conversionService.convert(samhandler, Aktør::class.java)?.let {
             lagreAktoer(it)
             return it
-        } ?: error("Konvertering av samhandler til aktør feilet!")
+        } ?: error("Konvertering av samhandler til aktør for ident: $aktørIdent feilet!")
     }
 
-    private fun hentAktørFraPerson(aktørIdent: String): Aktør {
+    private fun hentAktørFraPerson(personIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-person")
-        val person = personConsumer.hentPerson(aktørIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-person")
+        val person = personConsumer.hentPerson(personIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $personIdent i bidrag-person")
         conversionService.convert(person, Aktør::class.java)?.let {
             lagreAktoer(it)
             return it
         } ?: error("Konvertering av person til aktør feilet!")
     }
 
-    fun hentAktørFraDatabase(aktoerIdent: String): Aktør? {
-        return aktørRepository.getAktør(aktoerIdent)
+    fun hentAktørFraDatabase(aktoerIdent: Ident): Aktør? {
+        return aktørRepository.getAktør(aktoerIdent.verdi)
     }
 
     fun hentHendelser(sekvensunummer: Int, antallHendelser: Int): List<HendelseDTO> {
