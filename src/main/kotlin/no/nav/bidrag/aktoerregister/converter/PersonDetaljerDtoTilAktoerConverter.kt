@@ -6,60 +6,60 @@ import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Dødsbo
 import no.nav.bidrag.aktoerregister.persistence.entities.TidligereIdenter
+import no.nav.bidrag.transport.person.PersondetaljerDto
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
-import person.dto.PersonDetaljerDto
 
 @Component
-class PersonDetaljerDtoTilAktoerConverter : Converter<PersonDetaljerDto, Aktør> {
+class PersonDetaljerDtoTilAktoerConverter : Converter<PersondetaljerDto, Aktør> {
 
-    override fun convert(personDetaljer: PersonDetaljerDto): Aktør {
+    override fun convert(personDetaljer: PersondetaljerDto): Aktør {
         return Aktør(
-            aktørIdent = personDetaljer.person.ident,
+            aktørIdent = personDetaljer.person.ident.verdi,
             aktørType = Identtype.PERSONNUMMER.name,
-            fornavn = personDetaljer.person.fornavn,
-            etternavn = personDetaljer.person.etternavn,
-            adresselinje1 = personDetaljer.adresse?.adresselinje1,
-            adresselinje2 = personDetaljer.adresse?.adresselinje2,
-            adresselinje3 = personDetaljer.adresse?.adresselinje3,
-            leilighetsnummer = personDetaljer.adresse?.bruksenhetsnummer,
-            postnr = personDetaljer.adresse?.postnummer,
-            poststed = personDetaljer.adresse?.poststed,
-            land = personDetaljer.adresse?.land,
-            norskKontonr = personDetaljer.kontonummer?.norskKontonr,
-            bankCode = personDetaljer.kontonummer?.bankcode,
-            bankNavn = personDetaljer.kontonummer?.banknavn,
-            iban = personDetaljer.kontonummer?.iban,
-            bankLandkode = personDetaljer.kontonummer?.banklandkode,
-            swift = personDetaljer.kontonummer?.swift,
+            fornavn = personDetaljer.person.fornavn?.verdi,
+            etternavn = personDetaljer.person.etternavn?.verdi,
+            adresselinje1 = personDetaljer.adresse?.adresselinje1?.verdi,
+            adresselinje2 = personDetaljer.adresse?.adresselinje2?.verdi,
+            adresselinje3 = personDetaljer.adresse?.adresselinje3?.verdi,
+            leilighetsnummer = personDetaljer.adresse?.bruksenhetsnummer?.verdi,
+            postnr = personDetaljer.adresse?.postnummer?.verdi,
+            poststed = personDetaljer.adresse?.poststed?.verdi,
+            land = personDetaljer.adresse?.land?.verdi,
+            norskKontonr = personDetaljer.kontonummer?.norskKontonr?.verdi,
+            bankCode = personDetaljer.kontonummer?.bankkode?.verdi,
+            bankNavn = personDetaljer.kontonummer?.banknavn?.verdi,
+            iban = personDetaljer.kontonummer?.iban?.verdi,
+            bankLandkode = personDetaljer.kontonummer?.banklandkode?.verdi,
+            swift = personDetaljer.kontonummer?.swift?.verdi,
             valutaKode = personDetaljer.kontonummer?.valutakode,
-            språkkode = personDetaljer.språk,
-            fødtDato = personDetaljer.person.foedselsdato,
-            dødDato = personDetaljer.person.doedsdato,
+            språkkode = personDetaljer.språk?.verdi,
+            fødtDato = personDetaljer.person.fødselsdato?.verdi,
+            dødDato = personDetaljer.person.dødsdato?.verdi,
             gradering = finnGradering(personDetaljer),
             tidligereIdenter = opprettTidligereIndenter(personDetaljer),
             dødsbo = opprettDodsbo(personDetaljer)
         )
     }
 
-    private fun opprettDodsbo(personDetaljer: PersonDetaljerDto): Dødsbo? {
+    private fun opprettDodsbo(personDetaljer: PersondetaljerDto): Dødsbo? {
         return personDetaljer.dødsbo?.let {
             Dødsbo(
-                kontaktperson = it.kontaktperson,
-                adresselinje1 = it.kontaktadresse.adresselinje1,
-                adresselinje2 = it.kontaktadresse.adresselinje2,
-                postnr = it.kontaktadresse.postnummer,
-                poststed = it.kontaktadresse.poststed,
-                land = it.kontaktadresse.land3
+                kontaktperson = it.kontaktperson.verdi,
+                adresselinje1 = it.kontaktadresse.adresselinje1.verdi,
+                adresselinje2 = it.kontaktadresse.adresselinje2?.verdi,
+                postnr = it.kontaktadresse.postnummer.verdi,
+                poststed = it.kontaktadresse.poststed.verdi,
+                land = it.kontaktadresse.land3?.verdi
             )
         }
     }
 
-    private fun opprettTidligereIndenter(personDetaljer: PersonDetaljerDto): List<TidligereIdenter> {
-        return personDetaljer.tidligereIdenter?.map { TidligereIdenter(tidligereAktoerIdent = it, identtype = Identtype.PERSONNUMMER.name) } ?: emptyList()
+    private fun opprettTidligereIndenter(personDetaljer: PersondetaljerDto): List<TidligereIdenter> {
+        return personDetaljer.tidligereIdenter?.map { TidligereIdenter(tidligereAktoerIdent = it.verdi, identtype = Identtype.PERSONNUMMER.name) } ?: emptyList()
     }
 
-    private fun finnGradering(personDetaljer: PersonDetaljerDto): String? {
-        return Gradering.from(Diskresjonskode.valueOf(personDetaljer.person.diskresjonskode))?.name
+    private fun finnGradering(personDetaljer: PersondetaljerDto): String? {
+        return Gradering.from(Diskresjonskode.valueOf(personDetaljer.person.diskresjonskode?.name))?.name
     }
 }

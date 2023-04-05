@@ -4,11 +4,13 @@ import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
+import no.nav.bidrag.domain.ident.Ident
+import no.nav.bidrag.domain.ident.PersonIdent
+import no.nav.bidrag.transport.person.PersondetaljerDto
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestOperations
-import person.dto.PersonDetaljerDto
 import java.net.URI
 
 private val LOGGER = KotlinLogging.logger {}
@@ -23,8 +25,8 @@ class PersonConsumer(
         private const val PERSON_PATH = "/informasjon/detaljer"
     }
 
-    fun hentPerson(personIdent: String): PersonDetaljerDto? {
-        val response: PersonDetaljerDto? = postForEntity(leggTilPathPåUri(url, PERSON_PATH), personIdent)
+    fun hentPerson(personIdent: Ident): PersondetaljerDto? {
+        val response: PersondetaljerDto? = postForEntity(leggTilPathPåUri(url, PERSON_PATH), PersonIdent(personIdent.verdi))
         LOGGER.debug { "Hentet person fra bidrag-person." }
         SECURE_LOGGER.info { "Hentet person med id: $personIdent fra bidrag-person." }
         return response

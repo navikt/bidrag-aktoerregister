@@ -4,8 +4,8 @@ import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
+import no.nav.bidrag.domain.ident.Ident
 import no.nav.bidrag.transport.samhandler.SamhandlerDto
-import no.nav.domain.ident.Ident
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -24,10 +24,10 @@ class SamhandlerConsumer(
         private const val SAMHANDLER_PATH = "/samhandler"
     }
 
-    fun hentSamhandler(samhandlerIdent: String): SamhandlerDto? {
-        val response: SamhandlerDto? = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), Ident(samhandlerIdent))
-        LOGGER.debug { "Hentet samhandler med fra bidrag-samhandler." }
-        SECURE_LOGGER.info { "Hentet samhandler med id: $samhandlerIdent fra bidrag-samhandler." }
+    fun hentSamhandler(aktørIdent: Ident): SamhandlerDto? {
+        val response: SamhandlerDto? = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), aktørIdent)
+        LOGGER.debug { "Hentet samhandler med $aktørIdent fra bidrag-samhandler." }
+        SECURE_LOGGER.info { "Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler." }
         return response
     }
 }

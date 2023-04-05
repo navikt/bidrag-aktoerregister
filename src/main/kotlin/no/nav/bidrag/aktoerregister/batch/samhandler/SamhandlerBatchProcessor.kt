@@ -6,6 +6,7 @@ import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
 import no.nav.bidrag.aktoerregister.batch.AktørStatus
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
+import no.nav.bidrag.domain.ident.Ident
 import org.springframework.batch.item.ItemProcessor
 import org.springframework.core.convert.ConversionService
 import org.springframework.stereotype.Component
@@ -21,7 +22,7 @@ class SamhandlerBatchProcessor(
 
     override fun process(aktør: Aktør): AktørBatchProcessorResult? {
         return try {
-            conversionService.convert(samhandlerConsumer.hentSamhandler(aktør.aktørIdent), Aktør::class.java)
+            conversionService.convert(samhandlerConsumer.hentSamhandler(Ident(aktør.aktørIdent)), Aktør::class.java)
                 .takeIf { it != aktør }
                 ?.let {
                     SECURE_LOGGER.debug("Hentet aktør fra Bidrag-Samhandler med id: ${aktør.aktørIdent} og oppdaterer felter på lagret aktør.")

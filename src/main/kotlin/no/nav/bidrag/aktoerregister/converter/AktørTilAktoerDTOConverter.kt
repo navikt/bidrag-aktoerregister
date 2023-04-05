@@ -73,7 +73,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
         }
     }
 
-    private fun convertDodsbo(aktør: Aktør): DodsboDTO {
+    private fun convertDodsbo(aktør: Aktør): DodsboDTO? {
         return aktør.dødsbo?.let {
             DodsboDTO(
                 kontaktpersion = aktør.dødsbo?.kontaktperson,
@@ -87,7 +87,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
                     land = aktør.dødsbo?.land
                 )
             )
-        } ?: DodsboDTO()
+        }
     }
 
     private fun convertKontonummer(aktør: Aktør): KontonummerDTO {
