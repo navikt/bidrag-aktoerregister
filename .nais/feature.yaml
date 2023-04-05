@@ -10,4 +10,5 @@ env:
   BIDRAG_PERSON_SCOPE: dev-fss.bidrag.bidrag-person-feature
   BIDRAG_PERSON_HOST: bidrag-person-feature.dev-fss-pub.nais.io
   BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler-feature.dev.intern.nav.no
+  BIDRAG_SAMHANDLER_HOST: bidrag-samhandler-feature.dev.intern.nav.no
   BIDRAG_SAMHANDLER_SCOPE: dev-gcp.bidrag.bidrag-samhandler-feature
