@@ -1,14 +1,14 @@
 package no.nav.bidrag.aktoerregister.batch
 
 import io.github.oshai.KotlinLogging
-import no.nav.bidrag.aktoerregister.service.AktoerregisterService
+import no.nav.bidrag.aktoerregister.service.AktørregisterService
 import org.springframework.batch.item.ItemWriter
 import org.springframework.stereotype.Component
 
 private val LOGGER = KotlinLogging.logger { }
 
 @Component
-class AktørBatchWriter(private val aktoerregisterService: AktoerregisterService) : ItemWriter<AktørBatchProcessorResult> {
+class AktørBatchWriter(private val aktørregisterService: AktørregisterService) : ItemWriter<AktørBatchProcessorResult> {
 
     override fun write(aktørBatchProcessorResults: List<AktørBatchProcessorResult>) {
         aktørBatchProcessorResults
@@ -16,7 +16,7 @@ class AktørBatchWriter(private val aktoerregisterService: AktoerregisterService
             .map { it.aktør }
             .let {
                 LOGGER.trace { "Oppdaterer ${it.size} aktører.." }
-                aktoerregisterService.oppdaterAktoerer(it)
+                aktørregisterService.oppdaterAktører(it)
             }
     }
 }

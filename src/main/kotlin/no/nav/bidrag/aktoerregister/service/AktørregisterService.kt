@@ -7,7 +7,6 @@ import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
-import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
@@ -19,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 private val LOGGER = KotlinLogging.logger {}
 
 @Service
-class AktoerregisterService(
+class AktørregisterService(
     private val aktørRepository: AktørRepository,
     private val hendelseRepository: HendelseRepository,
     private val samhandlerConsumer: SamhandlerConsumer,
@@ -27,30 +26,56 @@ class AktoerregisterService(
     private val conversionService: ConversionService
 ) {
 
-    fun hentAktoer(aktørId: AktoerIdDTO): AktoerDTO {
+    @Transactional
+    fun hentAktoer(aktørId: AktoerIdDTO, tvingOppdatering: Boolean): AktoerDTO {
         val aktørIdent = Ident(aktørId.aktoerId)
-        val aktør = hentAktørFraDatabase(aktørIdent)
-            ?: if (aktørId.identtype == Identtype.AKTOERNUMMER) hentAktørFraSamhandler(aktørIdent) else hentAktørFraPerson(aktørIdent)
+        var aktør = hentAktørFraDatabase(aktørIdent)
 
+        if (aktør != null && tvingOppdatering) {
+            val hentetAktør = if (aktørId.identtype == Identtype.AKTOERNUMMER) hentAktørFraSamhandler(aktørIdent) else hentAktørFraPerson(aktørIdent)
+            if (aktør != hentetAktør) {
+                aktør.oppdaterAlleFelter(hentetAktør)
+                oppdaterAktør(aktør)
+            }
+        } else {
+            aktør = aktør
+                ?: if (aktørId.identtype == Identtype.AKTOERNUMMER) {
+                    hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent)
+                } else {
+                    hentAktørFraPersonOgLagreTilDatabase(
+                        aktørIdent
+                    )
+                }
+        }
         return conversionService.convert(aktør, AktoerDTO::class.java) ?: error("Konvertering av aktør til AktoerDTO feilet!")
     }
 
-    fun hentAktørFraSamhandler(aktørIdent: Ident): Aktør {
+    fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
-        val samhandler = samhandlerConsumer.hentSamhandler(aktørIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-samhandler")
-        conversionService.convert(samhandler, Aktør::class.java)?.let {
+        hentAktørFraSamhandler(aktørIdent).let {
             lagreAktoer(it)
             return it
-        } ?: error("Konvertering av samhandler til aktør for ident: $aktørIdent feilet!")
+        }
     }
 
-    private fun hentAktørFraPerson(personIdent: Ident): Aktør {
+    fun hentAktørFraSamhandler(aktørIdent: Ident): Aktør {
+        val samhandler = samhandlerConsumer.hentSamhandler(aktørIdent)
+        return conversionService.convert(samhandler, Aktør::class.java)
+            ?: error("Konvertering av samhandler til aktør for ident: $aktørIdent feilet!")
+    }
+
+    private fun hentAktørFraPersonOgLagreTilDatabase(personIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-person")
-        val person = personConsumer.hentPerson(personIdent) ?: throw AktørNotFoundException("fant ingen aktør med ident: $personIdent i bidrag-person")
-        conversionService.convert(person, Aktør::class.java)?.let {
+        hentAktørFraPerson(personIdent).let {
             lagreAktoer(it)
             return it
-        } ?: error("Konvertering av person til aktør feilet!")
+        }
+    }
+
+    fun hentAktørFraPerson(personIdent: Ident): Aktør {
+        val person = personConsumer.hentPerson(personIdent)
+        return conversionService.convert(person, Aktør::class.java)
+            ?: error("Konvertering av person til aktør feilet!")
     }
 
     fun hentAktørFraDatabase(aktoerIdent: Ident): Aktør? {
@@ -74,14 +99,14 @@ class AktoerregisterService(
     }
 
     @Transactional
-    fun oppdaterAktoer(aktør: Aktør) {
+    fun oppdaterAktør(aktør: Aktør) {
         aktørRepository.opprettEllerOppdaterAktør(aktør)
     }
 
     @Transactional
-    fun oppdaterAktoerer(aktoerliste: List<Aktør>) {
-        aktørRepository.opprettEllerOppdaterAktører(aktoerliste)
-        hendelseRepository.opprettHendelser(aktoerliste)
+    fun oppdaterAktører(aktørliste: List<Aktør>) {
+        aktørRepository.opprettEllerOppdaterAktører(aktørliste)
+        hendelseRepository.opprettHendelser(aktørliste)
     }
 
     fun slettAktoer(aktoerIdent: String) {

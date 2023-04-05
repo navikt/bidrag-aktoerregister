@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.api
+package no.nav.bidrag.aktoerregister.controller
 
 import io.github.oshai.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
@@ -10,7 +10,7 @@ import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
-import no.nav.bidrag.aktoerregister.service.AktoerregisterService
+import no.nav.bidrag.aktoerregister.service.AktørregisterService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
@@ -28,7 +28,7 @@ private val LOGGER = KotlinLogging.logger {}
 @RestController
 @ProtectedWithClaims(issuer = "maskinporten", claimMap = ["scope=nav:bidrag:aktoerregister.read"])
 class AktoerregisterController(
-    private val aktoerregisterService: AktoerregisterService
+    private val aktørregisterService: AktørregisterService
 ) {
 
     @Operation(
@@ -41,9 +41,9 @@ class AktoerregisterController(
         ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content = [Content()])
     )
     @PostMapping(path = ["/aktoer"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun hentAktoer(@RequestBody request: AktoerIdDTO): ResponseEntity<AktoerDTO> {
+    fun hentAktoer(@RequestBody request: AktoerIdDTO, @RequestParam(required = false) tvingOppdatering: Boolean = false): ResponseEntity<AktoerDTO> {
         return try {
-            val aktoer = aktoerregisterService.hentAktoer(request)
+            val aktoer = aktørregisterService.hentAktoer(request, tvingOppdatering)
             ResponseEntity.ok(aktoer)
         } catch (e: AktørNotFoundException) {
             LOGGER.info { "Aktør ${request.aktoerId} ikke funnet." }
@@ -73,7 +73,7 @@ class AktoerregisterController(
         antall: Int = 1000
     ): ResponseEntity<List<HendelseDTO>> {
         return try {
-            ResponseEntity.ok(aktoerregisterService.hentHendelser(fraSekvensnummer, antall))
+            ResponseEntity.ok(aktørregisterService.hentHendelser(fraSekvensnummer, antall))
         } catch (e: Exception) {
             LOGGER.error(e) { "Feil ved henting av $antall hendelser fra sekvensnummer $fraSekvensnummer" }
             throw ResponseStatusException(INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem ved henting av hendelser. Prøv igjen senere", e)

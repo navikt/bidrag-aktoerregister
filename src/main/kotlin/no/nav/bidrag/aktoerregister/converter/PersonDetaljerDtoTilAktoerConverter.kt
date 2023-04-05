@@ -55,8 +55,13 @@ class PersonDetaljerDtoTilAktoerConverter : Converter<PersondetaljerDto, Aktør>
         }
     }
 
-    private fun opprettTidligereIndenter(personDetaljer: PersondetaljerDto): List<TidligereIdenter> {
-        return personDetaljer.tidligereIdenter?.map { TidligereIdenter(tidligereAktoerIdent = it.verdi, identtype = Identtype.PERSONNUMMER.name) } ?: emptyList()
+    private fun opprettTidligereIndenter(personDetaljer: PersondetaljerDto): MutableSet<TidligereIdenter> {
+        return personDetaljer.tidligereIdenter?.map {
+            TidligereIdenter(
+                tidligereAktoerIdent = it.verdi,
+                identtype = Identtype.PERSONNUMMER.name
+            )
+        }?.toMutableSet() ?: mutableSetOf()
     }
 
     private fun finnGradering(personDetaljer: PersondetaljerDto): String? {
