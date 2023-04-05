@@ -213,7 +213,7 @@ data class Aktør(
         result = 31 * result + (postnr?.hashCode() ?: 0)
         result = 31 * result + (poststed?.hashCode() ?: 0)
         result = 31 * result + (land?.hashCode() ?: 0)
-        result = 31 * result + (dødsbo?.hashCode() ?: 0)
+        result = 31 * result + dødsbo?.id.hashCode()
         return result
     }
 
@@ -243,7 +243,7 @@ data class Aktør(
             "postnr=$postnr, " +
             "poststed=$poststed, land=$land, " +
             "tidligereIdenter=$tidligereIdenter, " +
-            "dodsbo=$dødsbo, " +
+            "dodsbo=${dødsbo?.id}, " +
             "sistEndret=$sistEndret)"
     }
 }
