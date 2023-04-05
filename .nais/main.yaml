@@ -7,7 +7,7 @@ ingresses:
 env:
   SPRING_PROFILES_ACTIVE: dev
   JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-  BIDRAG_PERSON_URL: https://bidrag-person.dev.intern.nav.no/bidrag-person
+  BIDRAG_PERSON_URL: https://bidrag-person.dev-fss-pub.nais.io/bidrag-person
   BIDRAG_PERSON_SCOPE: dev-fss.bidrag.bidrag-person
   BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler.dev.intern.nav.no
   BIDRAG_SAMHANDLER_SCOPE: dev-gcp.bidrag.bidrag-samhandler
