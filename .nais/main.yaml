@@ -2,7 +2,7 @@ name: bidrag-aktoerregister
 dbinstancename: bidrag-aktoerregister
 dbname: bidrag-aktoerregister
 ingresses:
-  - https://bidrag-aktoerregister.dev.intern.nav.no/
+  - https://bidrag-aktoerregister.intern.dev.nav.no/
   - https://bidrag-aktoerregister.ekstern.dev.nav.no/
 env:
   SPRING_PROFILES_ACTIVE: dev

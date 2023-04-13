@@ -33,7 +33,8 @@ class PersonConsumer(
             SECURE_LOGGER.info { "Hentet person med id: $personIdent fra bidrag-person." }
             return response
         } catch (e: Exception) {
-            throw AktørNotFoundException("fant ingen aktør med ident: $personIdent i bidrag-person")
+            SECURE_LOGGER.error("Fant ikke aktør med ident: ${personIdent.verdi}. Svaret fra bidrag-person var: ${e.message}")
+            throw AktørNotFoundException("Fant ingen aktør med ident: $personIdent i bidrag-person")
         }
     }
 }
