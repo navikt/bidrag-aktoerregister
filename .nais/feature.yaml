@@ -2,7 +2,7 @@ name: bidrag-aktoerregister-feature
 dbinstancename: bidrag-aktoerregister-feature
 dbname: bidrag-aktoerregister-feature
 ingresses:
-  - https://bidrag-aktoerregister-feature.dev.intern.nav.no
+  - https://bidrag-aktoerregister-feature.intern.dev.nav.no
 env:
   SPRING_PROFILES_ACTIVE: dev
   JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005

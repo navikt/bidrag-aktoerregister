@@ -32,6 +32,7 @@ class SamhandlerConsumer(
             SECURE_LOGGER.info { "Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler." }
             return response
         } catch (e: Exception) {
+            SECURE_LOGGER.error("Fant ikke aktør med ident: ${aktørIdent.verdi}. Svaret fra bidrag-samhandler var: ${e.message}")
             throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-samhandler")
         }
     }
