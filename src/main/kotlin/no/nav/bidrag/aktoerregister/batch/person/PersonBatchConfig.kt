@@ -40,7 +40,7 @@ class PersonBatchConfig(
     @Bean
     fun personStep(): Step {
         return stepBuilderFactory[PERSON_OPPDATER_AKTOERER_STEP]
-            .chunk<Aktør, AktørBatchProcessorResult>(1)
+            .chunk<Aktør, AktørBatchProcessorResult>(100)
             .reader(personBatchReader)
             .processor(personBatchProcessor)
             .writer(aktørBatchWriter)
