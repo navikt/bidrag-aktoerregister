@@ -29,7 +29,7 @@ class SamhandlerConsumer(
         try {
             val response: SamhandlerDto = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), aktørIdent)!!
             LOGGER.debug { "Hentet samhandler med $aktørIdent fra bidrag-samhandler." }
-            SECURE_LOGGER.info { "Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler." }
+            SECURE_LOGGER.info("Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler.")
             return response
         } catch (e: Exception) {
             SECURE_LOGGER.error("Fant ikke aktør med ident: ${aktørIdent.verdi}. Svaret fra bidrag-samhandler var: ${e.message}")
