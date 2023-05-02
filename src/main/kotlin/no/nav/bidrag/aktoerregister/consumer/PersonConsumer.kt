@@ -7,6 +7,7 @@ import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
 import no.nav.bidrag.domain.ident.Ident
 import no.nav.bidrag.domain.ident.PersonIdent
+import no.nav.bidrag.transport.person.PersonRequest
 import no.nav.bidrag.transport.person.PersondetaljerDto
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -20,7 +21,7 @@ private val LOGGER = KotlinLogging.logger {}
 class PersonConsumer(
     @Value("\${BIDRAG_PERSON_URL}") val url: URI,
     @Qualifier("azure") private val restTemplate: RestOperations
-) : AbstractRestClient(restTemplate, "bidrag-aktoerregister-samhandler") {
+) : AbstractRestClient(restTemplate, "bidrag-aktoerregister-aktoerregister") {
 
     companion object {
         private const val PERSON_PATH = "/informasjon/detaljer"
@@ -28,7 +29,7 @@ class PersonConsumer(
 
     fun hentPerson(personIdent: Ident): PersondetaljerDto? {
         try {
-            val response: PersondetaljerDto = postForEntity(leggTilPathPåUri(url, PERSON_PATH), PersonIdent(personIdent.verdi))!!
+            val response: PersondetaljerDto? = postForEntity(leggTilPathPåUri(url, PERSON_PATH), PersonRequest(PersonIdent(personIdent.verdi)))
             LOGGER.debug { "Hentet person fra bidrag-person." }
             SECURE_LOGGER.info("Hentet person med id: ${personIdent.verdi} fra bidrag-person.")
             return response
