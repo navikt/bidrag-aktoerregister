@@ -2,7 +2,7 @@
 
 ![](https://github.com/navikt/bidrag-aktoerregister/actions/workflows/build-and-deploy.yaml/badge.svg)
 
-* DEV-Intern: https://bidrag-aktoerregister.dev.intern.nav.no/ (må være koblet til naisdevice for å få tilgang).
+* DEV-Intern: https://bidrag-aktoerregister.intern.dev.nav.no/ (må være koblet til naisdevice for å få tilgang).
 * DEV-Ekstern: https://bidrag-aktoerregister.ekstern.dev.nav.no/.
 * PROD: https://bidrag-aktoerregister.nav.no/. Applikasjonen kjører, men ingen har foreløpig tilgang til den da dette må konfigureres manuelt av `#tech-sikkerhet`.
 
