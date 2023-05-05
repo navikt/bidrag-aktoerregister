@@ -16,7 +16,7 @@ DB_USERNAME: cloudsqliamuser
 DB_PASSWORD: root
 
 # URL
-BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler-feature.dev.intern.nav.no
+BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler-feature.intern.dev.nav.no
 BIDRAG_SAMHANDLER_SCOPE: dev-gcp.bidrag.bidrag-samhandler-feature
 
 BIDRAG_PERSON_URL: https://bidrag-person-feature.dev.intern.nav.no/bidrag-person

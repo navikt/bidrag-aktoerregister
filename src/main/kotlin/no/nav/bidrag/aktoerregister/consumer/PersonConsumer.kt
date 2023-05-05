@@ -2,7 +2,6 @@ package no.nav.bidrag.aktoerregister.consumer
 
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
-import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
 import no.nav.bidrag.domain.ident.Ident
@@ -34,8 +33,8 @@ class PersonConsumer(
             SECURE_LOGGER.info("Hentet person med id: ${personIdent.verdi} fra bidrag-person.")
             return response
         } catch (e: Exception) {
-            SECURE_LOGGER.error("Fant ikke aktør med ident: ${personIdent.verdi}. Svaret fra bidrag-person var: ${e.message}")
-            throw AktørNotFoundException("Fant ingen aktør med ident: $personIdent i bidrag-person")
+            SECURE_LOGGER.error("Noe gikk galt i kallet mot bidrag-sak for ident: ${personIdent.verdi}. Svaret fra bidrag-person var: ${e.message}")
+            throw e
         }
     }
 }

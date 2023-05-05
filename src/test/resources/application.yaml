@@ -4,9 +4,9 @@ AZURE_APP_CLIENT_ID: <CLIENT_ID>
 AZURE_APP_CLIENT_SECRET: <CLIENT_SECRET>
 AZURE_APP_TENANT_ID: 966ac572-f5b7-4bbe-aa88-c76419c0f851
 
-BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler-feature.dev.intern.nav.no
+BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler-feature.intern.dev.nav.no
 BIDRAG_SAMHANDLER_SCOPE: dev-gcp.bidrag.bidrag-samhandler-feature
-BIDRAG_PERSON_URL: https://bidrag-person-feature.dev.intern.nav.no/bidrag-person
+BIDRAG_PERSON_URL: https://bidrag-person-feature.intern.dev.nav.no/bidrag-person
 BIDRAG_PERSON_SCOPE: dev-fss.bidrag.bidrag-person-feature
 
 server:

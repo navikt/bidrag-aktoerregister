@@ -9,7 +9,9 @@ import no.nav.bidrag.domain.ident.Ident
 import no.nav.bidrag.transport.samhandler.SamhandlerDto
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestOperations
 import java.net.URI
 
@@ -27,13 +29,18 @@ class SamhandlerConsumer(
 
     fun hentSamhandler(aktørIdent: Ident): SamhandlerDto? {
         try {
-            val response: SamhandlerDto = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), aktørIdent)!!
+            val response: SamhandlerDto? = postForEntity(leggTilPathPåUri(url, SAMHANDLER_PATH), aktørIdent)
             LOGGER.debug { "Hentet samhandler med $aktørIdent fra bidrag-samhandler." }
             SECURE_LOGGER.info("Hentet samhandler med id: ${aktørIdent.verdi} fra bidrag-samhandler.")
             return response
+        } catch (e: HttpClientErrorException) {
+            if (e.statusCode == HttpStatus.NOT_FOUND) {
+                throw AktørNotFoundException("Aktør ikke funnet i bidrag-samhandler")
+            }
+            throw e
         } catch (e: Exception) {
-            SECURE_LOGGER.error("Fant ikke aktør med ident: ${aktørIdent.verdi}. Svaret fra bidrag-samhandler var: ${e.message}")
-            throw AktørNotFoundException("fant ingen aktør med ident: $aktørIdent i bidrag-samhandler")
+            SECURE_LOGGER.error("Noe gikk galt i kallet mot bidrag-samhandler for ident: ${aktørIdent.verdi}. Svaret fra bidrag-samhandler var: ${e.message}")
+            throw e
         }
     }
 }

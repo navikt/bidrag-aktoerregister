@@ -7,9 +7,11 @@ import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
 import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
+import no.nav.bidrag.aktoerregister.persistence.repository.TidligereIdenterRepository
 import no.nav.bidrag.domain.ident.Ident
 import org.springframework.core.convert.ConversionService
 import org.springframework.stereotype.Service
@@ -20,6 +22,7 @@ private val LOGGER = KotlinLogging.logger {}
 @Service
 class AktørregisterService(
     private val aktørRepository: AktørRepository,
+    private val tidligereIdenterRepository: TidligereIdenterRepository,
     private val hendelseRepository: HendelseRepository,
     private val samhandlerConsumer: SamhandlerConsumer,
     private val personConsumer: PersonConsumer,
@@ -47,7 +50,8 @@ class AktørregisterService(
                     )
                 }
         }
-        return conversionService.convert(aktør, AktoerDTO::class.java) ?: error("Konvertering av aktør til AktoerDTO feilet!")
+        return conversionService.convert(aktør, AktoerDTO::class.java)
+            ?: error("Konvertering av aktør til AktoerDTO feilet!")
     }
 
     fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
@@ -60,6 +64,7 @@ class AktørregisterService(
 
     fun hentAktørFraSamhandler(aktørIdent: Ident): Aktør {
         val samhandler = samhandlerConsumer.hentSamhandler(aktørIdent)
+            ?: throw AktørNotFoundException("Aktør ikke funnet i bidrag-samhandler.")
         return conversionService.convert(samhandler, Aktør::class.java)
             ?: error("Konvertering av samhandler til aktør for ident: $aktørIdent feilet!")
     }
@@ -74,12 +79,13 @@ class AktørregisterService(
 
     fun hentAktørFraPerson(personIdent: Ident): Aktør {
         val person = personConsumer.hentPerson(personIdent)
+            ?: throw AktørNotFoundException("Aktør ikke funnet i bidrag-person.")
         return conversionService.convert(person, Aktør::class.java)
             ?: error("Konvertering av person til aktør feilet!")
     }
 
-    fun hentAktørFraDatabase(aktoerIdent: Ident): Aktør? {
-        return aktørRepository.getAktør(aktoerIdent.verdi)
+    fun hentAktørFraDatabase(aktørIdent: Ident): Aktør? {
+        return aktørRepository.getAktør(aktørIdent.verdi) ?: tidligereIdenterRepository.findByTidligereAktoerIdent(aktørIdent.verdi)?.aktør
     }
 
     fun hentHendelser(sekvensunummer: Int, antallHendelser: Int): List<HendelseDTO> {
