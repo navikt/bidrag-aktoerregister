@@ -41,6 +41,8 @@ spec:
   replicas:
     cpuThresholdPercentage: 50
     min: 2
+  kafka:
+    pool: {{ kafka.pool }}
   maskinporten:
     enabled: true
     scopes:

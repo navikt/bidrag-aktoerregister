@@ -1,4 +1,5 @@
 NAIS_APP_NAME: bidrag-aktoerregister
+TOPIC_PERSONHENDELSE: bidrag.personhendelse.v1
 
 # Azure
 AZURE_APP_CLIENT_ID: <CLIENT_ID>

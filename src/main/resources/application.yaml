@@ -18,6 +18,24 @@ spring:
       enabled: 'false'
     jdbc:
       initialize-schema: never
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
+    properties:
+      security.protocol: SSL
+      ssl:
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        truststore:
+          location: ${KAFKA_TRUSTSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+    consumer:
+      auto-offset-reset: earliest
+      max-poll-records: 10
+      enable-auto-commit: false
+    listener:
+      ackMode: RECORD
 
 springdoc:
   swagger-ui:
