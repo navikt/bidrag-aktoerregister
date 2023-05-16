@@ -7,7 +7,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.aktoerregister.batch.samhandler.SamhandlerBatchProcessor
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.service.AktørregisterService
 import org.junit.jupiter.api.Assertions

@@ -1,7 +1,7 @@
 package no.nav.bidrag.aktoerregister.repository
 
 import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørJpaRepository
@@ -53,7 +53,7 @@ class AktørRepositoryTest {
     fun skalTesteOpprettEllerOppdatertAktoerer() {
         val aktoerer = opprettAktoerListeMed20Aktører()
         for (aktør in aktoerer) {
-            aktørRepository.opprettEllerOppdaterAktør(aktør)
+            aktørRepository.opprettEllerOppdaterAktør(aktør, null)
         }
         var savedAktoerer = aktørJpaRepository.findAll()
         var savedHendelser = hendelseJpaRepository.findAll()
@@ -62,7 +62,7 @@ class AktørRepositoryTest {
 
         // Updating the same aktoerer to test that new hendelser are created
         for (aktør in aktoerer) {
-            aktørRepository.opprettEllerOppdaterAktør(aktør)
+            aktørRepository.opprettEllerOppdaterAktør(aktør, null)
         }
         savedAktoerer = aktørJpaRepository.findAll()
         savedHendelser = hendelseJpaRepository.findAll()

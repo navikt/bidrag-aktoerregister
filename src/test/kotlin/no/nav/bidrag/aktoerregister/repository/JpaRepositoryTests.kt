@@ -5,7 +5,7 @@ import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørJpaRepository

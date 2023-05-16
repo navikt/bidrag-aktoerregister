@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO
+import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO
+import no.nav.bidrag.aktoerregister.dto.HendelseDTO
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.service.AktørregisterService
 import no.nav.security.token.support.core.api.ProtectedWithClaims

@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.converter
 
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.transport.samhandler.SamhandlerDto
 import org.springframework.core.convert.converter.Converter

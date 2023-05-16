@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer
+package no.nav.bidrag.aktoerregister.dto.enumer
 
 import io.swagger.v3.oas.annotations.media.Schema
 

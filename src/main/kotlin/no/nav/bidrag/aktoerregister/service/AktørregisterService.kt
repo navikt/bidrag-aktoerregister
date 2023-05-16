@@ -3,10 +3,10 @@ package no.nav.bidrag.aktoerregister.service
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.consumer.PersonConsumer
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.HendelseDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO
+import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO
+import no.nav.bidrag.aktoerregister.dto.HendelseDTO
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
@@ -38,7 +38,7 @@ class AktørregisterService(
             val hentetAktør = if (aktørId.identtype == Identtype.AKTOERNUMMER) hentAktørFraSamhandler(aktørIdent) else hentAktørFraPerson(aktørIdent)
             if (aktør != hentetAktør) {
                 aktør.oppdaterAlleFelter(hentetAktør)
-                oppdaterAktør(aktør)
+                lagreEllerOppdaterAktør(aktør, aktørId.aktoerId)
             }
         } else {
             aktør = aktør
@@ -57,7 +57,7 @@ class AktørregisterService(
     fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
         hentAktørFraSamhandler(aktørIdent).let {
-            lagreAktoer(it)
+            lagreEllerOppdaterAktør(it, null)
             return it
         }
     }
@@ -72,7 +72,23 @@ class AktørregisterService(
     private fun hentAktørFraPersonOgLagreTilDatabase(personIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-person")
         hentAktørFraPerson(personIdent).let {
-            lagreAktoer(it)
+            //Om det finnes tidligere identer må vi sjekke om disse eksisterer i databasen fra før av.
+            // Om de gjør det skal vi oppdatere og ikke opprette ny ident.
+            // Denne situasjonen kan oppstå om en endring av ident blir kalt via REST før vi har tatt imot hendelse fra PDL
+            if(it.tidligereIdenter.isNotEmpty()) {
+                var aktørFraDatabase: Aktør? = null
+                it.tidligereIdenter.forEach {
+                    aktørFraDatabase = hentAktørFraDatabase(Ident(it.tidligereAktoerIdent))
+                    if (aktørFraDatabase != null) return@forEach
+                }
+                if(aktørFraDatabase != null) {
+                    val orignalIdent = aktørFraDatabase!!.aktørIdent
+                    aktørFraDatabase!!.oppdaterAlleFelter(it)
+                    lagreEllerOppdaterAktør(aktørFraDatabase!!, orignalIdent)
+                    return aktørFraDatabase!!
+                }
+            }
+            lagreEllerOppdaterAktør(it, null)
             return it
         }
     }
@@ -100,13 +116,8 @@ class AktørregisterService(
         }.sortedBy { it.sekvensnummer }
     }
 
-    private fun lagreAktoer(aktør: Aktør): Aktør {
-        return aktørRepository.opprettEllerOppdaterAktør(aktør)
-    }
-
-    @Transactional
-    fun oppdaterAktør(aktør: Aktør) {
-        aktørRepository.opprettEllerOppdaterAktør(aktør)
+    fun lagreEllerOppdaterAktør(aktør: Aktør, orignalIdent: String?) {
+        aktørRepository.opprettEllerOppdaterAktør(aktør, orignalIdent)
     }
 
     @Transactional

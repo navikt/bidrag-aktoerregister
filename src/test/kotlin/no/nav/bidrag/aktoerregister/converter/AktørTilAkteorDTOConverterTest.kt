@@ -2,8 +2,8 @@ package no.nav.bidrag.aktoerregister.converter
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Gradering
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Gradering
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Dødsbo
 import no.nav.bidrag.aktoerregister.persistence.entities.TidligereIdenter
