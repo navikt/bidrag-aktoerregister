@@ -11,10 +11,8 @@ import org.springframework.stereotype.Repository
 class HendelseRepositoryImpl(private val hendelseJpaRepository: HendelseJpaRepository) : HendelseRepository {
 
     override fun hentHendelser(fraSekvensnummer: Int, antallHendelser: Int): List<Hendelse> {
-        return hendelseJpaRepository.hentHendelserMedUnikAktoer(
-            fraSekvensnummer,
-            Pageable.ofSize(antallHendelser)
-        )
+        val hendelser = hendelseJpaRepository.getAllBySekvensnummerGreaterThan(fraSekvensnummer, Pageable.ofSize(antallHendelser))
+        return hendelser.distinctBy { it.aktørIdent }
     }
 
     override fun opprettHendelser(updatedAktoerer: List<Aktør>) {

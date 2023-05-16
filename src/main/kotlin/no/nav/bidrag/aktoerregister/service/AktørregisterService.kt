@@ -109,7 +109,7 @@ class AktørregisterService(
             HendelseDTO(
                 sekvensnummer = it.sekvensnummer,
                 aktoerId = AktoerIdDTO(
-                    aktoerId = it.aktør.aktørIdent,
+                    aktoerId = it.aktørIdent,
                     identtype = Identtype.valueOf(it.aktør.aktørType)
                 )
             )
