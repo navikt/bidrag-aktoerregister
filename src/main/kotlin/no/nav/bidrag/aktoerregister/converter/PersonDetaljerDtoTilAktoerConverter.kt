@@ -1,8 +1,8 @@
 package no.nav.bidrag.aktoerregister.converter
 
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Diskresjonskode
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Gradering
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Diskresjonskode
+import no.nav.bidrag.aktoerregister.dto.enumer.Gradering
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Dødsbo
 import no.nav.bidrag.aktoerregister.persistence.entities.TidligereIdenter

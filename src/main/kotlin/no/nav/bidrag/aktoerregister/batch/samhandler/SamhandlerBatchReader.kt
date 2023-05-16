@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.batch.samhandler
 
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørJpaRepository
 import org.springframework.batch.item.ItemReader

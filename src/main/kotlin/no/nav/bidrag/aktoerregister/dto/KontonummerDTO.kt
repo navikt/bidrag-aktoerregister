@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.dto.aktoerregister.dto
+package no.nav.bidrag.aktoerregister.dto
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema

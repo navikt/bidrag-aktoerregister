@@ -1,8 +1,8 @@
-package no.nav.bidrag.aktoerregister.dto.aktoerregister.dto
+package no.nav.bidrag.aktoerregister.dto
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Gradering
+import no.nav.bidrag.aktoerregister.dto.enumer.Gradering
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class AktoerDTO(

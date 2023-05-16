@@ -1,4 +1,4 @@
-package no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer
+package no.nav.bidrag.aktoerregister.dto.enumer
 
 enum class Diskresjonskode {
     SPFO,

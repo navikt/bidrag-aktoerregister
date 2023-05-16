@@ -1,13 +1,13 @@
 package no.nav.bidrag.aktoerregister.converter
 
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AdresseDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.AktoerIdDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.DodsboDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.KontonummerDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.dto.NavnDTO
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Gradering
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.AdresseDTO
+import no.nav.bidrag.aktoerregister.dto.AktoerDTO
+import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO
+import no.nav.bidrag.aktoerregister.dto.DodsboDTO
+import no.nav.bidrag.aktoerregister.dto.KontonummerDTO
+import no.nav.bidrag.aktoerregister.dto.NavnDTO
+import no.nav.bidrag.aktoerregister.dto.enumer.Gradering
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component

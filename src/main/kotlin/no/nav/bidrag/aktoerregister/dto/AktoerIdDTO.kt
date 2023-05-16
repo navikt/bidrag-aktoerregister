@@ -1,7 +1,7 @@
-package no.nav.bidrag.aktoerregister.dto.aktoerregister.dto
+package no.nav.bidrag.aktoerregister.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.bidrag.aktoerregister.dto.aktoerregister.enumer.Identtype
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 
 data class AktoerIdDTO(
     @Schema(
