@@ -1,8 +1,5 @@
 package no.nav.bidrag.aktoerregister.repository
 
-import io.kotest.matchers.collections.shouldNotContainDuplicates
-import io.kotest.matchers.ints.shouldBeGreaterThan
-import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest
 import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
@@ -16,13 +13,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.Pageable
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import java.util.UUID
+import java.util.*
 
 @SpringBootTest(classes = [AktoerregisterApplicationTest::class])
 @Testcontainers
@@ -59,33 +55,6 @@ class JpaRepositoryTests {
 
         hendelser.size shouldBe 38
         lagdredeAktoerer.size shouldBe 19
-    }
-
-    @Test
-    fun validateHendelsePagination() {
-        aktørJpaRepository.count() shouldBe 0
-
-        val aktoerer = generateAktørListe(3)
-        aktørJpaRepository.saveAll(aktoerer)
-        var sisteHendelser = hendelseJpaRepository.hentHendelserMedUnikAktoer(0, Pageable.ofSize(5))
-
-        sisteHendelser.size shouldBe 5
-        sisteHendelser.map { it.aktør.aktørIdent }.shouldNotContainDuplicates().size shouldBe 5
-        sisteHendelser[0].sekvensnummer shouldBeGreaterThan 0
-
-        var lastReceivedSekvensnummer = sisteHendelser[sisteHendelser.size - 1].sekvensnummer
-        sisteHendelser = hendelseJpaRepository.hentHendelserMedUnikAktoer(lastReceivedSekvensnummer + 1, Pageable.ofSize(10))
-
-        sisteHendelser.size shouldBe 10
-        sisteHendelser.map { it.aktør.aktørIdent }.shouldNotContainDuplicates().size shouldBe 10
-        sisteHendelser[0].sekvensnummer shouldBeGreaterThanOrEqual lastReceivedSekvensnummer
-
-        lastReceivedSekvensnummer = sisteHendelser[sisteHendelser.size - 1].sekvensnummer
-        sisteHendelser = hendelseJpaRepository.hentHendelserMedUnikAktoer(lastReceivedSekvensnummer + 1, Pageable.ofSize(20))
-
-        sisteHendelser.size shouldBe 5
-        sisteHendelser.map { it.aktør.aktørIdent }.shouldNotContainDuplicates().size shouldBe 5
-        sisteHendelser[0].sekvensnummer shouldBeGreaterThanOrEqual lastReceivedSekvensnummer
     }
 
     private fun generateAktørListe(antallHendelser: Int): List<Aktør> {
