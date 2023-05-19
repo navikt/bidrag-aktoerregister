@@ -1,9 +1,10 @@
 package no.nav.bidrag.aktoerregister.persistence.repository
 
-import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface HendelseRepository {
-    fun hentHendelser(fraSekvensnummer: Int, antallHendelser: Int): List<Hendelse>
-    fun opprettHendelser(updatedAktoerer: List<Aktør>)
+interface HendelseRepository : JpaRepository<Hendelse, Int> {
+
+    fun getAllBySekvensnummerGreaterThan(sekvensnummer: Int, pageable: Pageable): List<Hendelse>
 }
