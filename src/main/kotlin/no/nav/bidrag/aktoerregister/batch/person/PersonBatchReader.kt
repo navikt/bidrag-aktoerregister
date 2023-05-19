@@ -2,7 +2,7 @@ package no.nav.bidrag.aktoerregister.batch.person
 
 import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
-import no.nav.bidrag.aktoerregister.persistence.repository.AktørJpaRepository
+import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import org.springframework.batch.item.ItemReader
 import org.springframework.batch.item.data.RepositoryItemReader
 import org.springframework.data.domain.Sort
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.util.Collections
 
 @Component
-class PersonBatchReader(aktoerRepository: AktørJpaRepository) : RepositoryItemReader<Aktør>(), ItemReader<Aktør> {
+class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemReader<Aktør>(), ItemReader<Aktør> {
     init {
         this.setRepository(aktoerRepository)
         this.setMethodName("findAllByAktørType")

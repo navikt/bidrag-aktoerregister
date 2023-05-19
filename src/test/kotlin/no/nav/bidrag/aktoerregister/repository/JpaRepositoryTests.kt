@@ -5,8 +5,8 @@ import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest
 import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Hendelse
-import no.nav.bidrag.aktoerregister.persistence.repository.AktørJpaRepository
-import no.nav.bidrag.aktoerregister.persistence.repository.HendelseJpaRepository
+import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
+import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,31 +27,31 @@ import java.util.*
 class JpaRepositoryTests {
 
     @Autowired
-    private lateinit var hendelseJpaRepository: HendelseJpaRepository
+    private lateinit var hendelseRepository: HendelseRepository
 
     @Autowired
-    private lateinit var aktørJpaRepository: AktørJpaRepository
+    private lateinit var aktørRepository: AktørRepository
 
     @BeforeEach
     fun Setup() {
-        aktørJpaRepository.deleteAll()
+        aktørRepository.deleteAll()
     }
 
     @Test
     fun `Skal lagre og slette aktør med hendelser`() {
         val aktoerer = generateAktørListe(2)
-        aktørJpaRepository.saveAll(aktoerer)
+        aktørRepository.saveAll(aktoerer)
 
-        var hendelser = hendelseJpaRepository.findAll()
-        var lagdredeAktoerer = aktørJpaRepository.findAll()
+        var hendelser = hendelseRepository.findAll()
+        var lagdredeAktoerer = aktørRepository.findAll()
 
         hendelser.size shouldBe 40
         lagdredeAktoerer.size shouldBe 20
 
-        aktørJpaRepository.delete(lagdredeAktoerer[0])
+        aktørRepository.delete(lagdredeAktoerer[0])
 
-        hendelser = hendelseJpaRepository.findAll()
-        lagdredeAktoerer = aktørJpaRepository.findAll()
+        hendelser = hendelseRepository.findAll()
+        lagdredeAktoerer = aktørRepository.findAll()
 
         hendelser.size shouldBe 38
         lagdredeAktoerer.size shouldBe 19

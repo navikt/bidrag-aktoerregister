@@ -4,13 +4,12 @@ import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.listener.RetryListener
 
-
 class KafkaRetryListener : RetryListener {
 
     override fun failedDelivery(
-            record: ConsumerRecord<*, *>,
-            exception: Exception,
-            deliveryAttempt: Int
+        record: ConsumerRecord<*, *>,
+        exception: Exception,
+        deliveryAttempt: Int
     ) {
         SECURE_LOGGER.error("Håndtering av kafka melding ${record.value()} feilet. Dette er $deliveryAttempt. forsøk", exception)
     }
@@ -20,9 +19,9 @@ class KafkaRetryListener : RetryListener {
     }
 
     override fun recoveryFailed(
-            record: ConsumerRecord<*, *>,
-            original: java.lang.Exception,
-            failure: java.lang.Exception
+        record: ConsumerRecord<*, *>,
+        original: java.lang.Exception,
+        failure: java.lang.Exception
     ) {
     }
 }

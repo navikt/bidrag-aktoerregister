@@ -4,5 +4,6 @@ import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 
 data class AktørBatchProcessorResult(
     val aktør: Aktør,
-    val aktørStatus: AktørStatus
+    val aktørStatus: AktørStatus,
+    val originalIdent: String? = null
 )

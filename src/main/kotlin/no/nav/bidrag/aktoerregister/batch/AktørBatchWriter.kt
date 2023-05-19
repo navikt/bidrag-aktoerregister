@@ -1,22 +1,21 @@
 package no.nav.bidrag.aktoerregister.batch
 
 import io.github.oshai.KotlinLogging
-import no.nav.bidrag.aktoerregister.service.AktørregisterService
+import no.nav.bidrag.aktoerregister.service.AktørService
 import org.springframework.batch.item.ItemWriter
 import org.springframework.stereotype.Component
 
 private val LOGGER = KotlinLogging.logger { }
 
 @Component
-class AktørBatchWriter(private val aktørregisterService: AktørregisterService) : ItemWriter<AktørBatchProcessorResult> {
+class AktørBatchWriter(private val aktørService: AktørService) : ItemWriter<AktørBatchProcessorResult> {
 
     override fun write(aktørBatchProcessorResults: List<AktørBatchProcessorResult>) {
         aktørBatchProcessorResults
             .filter { it.aktørStatus == AktørStatus.UPDATED }
-            .map { it.aktør }
-            .let {
-                LOGGER.trace { "Oppdaterer ${it.size} aktører.." }
-                aktørregisterService.oppdaterAktører(it)
+            .forEach {
+                LOGGER.trace { "Oppdaterer aktør ${it.aktør}" }
+                aktørService.lagreEllerOppdaterAktør(it.aktør, it.originalIdent)
             }
     }
 }
