@@ -4,7 +4,6 @@ import no.nav.bidrag.aktoerregister.AktoerregisterApplicationTest
 import no.nav.bidrag.commons.util.Kjonn
 import no.nav.bidrag.commons.util.PersonidentGenerator
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -62,7 +61,7 @@ class PersonHendelseListenerTest {
 
         kafkaTemplate.usingCompletableFuture().send(topic, hendelse)
 
-        //Sørger for at kafka er ferdig med prosessering av hendelse
+        // Sørger for at kafka er ferdig med prosessering av hendelse
         Awaitility.await().timeout(Durations.ONE_SECOND)
     }
 }
