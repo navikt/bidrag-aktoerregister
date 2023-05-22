@@ -6,6 +6,7 @@ import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.dto.Endringsmelding
 import no.nav.bidrag.domain.ident.Ident
 import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 private val LOGGER = KotlinLogging.logger { }
 
@@ -15,6 +16,7 @@ class PersonHendelseService(
     private val aktørService: AktørService
 ) {
 
+    @Transactional
     fun behandleHendelse(hendelse: String) {
         SECURE_LOGGER.info("Behandler hendelse: $hendelse")
         val endringsmelding = mapEndringsmelding(hendelse)
