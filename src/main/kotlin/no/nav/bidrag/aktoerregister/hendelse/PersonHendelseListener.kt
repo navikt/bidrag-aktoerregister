@@ -12,7 +12,7 @@ class PersonHendelseListener(
     private val personHendelseService: PersonHendelseService
 ) {
 
-    @KafkaListener(groupId = "bidrag-aktoerregister", topics = ["\${TOPIC_PERSON_HENDELSE"])
+    @KafkaListener(groupId = "bidrag-aktoerregister", topics = ["\${TOPIC_PERSONHENDELSE}"])
     fun lesHendelse(
         hendelse: String,
         @Header(KafkaHeaders.OFFSET) offset: Long,
