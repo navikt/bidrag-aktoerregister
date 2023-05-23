@@ -4,7 +4,7 @@ dbname: bidrag-aktoerregister-feature
 ingresses:
   - https://bidrag-aktoerregister-feature.intern.dev.nav.no
 kafka:
-    pool: nav-dev
+  pool: nav-dev
 env:
   SPRING_PROFILES_ACTIVE: dev
   JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
