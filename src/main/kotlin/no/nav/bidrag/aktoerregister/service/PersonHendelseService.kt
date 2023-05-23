@@ -1,14 +1,11 @@
 package no.nav.bidrag.aktoerregister.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.dto.Endringsmelding
 import no.nav.bidrag.domain.ident.Ident
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
-
-private val LOGGER = KotlinLogging.logger { }
 
 @Service
 class PersonHendelseService(
@@ -34,10 +31,6 @@ class PersonHendelseService(
     }
 
     private fun mapEndringsmelding(hendelse: String): Endringsmelding {
-        return try {
-            objectMapper.readValue(hendelse, Endringsmelding::class.java)
-        } finally {
-            LOGGER.info { "Leser endringsmelding: $hendelse" }
-        }
+        return objectMapper.readValue(hendelse, Endringsmelding::class.java)
     }
 }
