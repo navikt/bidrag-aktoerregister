@@ -76,7 +76,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
     private fun convertDodsbo(aktør: Aktør): DodsboDTO? {
         return aktør.dødsbo?.let {
             DodsboDTO(
-                kontaktpersion = aktør.dødsbo?.kontaktperson,
+                kontaktperson = aktør.dødsbo?.kontaktperson,
                 adresse = AdresseDTO(
                     adresselinje1 = aktør.dødsbo?.adresselinje1,
                     adresselinje2 = aktør.dødsbo?.adresselinje2,

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class DodsboDTO(
 
     @Schema(description = "Navn på kontaktperson for dødsboet.")
-    val kontaktpersion: String? = null,
+    val kontaktperson: String? = null,
 
     val adresse: AdresseDTO? = null
 )
