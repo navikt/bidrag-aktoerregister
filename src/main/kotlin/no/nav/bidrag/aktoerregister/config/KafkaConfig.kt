@@ -2,8 +2,6 @@ package no.nav.bidrag.aktoerregister.config
 
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
-import no.nav.bidrag.aktoerregister.hendelse.PersonHendelseListener
-import no.nav.bidrag.aktoerregister.service.PersonHendelseService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,9 +13,6 @@ private val LOGGER = KotlinLogging.logger { }
 
 @Configuration
 class KafkaConfig {
-
-    @Bean
-    fun personHendelseListener(personHendelseService: PersonHendelseService) = PersonHendelseListener(personHendelseService)
 
     @Bean
     fun defaultErrorHandler(@Value("\${KAFKA_MAX_RETRY:-1}") maxRetry: Int): DefaultErrorHandler {
