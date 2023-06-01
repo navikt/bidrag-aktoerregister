@@ -39,14 +39,13 @@ class AktørService(
                 lagreEllerOppdaterAktør(aktør, aktørId.aktoerId)
             }
         } else {
-            aktør = aktør
-                ?: if (aktørId.identtype == Identtype.AKTOERNUMMER) {
-                    hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent)
-                } else {
-                    hentAktørFraPersonOgLagreTilDatabase(
-                        aktørIdent
-                    )
-                }
+            aktør = if (aktørId.identtype == Identtype.AKTOERNUMMER) {
+                hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent)
+            } else {
+                hentAktørFraPersonOgLagreTilDatabase(
+                    aktørIdent
+                )
+            }
         }
         return conversionService.convert(aktør, AktoerDTO::class.java)
             ?: error("Konvertering av aktør til AktoerDTO feilet!")
@@ -99,7 +98,8 @@ class AktørService(
     }
 
     fun hentAktørFraDatabase(aktørIdent: Ident): Aktør? {
-        return aktørRepository.findByAktørIdent(aktørIdent.verdi) ?: tidligereIdenterRepository.findByTidligereAktoerIdent(aktørIdent.verdi)?.aktør
+        return aktørRepository.findByAktørIdent(aktørIdent.verdi)
+            ?: tidligereIdenterRepository.findByTidligereAktoerIdent(aktørIdent.verdi)?.aktør
     }
 
     fun lagreEllerOppdaterAktør(aktør: Aktør, originalIdent: String?) {

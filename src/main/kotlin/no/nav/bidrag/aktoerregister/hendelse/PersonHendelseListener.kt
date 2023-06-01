@@ -5,9 +5,11 @@ import no.nav.bidrag.aktoerregister.service.PersonHendelseService
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.messaging.handler.annotation.Header
+import org.springframework.stereotype.Component
 
 private val LOGGER = KotlinLogging.logger { }
 
+@Component
 class PersonHendelseListener(
     private val personHendelseService: PersonHendelseService
 ) {
