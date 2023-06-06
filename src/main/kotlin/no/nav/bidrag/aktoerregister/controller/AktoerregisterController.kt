@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.dto.AktoerDTO
 import no.nav.bidrag.aktoerregister.dto.AktoerIdDTO
 import no.nav.bidrag.aktoerregister.dto.HendelseDTO
@@ -52,6 +53,7 @@ class AktoerregisterController(
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Finner ingen aktør med oppgitt ident", e)
         } catch (e: Exception) {
             LOGGER.error(e) { "Feil ved henting av aktør ${request.aktoerId}. Feilmelding: ${e.message}" }
+            SECURE_LOGGER.error("Feil ved henting av aktør ${request.aktoerId}. Feilmelding: ${e.message}")
             throw ResponseStatusException(INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Feil ved henting av aktør. Prøv igjen senere.", e)
         }
     }
