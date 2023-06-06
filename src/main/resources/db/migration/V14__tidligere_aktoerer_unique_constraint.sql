@@ -1,0 +1,1 @@
+ALTER TABLE aktoerregister.tidligere_identer ADD CONSTRAINT tidligere_aktoer_ident_aktoer_id_constraint UNIQUE (tidligere_aktoer_ident, aktoer_id)
