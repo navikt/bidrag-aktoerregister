@@ -15,7 +15,7 @@
   <description>Aktoerregister for Bidragsområdet</description>
   <properties>
     <java.version>17</java.version>
-    <kotlin.version>1.8.0</kotlin.version>
+    <kotlin.version>1.8.21</kotlin.version>
     <bidrag-commons.version>0.7.45</bidrag-commons.version>
     <bidrag-transport.version>20230413080727_14a3c1b</bidrag-transport.version>
     <logback-encoder.version>7.2</logback-encoder.version>
@@ -350,8 +350,7 @@
             <phase>verify</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                  classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <arg value="src/**/*.kt"/>
                 </java>
               </target>
@@ -365,8 +364,7 @@
             <phase>validate</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                  classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <jvmarg value="--add-opens"/>
                   <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
                   <arg value="-F"/>
