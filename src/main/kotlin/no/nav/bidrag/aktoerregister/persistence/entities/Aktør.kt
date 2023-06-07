@@ -138,8 +138,7 @@ data class Aktør(
         this.postnr = aktør.postnr
         this.land = aktør.land
         this.dødsbo = aktør.dødsbo
-        this.tidligereIdenter.clear()
-        this.tidligereIdenter.addAll(aktør.tidligereIdenter)
+        this.tidligereIdenter = aktør.tidligereIdenter
     }
 
     override fun equals(other: Any?): Boolean {

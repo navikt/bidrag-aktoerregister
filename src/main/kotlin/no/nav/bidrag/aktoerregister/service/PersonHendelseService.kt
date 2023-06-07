@@ -25,7 +25,7 @@ class PersonHendelseService(
                 val aktørFraPerson = aktørService.hentAktørFraPerson(Ident(ident))
                 aktør.oppdaterAlleFelter(aktørFraPerson)
                 aktørService.lagreEllerOppdaterAktør(aktør, ident)
-                return@forEach
+                return
             }
         }
     }
