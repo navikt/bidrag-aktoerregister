@@ -7,7 +7,7 @@ import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.Dødsbo
 import no.nav.bidrag.aktoerregister.persistence.entities.TidligereIdenter
-import no.nav.bidrag.commons.util.PersonidentGenerator.genererPersonnummer
+import no.nav.bidrag.commons.util.PersonidentGenerator.genererFødselsnummer
 import org.assertj.core.api.AssertionsForClassTypes
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -17,15 +17,15 @@ internal class AktørTilAkteorDTOConverterTest {
 
     @Test
     fun skalKonverteSelvOmFlesteFelterErNull() {
-        val aktør = Aktør(aktørIdent = genererPersonnummer(), aktørType = "PERSONNUMMER")
+        val aktør = Aktør(aktørIdent = genererFødselsnummer(), aktørType = "PERSONNUMMER")
         val aktoerDTO = aktoerTilAktoerDTOConverter.convert(aktør)
         AssertionsForClassTypes.assertThat(aktoerDTO).isNotNull
     }
 
     @Test
     fun skalKonvertereAktoerTilAktoerDTO() {
-        val aktoerIdent = genererPersonnummer(null, null)
-        val tidligereAktoerIdent = genererPersonnummer(null, null)
+        val aktoerIdent = genererFødselsnummer(null, null)
+        val tidligereAktoerIdent = genererFødselsnummer(null, null)
         val aktoerType = Identtype.PERSONNUMMER
         val offentligId = "6"
         val offentligType = "OffentligType"
@@ -92,7 +92,7 @@ internal class AktørTilAkteorDTOConverterTest {
         aktoerDTO.kontonummer?.bankCode shouldBe bankCode
         aktoerDTO.kontonummer?.bankLandkode shouldBe bankLandkode
         aktoerDTO.kontonummer?.valutaKode shouldBe valutaKode
-        aktoerDTO.adresse?.navn shouldBe etternavn
+        aktoerDTO.navn?.etternavn shouldBe etternavn
         aktoerDTO.adresse?.adresselinje1 shouldBe adresselinje1
         aktoerDTO.adresse?.adresselinje2 shouldBe adresselinje2
         aktoerDTO.adresse?.adresselinje3 shouldBe adresselinje3

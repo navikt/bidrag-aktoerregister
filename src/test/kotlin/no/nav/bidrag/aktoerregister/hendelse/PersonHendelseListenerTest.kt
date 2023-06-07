@@ -50,8 +50,8 @@ class PersonHendelseListenerTest {
 
     @Test
     fun `skal lese inn person-hendelse via kafka`() {
-        val personIdent1 = PersonidentGenerator.genererPersonnummer(LocalDate.now().minusYears(30), Kjonn.MANN)
-        val personIdent2 = PersonidentGenerator.genererPersonnummer(LocalDate.now().minusYears(30), Kjonn.KVINNE)
+        val personIdent1 = PersonidentGenerator.genererFødselsnummer(LocalDate.now().minusYears(30), Kjonn.MANN)
+        val personIdent2 = PersonidentGenerator.genererFødselsnummer(LocalDate.now().minusYears(30), Kjonn.KVINNE)
         val hendelse = "{" +
             "\"aktørid\":\"123456\"," +
             "\"personidenter\":[" +
@@ -59,7 +59,7 @@ class PersonHendelseListenerTest {
             "\"$personIdent2\"" +
             "]}"
 
-        kafkaTemplate.usingCompletableFuture().send(topic, hendelse)
+        kafkaTemplate.send(topic, hendelse)
 
         // Sørger for at kafka er ferdig med prosessering av hendelse
         Awaitility.await().timeout(Durations.ONE_SECOND)

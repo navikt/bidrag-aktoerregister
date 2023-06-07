@@ -6,17 +6,19 @@ import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
+import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
+import org.springframework.batch.core.repository.JobRepository
+import org.springframework.batch.core.step.builder.StepBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
 @EnableBatchProcessing
 class PersonBatchConfig(
-    private val jobBuilderFactory: JobBuilderFactory,
-    private val stepBuilderFactory: StepBuilderFactory,
+    private val jobRepository: JobRepository,
+    private val transactionManager: PlatformTransactionManager,
     private val personBatchReader: PersonBatchReader,
     private val aktørBatchWriter: AktørBatchWriter,
     private val personBatchProcessor: PersonBatchProcessor
@@ -29,7 +31,7 @@ class PersonBatchConfig(
 
     @Bean
     fun personJob(): Job {
-        return jobBuilderFactory[PERSON_BATCH_OPPDATERING_JOB]
+        return JobBuilder(PERSON_BATCH_OPPDATERING_JOB, jobRepository)
             .listener(PersonJobListener())
             .incrementer(RunIdIncrementer())
             .flow(personStep())
@@ -39,8 +41,8 @@ class PersonBatchConfig(
 
     @Bean
     fun personStep(): Step {
-        return stepBuilderFactory[PERSON_OPPDATER_AKTOERER_STEP]
-            .chunk<Aktør, AktørBatchProcessorResult>(100)
+        return StepBuilder(PERSON_OPPDATER_AKTOERER_STEP, jobRepository)
+            .chunk<Aktør, AktørBatchProcessorResult>(100, transactionManager)
             .reader(personBatchReader)
             .processor(personBatchProcessor)
             .writer(aktørBatchWriter)

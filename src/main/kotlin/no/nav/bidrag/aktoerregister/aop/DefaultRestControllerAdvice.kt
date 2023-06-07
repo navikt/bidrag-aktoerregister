@@ -35,7 +35,7 @@ class DefaultRestControllerAdvice {
     @ExceptionHandler(ResponseStatusException::class)
     fun handlerResponseStatusException(exception: ResponseStatusException): ResponseEntity<*> {
         LOGGER.warn(exception) { exception.message }
-        return ResponseEntity.status(exception.status).header(HttpHeaders.WARNING, exception.message).build<Any>()
+        return ResponseEntity.status(exception.statusCode).header(HttpHeaders.WARNING, exception.message).build<Any>()
     }
 
     @ResponseBody
