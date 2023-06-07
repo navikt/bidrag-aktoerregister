@@ -15,3 +15,4 @@ env:
   BIDRAG_SAMHANDLER_HOST: bidrag-samhandler-feature.intern.dev.nav.no
   BIDRAG_SAMHANDLER_SCOPE: dev-gcp.bidrag.bidrag-samhandler-feature
   TOPIC_PERSONHENDELSE: bidrag.personhendelse.v1
+  KAFKA_GROUP_ID: bidrag-aktoerregister-feature
