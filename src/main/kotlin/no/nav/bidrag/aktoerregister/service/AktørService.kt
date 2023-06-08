@@ -106,7 +106,6 @@ class AktørService(
     }
 
     fun lagreEllerOppdaterAktør(aktør: Aktør, originalIdent: String?) {
-        tidligereIdenterRepository.deleteAllByAktørIs(aktør)
         aktørRepository.save(aktør)
         aktør.tidligereIdenter.forEach {
             it.aktør = aktør
