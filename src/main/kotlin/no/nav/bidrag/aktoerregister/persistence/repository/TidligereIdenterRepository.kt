@@ -1,9 +1,13 @@
 package no.nav.bidrag.aktoerregister.persistence.repository
 
+import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.entities.TidligereIdenter
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface TidligereIdenterRepository : JpaRepository<TidligereIdenter, Int> {
 
     fun findByTidligereAktoerIdent(tidligereAktoerIdent: String): TidligereIdenter?
+
+    fun deleteAllByAktørIs(aktør: Aktør)
+
 }

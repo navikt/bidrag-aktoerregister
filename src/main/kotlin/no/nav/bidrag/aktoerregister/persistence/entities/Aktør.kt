@@ -138,8 +138,8 @@ data class Aktør(
         this.postnr = aktør.postnr
         this.land = aktør.land
         this.dødsbo = aktør.dødsbo
-        this.tidligereIdenter.forEach { it.aktør = null }
-        this.tidligereIdenter = aktør.tidligereIdenter
+        this.tidligereIdenter.clear()
+        this.tidligereIdenter.addAll(aktør.tidligereIdenter)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -173,9 +173,7 @@ data class Aktør(
         if (poststed != other.poststed) return false
         if (land != other.land) return false
         if (dødsbo != other.dødsbo) return false
-        if (!erTidligereIdenterLike(other)) return false
-
-        return true
+        return erTidligereIdenterLike(other)
     }
 
     fun erTidligereIdenterLike(other: Aktør): Boolean {
