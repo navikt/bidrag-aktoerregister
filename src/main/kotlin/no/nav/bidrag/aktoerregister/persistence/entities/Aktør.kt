@@ -138,6 +138,7 @@ data class Aktør(
         this.postnr = aktør.postnr
         this.land = aktør.land
         this.dødsbo = aktør.dødsbo
+        this.tidligereIdenter.forEach { it.aktør = null }
         this.tidligereIdenter.clear()
         this.tidligereIdenter.addAll(aktør.tidligereIdenter)
     }
