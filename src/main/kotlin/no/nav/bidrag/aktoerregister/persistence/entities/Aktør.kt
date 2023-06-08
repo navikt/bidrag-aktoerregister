@@ -139,8 +139,7 @@ data class Aktør(
         this.land = aktør.land
         this.dødsbo = aktør.dødsbo
         this.tidligereIdenter.forEach { it.aktør = null }
-        this.tidligereIdenter.clear()
-        this.tidligereIdenter.addAll(aktør.tidligereIdenter)
+        this.tidligereIdenter = aktør.tidligereIdenter
     }
 
     override fun equals(other: Any?): Boolean {
