@@ -38,6 +38,7 @@ spring:
       ackMode: RECORD
 
 springdoc:
+  packages-to-scan: no.nav.bidrag.aktoerregister.controller
   swagger-ui:
     path: /
 
