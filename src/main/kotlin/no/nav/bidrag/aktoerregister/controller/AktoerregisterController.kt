@@ -83,4 +83,22 @@ class AktoerregisterController(
             throw ResponseStatusException(INTERNAL_SERVER_ERROR, "Intern tjenestefeil. Problem ved henting av hendelser. Prøv igjen senere", e)
         }
     }
+
+    @Operation(
+        summary = "Avmelder gitt aktør.",
+        description = "Avmelder aktøren fra aktørregisteret. Hendelser vil ikke lenger bli opprettet på denne aktøren."
+    )
+    @PostMapping(path = ["/avmelding"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "Aktøren ble avmeldt."),
+        ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = [Content()])
+    )
+    fun avmeldAktør(@RequestBody request: AktoerIdDTO): ResponseEntity<Any> {
+        return try {
+            aktørService.slettAktoer(request)
+            ResponseEntity.ok().build()
+        } catch (e: AktørNotFoundException) {
+            ResponseEntity.notFound().build()
+        }
+    }
 }

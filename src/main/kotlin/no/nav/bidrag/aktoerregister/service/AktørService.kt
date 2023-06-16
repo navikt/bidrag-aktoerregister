@@ -114,7 +114,8 @@ class AktørService(
         hendelseService.opprettHendelserPåAktør(aktør, originalIdent)
     }
 
-    fun slettAktoer(aktoerIdent: String) {
-        aktørRepository.deleteAktørByAktørIdent(aktoerIdent)
+    @Transactional
+    fun slettAktoer(aktoerIdDTO: AktoerIdDTO) {
+        aktørRepository.deleteAktørByAktørIdent(aktoerIdDTO.aktoerId)
     }
 }

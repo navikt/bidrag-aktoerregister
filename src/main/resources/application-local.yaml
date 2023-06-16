@@ -1,6 +1,7 @@
 NAIS_APP_NAME: bidrag-aktoerregister
 TOPIC_PERSONHENDELSE: bidrag.personhendelse.v1
 KAFKA_GROUP_ID: bidrag-aktoerregister-local
+KAFKA_BROKERS: localhost:9092
 
 # Azure
 AZURE_APP_CLIENT_ID: <CLIENT_ID>
@@ -11,6 +12,9 @@ AZURE_APP_TENANT_ID: 966ac572-f5b7-4bbe-aa88-c76419c0f851
 spring:
   jpa:
     database: POSTGRESQL
+  kafka:
+    properties:
+      security.protocol: PLAINTEXT
 DB_HOST: localhost
 DB_PORT: '5432'
 DB_DATABASE: test_db
