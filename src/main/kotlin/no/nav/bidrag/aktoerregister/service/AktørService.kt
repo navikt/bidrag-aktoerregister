@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.service
 
 import io.github.oshai.KotlinLogging
+import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.consumer.PersonConsumer
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
 import no.nav.bidrag.aktoerregister.dto.AktoerDTO
@@ -12,6 +13,7 @@ import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.TidligereIdenterRepository
 import no.nav.bidrag.domain.ident.Ident
 import org.springframework.core.convert.ConversionService
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -106,13 +108,18 @@ class AktørService(
     }
 
     fun lagreEllerOppdaterAktør(aktør: Aktør, originalIdent: String?) {
-        aktørRepository.save(aktør)
-        tidligereIdenterRepository.deleteAllByAktørIs(aktør)
-        aktør.tidligereIdenter.forEach {
-            it.aktør = aktør
+        try {
+            aktørRepository.save(aktør)
+            tidligereIdenterRepository.deleteAllByAktørIs(aktør)
+            aktør.tidligereIdenter.forEach {
+                it.aktør = aktør
+            }
+            aktør.dødsbo?.aktør = aktør
+            hendelseService.opprettHendelserPåAktør(aktør, originalIdent)
+        } catch (e: DataIntegrityViolationException) {
+            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: $e ")
+            throw e
         }
-        aktør.dødsbo?.aktør = aktør
-        hendelseService.opprettHendelserPåAktør(aktør, originalIdent)
     }
 
     @Transactional
