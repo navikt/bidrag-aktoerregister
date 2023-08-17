@@ -30,7 +30,7 @@ class PersonConsumer(
         try {
             val response: PersondetaljerDto? = postForEntity(leggTilPathPåUri(url, PERSON_PATH), PersonRequest(PersonIdent(personIdent.verdi)))
             LOGGER.debug { "Hentet person fra bidrag-person." }
-            SECURE_LOGGER.info("Hentet person med id: ${personIdent.verdi} fra bidrag-person.")
+            SECURE_LOGGER.info("Hentet person med id: ${personIdent.verdi} fra bidrag-person: ${response.toString()}")
             return response
         } catch (e: Exception) {
             SECURE_LOGGER.error("Noe gikk galt i kallet mot bidrag-sak for ident: ${personIdent.verdi}. Svaret fra bidrag-person var: ${e.message}")
