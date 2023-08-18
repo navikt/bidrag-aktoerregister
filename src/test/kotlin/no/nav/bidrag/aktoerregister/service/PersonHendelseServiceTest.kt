@@ -49,7 +49,7 @@ class PersonHendelseServiceTest {
 
         personHendelseService.behandleHendelse(hendelse)
 
-        verify(exactly = 1) { aktørService.lagreAktør(aktør) }
+        verify(exactly = 1) { aktørService.oppdaterAktør(aktør, aktør, aktør.aktørIdent) }
     }
 
     @Test

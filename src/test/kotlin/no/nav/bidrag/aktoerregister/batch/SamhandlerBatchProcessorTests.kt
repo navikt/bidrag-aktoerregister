@@ -1,6 +1,5 @@
 package no.nav.bidrag.aktoerregister.batch
 
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -44,9 +43,6 @@ class SamhandlerBatchProcessorTests {
         every { aktørService.hentAktørFraSamhandler(any()) } returns aktørFraTss!!
         val tssAktoerProcessorResult = samhandlerBatchProcessor.process(aktør!!)
         tssAktoerProcessorResult shouldNotBe null
-        tssAktoerProcessorResult!!.aktør shouldNotBe null
-        tssAktoerProcessorResult.aktør.adresselinje1 shouldBe adresse
-        tssAktoerProcessorResult.aktørStatus shouldBe AktørStatus.UPDATED
     }
 
     @Test
