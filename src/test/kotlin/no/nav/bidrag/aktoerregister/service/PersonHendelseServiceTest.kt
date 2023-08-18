@@ -49,7 +49,7 @@ class PersonHendelseServiceTest {
 
         personHendelseService.behandleHendelse(hendelse)
 
-        verify(exactly = 1) { aktørService.lagreEllerOppdaterAktør(aktør, personIdent2) }
+        verify(exactly = 1) { aktørService.lagreAktør(aktør) }
     }
 
     @Test
@@ -59,6 +59,6 @@ class PersonHendelseServiceTest {
 
         personHendelseService.behandleHendelse(hendelse)
 
-        verify(exactly = 0) { aktørService.lagreEllerOppdaterAktør(aktør, personIdent2) }
+        verify(exactly = 0) { aktørService.lagreAktør(aktør) }
     }
 }

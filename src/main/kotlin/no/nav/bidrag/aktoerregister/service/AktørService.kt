@@ -37,8 +37,7 @@ class AktørService(
         if (aktør != null && tvingOppdatering) {
             val hentetAktør = if (aktørId.identtype == Identtype.AKTOERNUMMER) hentAktørFraSamhandler(aktørIdent) else hentAktørFraPerson(aktørIdent)
             if (aktør != hentetAktør) {
-                aktør.oppdaterAlleFelter(hentetAktør)
-                lagreEllerOppdaterAktør(aktør, aktørId.aktoerId)
+                oppdaterAktør(aktør, hentetAktør, aktørId.aktoerId)
             }
         } else if (aktør == null) {
             aktør = hentNyAktør(aktørId, aktørIdent)
@@ -59,7 +58,7 @@ class AktørService(
     private fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
         hentAktørFraSamhandler(aktørIdent).let {
-            lagreEllerOppdaterAktør(it, null)
+            lagreAktør(it)
             return it
         }
     }
@@ -85,12 +84,11 @@ class AktørService(
                 }
                 if (aktørFraDatabase != null) {
                     val originalIdent = aktørFraDatabase!!.aktørIdent
-                    aktørFraDatabase!!.oppdaterAlleFelter(it)
-                    lagreEllerOppdaterAktør(aktørFraDatabase!!, originalIdent)
+                    oppdaterAktør(aktørFraDatabase!!, it, originalIdent)
                     return aktørFraDatabase!!
                 }
             }
-            lagreEllerOppdaterAktør(it, null)
+            lagreAktør(it)
             return it
         }
     }
@@ -107,17 +105,37 @@ class AktørService(
             ?: tidligereIdenterRepository.findByTidligereAktoerIdent(aktørIdent.verdi)?.aktør
     }
 
-    fun lagreEllerOppdaterAktør(aktør: Aktør, originalIdent: String?) {
+    fun oppdaterAktør(aktør: Aktør, nyAktør: Aktør, originalIdent: String?) {
         try {
-            aktørRepository.save(aktør)
-            tidligereIdenterRepository.deleteAllByAktørIs(aktør)
+            aktør.tidligereIdenter.forEach {
+                tidligereIdenterRepository.delete(it)
+            }
+
+            aktør.oppdaterAlleFelter(nyAktør)
+
             aktør.tidligereIdenter.forEach {
                 it.aktør = aktør
             }
             aktør.dødsbo?.aktør = aktør
             hendelseService.opprettHendelserPåAktør(aktør, originalIdent)
+
+            aktørRepository.save(aktør)
         } catch (e: DataIntegrityViolationException) {
             SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: $e ")
+            throw e
+        }
+    }
+
+    fun lagreAktør(aktør: Aktør) {
+        try {
+            aktørRepository.save(aktør)
+            aktør.tidligereIdenter.forEach {
+                it.aktør = aktør
+            }
+            aktør.dødsbo?.aktør = aktør
+            hendelseService.opprettHendelserPåAktør(aktør, null)
+        } catch (e: DataIntegrityViolationException) {
+            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Aktør: $aktør \nFeil: $e ")
             throw e
         }
     }

@@ -30,8 +30,7 @@ class PersonHendelseService(
                 SECURE_LOGGER.info("Fant lagret aktør $it. Oppdaterer med nye verdier.")
                 try {
                     val aktørFraPerson = aktørService.hentAktørFraPerson(Ident(ident))
-                    aktør.oppdaterAlleFelter(aktørFraPerson)
-                    aktørService.lagreEllerOppdaterAktør(aktør, ident)
+                    aktørService.oppdaterAktør(aktør, aktørFraPerson, ident)
                     return
                 } catch (e: AktørNotFoundException) {
                     LOGGER.error("Aktør ikke funnet i bidrag-person! Se sikker logg for mer info.")
