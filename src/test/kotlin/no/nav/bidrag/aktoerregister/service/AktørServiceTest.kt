@@ -63,7 +63,7 @@ class AktørServiceTest {
     fun skalTesteOpprettEllerOppdatertAktoerer() {
         val aktoerer = opprettAktoerListeMed20Aktører()
         for (aktør in aktoerer) {
-            aktørService.lagreEllerOppdaterAktør(aktør, null)
+            aktørService.lagreAktør(aktør)
         }
         var savedAktoerer = aktørRepository.findAll()
         var savedHendelser = hendelseRepository.findAll()
@@ -73,7 +73,7 @@ class AktørServiceTest {
 
         // Updating the same aktoerer to test that new hendelser are created
         for (aktør in aktoerer) {
-            aktørService.lagreEllerOppdaterAktør(aktør, null)
+            aktørService.oppdaterAktør(aktør, aktør, null)
         }
         savedAktoerer = aktørRepository.findAll()
         savedHendelser = hendelseRepository.findAll()

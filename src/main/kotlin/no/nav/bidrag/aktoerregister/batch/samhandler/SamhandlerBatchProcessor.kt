@@ -1,7 +1,6 @@
 package no.nav.bidrag.aktoerregister.batch.samhandler
 
 import io.github.oshai.KotlinLogging
-import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
 import no.nav.bidrag.aktoerregister.batch.AktørStatus
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
@@ -23,9 +22,7 @@ class SamhandlerBatchProcessor(
             aktørService.hentAktørFraSamhandler(Ident(aktør.aktørIdent))
                 .takeIf { it != aktør }
                 ?.let {
-                    SECURE_LOGGER.debug("Hentet aktør fra Bidrag-Samhandler med id: ${aktør.aktørIdent} og oppdaterer felter på lagret aktør.")
-                    aktør.oppdaterAlleFelter(it)
-                    AktørBatchProcessorResult(aktør, AktørStatus.UPDATED)
+                    AktørBatchProcessorResult(aktør, it, AktørStatus.UPDATED)
                 }
         } catch (e: Exception) {
             LOGGER.error(e) { e.message }
