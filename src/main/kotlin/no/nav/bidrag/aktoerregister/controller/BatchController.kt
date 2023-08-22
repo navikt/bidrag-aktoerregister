@@ -16,13 +16,13 @@ private val LOGGER = KotlinLogging.logger {}
 @RestController
 @Protected
 class BatchController(
-    private val samhandlerBatchScheduler: SamhandlerBatchScheduler,
-    private val personBatch: PersonBatch
+        private val samhandlerBatchScheduler: SamhandlerBatchScheduler,
+        private val personBatch: PersonBatch
 ) {
 
     @Operation(
-        summary = "Start kjøring av Samhandler batch.",
-        description = "Samhandler batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
+            summary = "Start kjøring av Samhandler batch.",
+            description = "Samhandler batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
     )
     @ApiResponse(responseCode = "200", description = "Samhandler batchen ble startet.")
     @PostMapping("/samhandlerBatch")
@@ -38,8 +38,8 @@ class BatchController(
     }
 
     @Operation(
-        summary = "Start kjøring av Person batch.",
-        description = "Person batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
+            summary = "Start kjøring av Person batch.",
+            description = "Person batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
     )
     @ApiResponse(responseCode = "200", description = "Person batchen ble startet.")
     @PostMapping("/personBatch")
@@ -54,20 +54,10 @@ class BatchController(
         return ResponseEntity.ok().build<Any>()
     }
 
-    @Operation(
-        summary = "Restart kjøring av Person batch.",
-        description = "Person batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
-    )
+    @Operation(summary = "Restart kjøring av Person batch.")
     @ApiResponse(responseCode = "200", description = "Person batchen ble restartet.")
     @PostMapping("/restartPersonBatch")
-    fun restartPersonBatch(executionId: Long): ResponseEntity<*> {
-        CompletableFuture.runAsync {
-            try {
-                personBatch.restartPersonBatch(executionId)
-            } catch (e: Exception) {
-                LOGGER.error(e) { "Manuell start av batchen feilet med følgende feilkode: ${e.message}" }
-            }
-        }
-        return ResponseEntity.ok().build<Any>()
+    fun restartPersonBatch(): ResponseEntity<*> {
+        return personBatch.restartPersonBatch()
     }
 }
