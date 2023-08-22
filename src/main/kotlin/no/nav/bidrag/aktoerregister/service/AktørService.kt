@@ -2,6 +2,7 @@ package no.nav.bidrag.aktoerregister.service
 
 import io.github.oshai.KotlinLogging
 import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceException
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.consumer.PersonConsumer
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
@@ -125,7 +126,13 @@ class AktørService(
 
             aktørRepository.save(aktør)
         } catch (e: DataIntegrityViolationException) {
-            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: $e ")
+            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.stackTrace} ")
+            throw e
+        } catch (e: PersistenceException) {
+            SECURE_LOGGER.error("PersistenceException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.stackTrace} ")
+            throw e
+        } catch  (e: Exception) {
+            SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.stackTrace} ")
             throw e
         }
     }
