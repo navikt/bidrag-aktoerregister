@@ -126,13 +126,13 @@ class AktørService(
 
             aktørRepository.save(aktør)
         } catch (e: DataIntegrityViolationException) {
-            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.stackTrace} ")
+            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
             throw e
         } catch (e: PersistenceException) {
-            SECURE_LOGGER.error("PersistenceException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.stackTrace} ")
+            SECURE_LOGGER.error("PersistenceException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
             throw e
         } catch  (e: Exception) {
-            SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.stackTrace} ")
+            SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
             throw e
         }
     }
