@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.service
 
 import io.github.oshai.KotlinLogging
+import jakarta.persistence.EntityManager
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.consumer.PersonConsumer
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
@@ -26,7 +27,8 @@ class AktørService(
     private val hendelseService: HendelseService,
     private val samhandlerConsumer: SamhandlerConsumer,
     private val personConsumer: PersonConsumer,
-    private val conversionService: ConversionService
+    private val conversionService: ConversionService,
+    private val entityManager: EntityManager
 ) {
 
     @Transactional
@@ -112,6 +114,8 @@ class AktørService(
             }
 
             aktør.oppdaterAlleFelter(nyAktør)
+
+            entityManager.flush()
 
             aktør.tidligereIdenter.forEach {
                 it.aktør = aktør
