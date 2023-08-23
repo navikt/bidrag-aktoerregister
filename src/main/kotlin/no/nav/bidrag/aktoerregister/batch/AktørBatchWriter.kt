@@ -9,10 +9,13 @@ import org.springframework.stereotype.Component
 class AktørBatchWriter(private val aktørService: AktørService) : ItemWriter<AktørBatchProcessorResult> {
 
     override fun write(chunk: Chunk<out AktørBatchProcessorResult>) {
+        val slettedeAktører: MutableList<String> = mutableListOf()
         chunk
             .filter { it.aktørStatus == AktørStatus.UPDATED }
             .forEach {
-                aktørService.oppdaterAktør(it.aktør, it.nyAktør, it.originalIdent)
+                if (!slettedeAktører.contains(it.aktør.aktørIdent)) {
+                    aktørService.oppdaterAktør(it.aktør, it.nyAktør, it.originalIdent)?.let { slettedeAktører.add(it) }
+                }
             }
     }
 }

@@ -12,6 +12,7 @@ import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
+import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.TidligereIdenterRepository
 import no.nav.bidrag.domain.ident.Ident
 import org.springframework.core.convert.ConversionService
@@ -25,6 +26,7 @@ private val LOGGER = KotlinLogging.logger {}
 class AktørService(
     private val aktørRepository: AktørRepository,
     private val tidligereIdenterRepository: TidligereIdenterRepository,
+    private val hendelseRepository: HendelseRepository,
     private val hendelseService: HendelseService,
     private val samhandlerConsumer: SamhandlerConsumer,
     private val personConsumer: PersonConsumer,
@@ -108,8 +110,22 @@ class AktørService(
             ?: tidligereIdenterRepository.findByTidligereAktoerIdent(aktørIdent.verdi)?.aktør
     }
 
-    fun oppdaterAktør(aktør: Aktør, nyAktør: Aktør, originalIdent: String?) {
+    fun oppdaterAktør(aktør: Aktør, nyAktør: Aktør, originalIdent: String?): String? {
+        var slettetAktørIdent: String? = null
         try {
+
+            if (originalIdent != null && originalIdent != nyAktør.aktørIdent) {
+                aktørRepository.findByAktørIdent(nyAktør.aktørIdent)?.let {
+                    LOGGER.info("Sletter aktør: ${it.aktørIdent}")
+                    slettetAktørIdent = it.aktørIdent
+                    it.hendelser.forEach { hendelse ->
+                        hendelseRepository.delete(hendelse)
+                    }
+                    aktørRepository.delete(it)
+                }
+                entityManager.flush()
+            }
+
             aktør.tidligereIdenter.forEach {
                 tidligereIdenterRepository.delete(it)
             }
@@ -123,8 +139,9 @@ class AktørService(
             }
             aktør.dødsbo?.aktør = aktør
             hendelseService.opprettHendelserPåAktør(aktør, originalIdent)
-
+            LOGGER.info("Lagrer aktør: ${aktør.aktørIdent}")
             aktørRepository.save(aktør)
+            return slettetAktørIdent
         } catch (e: DataIntegrityViolationException) {
             SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
             throw e
