@@ -25,7 +25,7 @@
     <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
     <kotest.version>5.6.2</kotest.version>
     <sprinmockk.version>4.0.2</sprinmockk.version>
-    <kotlin-logging-jvm.version>4.0.0-beta-22</kotlin-logging-jvm.version>
+    <kotlin-logging-jvm.version>4.0.2</kotlin-logging-jvm.version>
     <shedlock.version>5.4.0</shedlock.version>
     <testcontainers.version>1.18.3</testcontainers.version>
     <spring-kafka.version>3.0.10</spring-kafka.version>
@@ -347,8 +347,7 @@
             <phase>verify</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                  classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <arg value="src/**/*.kt"/>
                 </java>
               </target>
@@ -362,8 +361,7 @@
             <phase>validate</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                  classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <jvmarg value="--add-opens"/>
                   <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
                   <arg value="-F"/>
