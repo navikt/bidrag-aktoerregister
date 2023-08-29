@@ -1,6 +1,7 @@
 package no.nav.bidrag.aktoerregister.batch.person
 
 import io.github.oshai.KotlinLogging
+import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
 import no.nav.bidrag.aktoerregister.batch.AktørStatus
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
@@ -25,6 +26,7 @@ class PersonBatchProcessor(
                     AktørBatchProcessorResult(aktør, it, AktørStatus.UPDATED, originalIdent)
                 }
         } catch (e: Exception) {
+            SECURE_LOGGER.error("Person: ${aktør.aktørIdent} feilet i PersonBatchProcessor. Feilmelding: ${e.message}")
             LOGGER.error(e) { e.message }
             null
         }
