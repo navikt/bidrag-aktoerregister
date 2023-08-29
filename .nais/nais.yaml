@@ -9,6 +9,14 @@ spec:
   secureLogs:
     enabled: true
   image: {{ image }}
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{env.MQ_HOST}}
+          ports:
+            - name: MQ
+              port: {{env.MQ_PORT}}
+              protocol: TCP
   gcp:
     sqlInstances:
       - name: {{ dbinstancename }}

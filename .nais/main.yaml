@@ -7,3 +7,5 @@ ingresses:
 env:
   SPRING_PROFILES_ACTIVE: dev
   JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+  MQ_HOST: b27apvl220.preprod.local
+  MQ_PORT: 1413

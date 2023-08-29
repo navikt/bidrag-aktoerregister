@@ -5,3 +5,5 @@ ingresses:
   - https://bidrag-aktoerregister.nav.no/
 env:
   SPRING_PROFILES_ACTIVE: prod
+  MQ_HOST: mpls02.adeo.no
+  MQ_PORT: 1414
