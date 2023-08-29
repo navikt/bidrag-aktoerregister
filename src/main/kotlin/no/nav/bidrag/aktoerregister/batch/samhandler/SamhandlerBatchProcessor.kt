@@ -3,6 +3,7 @@ package no.nav.bidrag.aktoerregister.batch.samhandler
 import io.github.oshai.KotlinLogging
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
 import no.nav.bidrag.aktoerregister.batch.AktørStatus
+import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.service.AktørService
 import no.nav.bidrag.domain.ident.Ident
@@ -24,7 +25,11 @@ class SamhandlerBatchProcessor(
                 ?.let {
                     AktørBatchProcessorResult(aktør, it, AktørStatus.UPDATED)
                 }
-        } catch (e: Exception) {
+        } catch (e: AktørNotFoundException) {
+            LOGGER.warn(e) { e.message }
+            null
+        }
+        catch (e: Exception) {
             LOGGER.error(e) { e.message }
             null
         }
