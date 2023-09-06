@@ -59,6 +59,6 @@ class PersonHendelseServiceTest {
 
         personHendelseService.behandleHendelse(hendelse)
 
-        verify(exactly = 0) { aktørService.lagreAktør(aktør) }
+        verify(exactly = 0) { aktørService.lagreNyAktør(aktør) }
     }
 }

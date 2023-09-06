@@ -63,7 +63,7 @@ class AktørServiceTest {
     fun skalTesteOpprettEllerOppdatertAktoerer() {
         val aktoerer = opprettAktoerListeMed20Aktører()
         for (aktør in aktoerer) {
-            aktørService.lagreAktør(aktør)
+            aktørService.lagreNyAktør(aktør)
         }
         var savedAktoerer = aktørRepository.findAll()
         var savedHendelser = hendelseRepository.findAll()
