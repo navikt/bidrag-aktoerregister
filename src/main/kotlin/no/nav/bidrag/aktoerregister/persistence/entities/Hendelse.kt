@@ -27,7 +27,34 @@ data class Hendelse(
 
     @Version
     @Column(name = "sist_endret")
-    val sistEndret: Timestamp? = null
+    val sistEndret: Timestamp? = null,
+
+    @Column(name = "kontonummer_oppdatering")
+    var kontonummerOppdatering: Boolean? = null,
+
+    @Column(name = "ident_oppdatering")
+    val identOppdatering: Boolean? = null,
+
+    @Column(name = "navn_oppdatering")
+    val navnOppdatering: Boolean? = null,
+
+    @Column(name = "adresse_oppdatering")
+    val adresseOppdatering: Boolean? = null,
+
+    @Column(name = "fodt_dato_oppdatering")
+    val fødtDatoOppdatering: Boolean? = null,
+
+    @Column(name = "dod_dato_oppdatering")
+    val dødDatoOppdatering: Boolean? = null,
+
+    @Column(name = "gradering_oppdatering")
+    val graderingOppdatering: Boolean? = null,
+
+    @Column(name = "dodsbo_oppdatering")
+    val dødsboOppdatering: Boolean? = null,
+
+    @Column(name = "sprak_oppdatering")
+    val språkOppdatering: Boolean? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

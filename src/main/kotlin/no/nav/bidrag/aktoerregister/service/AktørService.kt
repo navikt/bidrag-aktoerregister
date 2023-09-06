@@ -2,7 +2,6 @@ package no.nav.bidrag.aktoerregister.service
 
 import io.github.oshai.KotlinLogging
 import jakarta.persistence.EntityManager
-import jakarta.persistence.PersistenceException
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.consumer.PersonConsumer
 import no.nav.bidrag.aktoerregister.consumer.SamhandlerConsumer
@@ -63,7 +62,7 @@ class AktørService(
     private fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
         LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
         hentAktørFraSamhandler(aktørIdent).let {
-            lagreAktør(it)
+            lagreNyAktør(it)
             return it
         }
     }
@@ -93,7 +92,7 @@ class AktørService(
                     return aktørFraDatabase!!
                 }
             }
-            lagreAktør(it)
+            lagreNyAktør(it)
             return it
         }
     }
@@ -113,7 +112,9 @@ class AktørService(
     fun oppdaterAktør(aktør: Aktør, nyAktør: Aktør, originalIdent: String?): String? {
         var slettetAktørIdent: String? = null
         try {
-
+            // Denne kodesnutten går igjennom og sletter aktører som er duplikater. Dette har forekommet siden aktørregisteret
+            // ikke har hatt ett forhold til tidligereIdenter fra starten av, noe som har ført til at aktører med ny ident har
+            // blitt opprettet som en ny aktør.
             if (originalIdent != null && originalIdent != nyAktør.aktørIdent) {
                 aktørRepository.findByAktørIdent(nyAktør.aktørIdent)?.let {
                     LOGGER.info("Sletter aktør: ${it.aktørIdent}")
@@ -125,6 +126,8 @@ class AktørService(
                 }
                 entityManager.flush()
             }
+
+            val oppdaterteFelterPåAktør = finnOppdaterteFelterPåAktør(aktør, nyAktør)
 
             aktør.tidligereIdenter.forEach {
                 tidligereIdenterRepository.delete(it)
@@ -138,23 +141,17 @@ class AktørService(
                 it.aktør = aktør
             }
             aktør.dødsbo?.aktør = aktør
-            hendelseService.opprettHendelserPåAktør(aktør, originalIdent)
-            LOGGER.info("Lagrer aktør: ${aktør.aktørIdent}")
+            hendelseService.opprettHendelserPåAktør(aktør, originalIdent, oppdaterteFelterPåAktør)
+            SECURE_LOGGER.info("Lagrer aktør: ${aktør.aktørIdent}")
             aktørRepository.save(aktør)
             return slettetAktørIdent
-        } catch (e: DataIntegrityViolationException) {
-            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
-            throw e
-        } catch (e: PersistenceException) {
-            SECURE_LOGGER.error("PersistenceException for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
-            throw e
         } catch  (e: Exception) {
             SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
             throw e
         }
     }
 
-    fun lagreAktør(aktør: Aktør) {
+    fun lagreNyAktør(aktør: Aktør) {
         try {
             aktørRepository.save(aktør)
             aktør.tidligereIdenter.forEach {
@@ -171,5 +168,62 @@ class AktørService(
     @Transactional
     fun slettAktoer(aktoerIdDTO: AktoerIdDTO) {
         aktørRepository.deleteAktørByAktørIdent(aktoerIdDTO.aktoerId)
+    }
+
+    fun finnOppdaterteFelterPåAktør(aktør: Aktør, nyAktør: Aktør): List<String> {
+        val oppdaterteFelterPåAktør = mutableListOf<String>()
+
+        if(aktør.fornavn != nyAktør.fornavn
+            || aktør.etternavn != nyAktør.etternavn) {
+            oppdaterteFelterPåAktør.add("navnOppdatering")
+        }
+        if(aktør.aktørIdent != nyAktør.aktørIdent) {
+            oppdaterteFelterPåAktør.add("identOppdatering")
+        }
+        if(aktør.norskKontonr != nyAktør.norskKontonr
+            || aktør.iban != nyAktør.iban
+            || aktør.swift != nyAktør.swift
+            || aktør.bankNavn != nyAktør.bankNavn
+            || aktør.bankLandkode != nyAktør.bankLandkode
+            || aktør.bankCode != nyAktør.bankCode
+            || aktør.valutaKode != nyAktør.valutaKode
+            ) {
+            oppdaterteFelterPåAktør.add("kontonummerOppdatering")
+        }
+        if(aktør.adresselinje1 != nyAktør.adresselinje1
+            || aktør.adresselinje2 != nyAktør.adresselinje2
+            || aktør.adresselinje3 != nyAktør.adresselinje3
+            || aktør.leilighetsnummer != nyAktør.leilighetsnummer
+            || aktør.postnr != nyAktør.postnr
+            || aktør.poststed != nyAktør.poststed
+            || aktør.land != nyAktør.land
+            ) {
+            oppdaterteFelterPåAktør.add("adresseOppdatering")
+        }
+        if(aktør.fødtDato != nyAktør.fødtDato) {
+            oppdaterteFelterPåAktør.add("fødtDatoOppdatering")
+        }
+        if(aktør.dødDato != nyAktør.dødDato) {
+            oppdaterteFelterPåAktør.add("dødDatoOppdatering")
+        }
+        if(aktør.gradering != nyAktør.gradering) {
+            oppdaterteFelterPåAktør.add("graderingOppdatering")
+        }
+        if(aktør.dødsbo?.kontaktperson != nyAktør.dødsbo?.kontaktperson
+            || aktør.dødsbo?.adresselinje1 != nyAktør.dødsbo?.adresselinje1
+            || aktør.dødsbo?.adresselinje2 != nyAktør.dødsbo?.adresselinje2
+            || aktør.dødsbo?.adresselinje3 != nyAktør.dødsbo?.adresselinje3
+            || aktør.dødsbo?.leilighetsnummer != nyAktør.dødsbo?.leilighetsnummer
+            || aktør.dødsbo?.postnr != nyAktør.dødsbo?.postnr
+            || aktør.dødsbo?.poststed != nyAktør.dødsbo?.poststed
+            || aktør.dødsbo?.land != nyAktør.dødsbo?.land
+            ) {
+            oppdaterteFelterPåAktør.add("dødsboOppdatering")
+        }
+        if (aktør.språkkode != nyAktør.språkkode) {
+            oppdaterteFelterPåAktør.add("språkOppdatering")
+        }
+
+        return oppdaterteFelterPåAktør
     }
 }

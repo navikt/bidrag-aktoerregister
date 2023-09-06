@@ -15,7 +15,8 @@ class HendelseService(
 ) {
 
     fun hentHendelser(sekvensunummer: Int, antallHendelser: Int): List<HendelseDTO> {
-        val hendelser = hendelseRepository.getAllBySekvensnummerGreaterThan(sekvensunummer, Pageable.ofSize(antallHendelser))
+        val hendelser =
+            hendelseRepository.getAllBySekvensnummerGreaterThan(sekvensunummer, Pageable.ofSize(antallHendelser))
 
         return hendelser.distinctBy { it.aktørIdent }
             .map {
@@ -30,10 +31,37 @@ class HendelseService(
             .sortedBy { it.sekvensnummer }
     }
 
-    fun opprettHendelserPåAktør(aktør: Aktør, originalIdent: String?) {
+    fun opprettHendelserPåAktør(aktør: Aktør, originalIdent: String?, oppdaterteFelter: List<String> = listOf()) {
         if (originalIdent != null && originalIdent != aktør.aktørIdent) {
-            aktør.addHendelse(Hendelse(aktørIdent = originalIdent, aktør = aktør))
+            val hendelse = Hendelse(
+                aktørIdent = originalIdent,
+                aktør = aktør,
+                kontonummerOppdatering = oppdaterteFelter.contains("kontonummerOppdatering"),
+                identOppdatering = oppdaterteFelter.contains("identOppdatering"),
+                navnOppdatering = oppdaterteFelter.contains("navnOppdatering"),
+                adresseOppdatering = oppdaterteFelter.contains("adresseOppdatering"),
+                fødtDatoOppdatering = oppdaterteFelter.contains("fødtDatoOppdatering"),
+                dødDatoOppdatering = oppdaterteFelter.contains("dødDatoOppdatering"),
+                graderingOppdatering = oppdaterteFelter.contains("graderingOppdatering"),
+                dødsboOppdatering = oppdaterteFelter.contains("dødsboOppdatering"),
+                språkOppdatering = oppdaterteFelter.contains("språkOppdatering")
+            )
+            aktør.addHendelse(hendelse)
         }
-        aktør.addHendelse(Hendelse(aktørIdent = aktør.aktørIdent, aktør = aktør))
+        aktør.addHendelse(
+            Hendelse(
+                aktørIdent = aktør.aktørIdent,
+                aktør = aktør,
+                kontonummerOppdatering = oppdaterteFelter.contains("kontonummerOppdatering"),
+                identOppdatering = oppdaterteFelter.contains("identOppdatering"),
+                navnOppdatering = oppdaterteFelter.contains("navnOppdatering"),
+                adresseOppdatering = oppdaterteFelter.contains("adresseOppdatering"),
+                fødtDatoOppdatering = oppdaterteFelter.contains("fødtDatoOppdatering"),
+                dødDatoOppdatering = oppdaterteFelter.contains("dødDatoOppdatering"),
+                graderingOppdatering = oppdaterteFelter.contains("graderingOppdatering"),
+                dødsboOppdatering = oppdaterteFelter.contains("dødsboOppdatering"),
+                språkOppdatering = oppdaterteFelter.contains("språkOppdatering")
+            )
+        )
     }
 }
