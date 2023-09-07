@@ -30,8 +30,7 @@ class SamhandlerBatchProcessor(
             SECURE_LOGGER.warn("Samhandler: ${aktør.aktørIdent} finnes ikke. Feilmelding: ${e.message}")
             LOGGER.warn(e) { e.message }
             null
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             SECURE_LOGGER.error("Samhandler: ${aktør.aktørIdent} feilet i SamhandlerBatchProcessor. Feilmelding: ${e.message}")
             LOGGER.error(e) { e.message }
             null
