@@ -14,7 +14,6 @@ import no.nav.bidrag.aktoerregister.persistence.entities.Dødsbo
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.TidligereIdenterRepository
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -50,7 +49,6 @@ class AktørServiceOppdaterteFelterTest {
 
     @InjectMockKs
     private lateinit var aktørService: AktørService
-
 
     @Test
     fun `skal ikke sette noe om alt er likt`() {
@@ -395,5 +393,4 @@ class AktørServiceOppdaterteFelterTest {
             oppdaterteFelter shouldHaveSize 0
         }
     }
-
 }

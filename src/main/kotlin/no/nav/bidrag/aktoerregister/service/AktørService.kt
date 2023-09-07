@@ -145,7 +145,7 @@ class AktørService(
             SECURE_LOGGER.info("Lagrer aktør: ${aktør.aktørIdent}")
             aktørRepository.save(aktør)
             return slettetAktørIdent
-        } catch  (e: Exception) {
+        } catch (e: Exception) {
             SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
             throw e
         }
@@ -173,51 +173,52 @@ class AktørService(
     fun finnOppdaterteFelterPåAktør(aktør: Aktør, nyAktør: Aktør): List<String> {
         val oppdaterteFelterPåAktør = mutableListOf<String>()
 
-        if(aktør.fornavn != nyAktør.fornavn
-            || aktør.etternavn != nyAktør.etternavn) {
+        if (aktør.fornavn != nyAktør.fornavn ||
+            aktør.etternavn != nyAktør.etternavn
+        ) {
             oppdaterteFelterPåAktør.add("navnOppdatering")
         }
-        if(aktør.aktørIdent != nyAktør.aktørIdent) {
+        if (aktør.aktørIdent != nyAktør.aktørIdent) {
             oppdaterteFelterPåAktør.add("identOppdatering")
         }
-        if(aktør.norskKontonr != nyAktør.norskKontonr
-            || aktør.iban != nyAktør.iban
-            || aktør.swift != nyAktør.swift
-            || aktør.bankNavn != nyAktør.bankNavn
-            || aktør.bankLandkode != nyAktør.bankLandkode
-            || aktør.bankCode != nyAktør.bankCode
-            || aktør.valutaKode != nyAktør.valutaKode
-            ) {
+        if (aktør.norskKontonr != nyAktør.norskKontonr ||
+            aktør.iban != nyAktør.iban ||
+            aktør.swift != nyAktør.swift ||
+            aktør.bankNavn != nyAktør.bankNavn ||
+            aktør.bankLandkode != nyAktør.bankLandkode ||
+            aktør.bankCode != nyAktør.bankCode ||
+            aktør.valutaKode != nyAktør.valutaKode
+        ) {
             oppdaterteFelterPåAktør.add("kontonummerOppdatering")
         }
-        if(aktør.adresselinje1 != nyAktør.adresselinje1
-            || aktør.adresselinje2 != nyAktør.adresselinje2
-            || aktør.adresselinje3 != nyAktør.adresselinje3
-            || aktør.leilighetsnummer != nyAktør.leilighetsnummer
-            || aktør.postnr != nyAktør.postnr
-            || aktør.poststed != nyAktør.poststed
-            || aktør.land != nyAktør.land
-            ) {
+        if (aktør.adresselinje1 != nyAktør.adresselinje1 ||
+            aktør.adresselinje2 != nyAktør.adresselinje2 ||
+            aktør.adresselinje3 != nyAktør.adresselinje3 ||
+            aktør.leilighetsnummer != nyAktør.leilighetsnummer ||
+            aktør.postnr != nyAktør.postnr ||
+            aktør.poststed != nyAktør.poststed ||
+            aktør.land != nyAktør.land
+        ) {
             oppdaterteFelterPåAktør.add("adresseOppdatering")
         }
-        if(aktør.fødtDato != nyAktør.fødtDato) {
+        if (aktør.fødtDato != nyAktør.fødtDato) {
             oppdaterteFelterPåAktør.add("fødtDatoOppdatering")
         }
-        if(aktør.dødDato != nyAktør.dødDato) {
+        if (aktør.dødDato != nyAktør.dødDato) {
             oppdaterteFelterPåAktør.add("dødDatoOppdatering")
         }
-        if(aktør.gradering != nyAktør.gradering) {
+        if (aktør.gradering != nyAktør.gradering) {
             oppdaterteFelterPåAktør.add("graderingOppdatering")
         }
-        if(aktør.dødsbo?.kontaktperson != nyAktør.dødsbo?.kontaktperson
-            || aktør.dødsbo?.adresselinje1 != nyAktør.dødsbo?.adresselinje1
-            || aktør.dødsbo?.adresselinje2 != nyAktør.dødsbo?.adresselinje2
-            || aktør.dødsbo?.adresselinje3 != nyAktør.dødsbo?.adresselinje3
-            || aktør.dødsbo?.leilighetsnummer != nyAktør.dødsbo?.leilighetsnummer
-            || aktør.dødsbo?.postnr != nyAktør.dødsbo?.postnr
-            || aktør.dødsbo?.poststed != nyAktør.dødsbo?.poststed
-            || aktør.dødsbo?.land != nyAktør.dødsbo?.land
-            ) {
+        if (aktør.dødsbo?.kontaktperson != nyAktør.dødsbo?.kontaktperson ||
+            aktør.dødsbo?.adresselinje1 != nyAktør.dødsbo?.adresselinje1 ||
+            aktør.dødsbo?.adresselinje2 != nyAktør.dødsbo?.adresselinje2 ||
+            aktør.dødsbo?.adresselinje3 != nyAktør.dødsbo?.adresselinje3 ||
+            aktør.dødsbo?.leilighetsnummer != nyAktør.dødsbo?.leilighetsnummer ||
+            aktør.dødsbo?.postnr != nyAktør.dødsbo?.postnr ||
+            aktør.dødsbo?.poststed != nyAktør.dødsbo?.poststed ||
+            aktør.dødsbo?.land != nyAktør.dødsbo?.land
+        ) {
             oppdaterteFelterPåAktør.add("dødsboOppdatering")
         }
         if (aktør.språkkode != nyAktør.språkkode) {
