@@ -11,7 +11,6 @@ import jakarta.persistence.OneToOne
 import jakarta.persistence.Version
 import java.sql.Timestamp
 import java.time.LocalDate
-
 @Entity(name = "aktoer")
 data class Aktør(
 
@@ -148,42 +147,59 @@ data class Aktør(
 
         other as Aktør
 
-        if (aktørIdent != other.aktørIdent) return false
-        if (aktørType != other.aktørType) return false
-        if (offentligId != other.offentligId) return false
-        if (offentligIdType != other.offentligIdType) return false
-        if (norskKontonr != other.norskKontonr) return false
-        if (iban != other.iban) return false
-        if (swift != other.swift) return false
-        if (bankNavn != other.bankNavn) return false
-        if (bankLandkode != other.bankLandkode) return false
-        if (bankCode != other.bankCode) return false
-        if (valutaKode != other.valutaKode) return false
-        if (fornavn != other.fornavn) return false
-        if (etternavn != other.etternavn) return false
-        if (fødtDato != other.fødtDato) return false
-        if (dødDato != other.dødDato) return false
-        if (gradering != other.gradering) return false
-        if (språkkode != other.språkkode) return false
-        if (adresselinje1 != other.adresselinje1) return false
-        if (adresselinje2 != other.adresselinje2) return false
-        if (adresselinje3 != other.adresselinje3) return false
-        if (leilighetsnummer != other.leilighetsnummer) return false
-        if (postnr != other.postnr) return false
-        if (poststed != other.poststed) return false
-        if (land != other.land) return false
-        if (dødsbo != other.dødsbo) return false
-        return erTidligereIdenterLike(other)
+        return when {
+            aktørIdent != other.aktørIdent -> false
+            aktørType != other.aktørType -> false
+            offentligId != other.offentligId -> false
+            offentligIdType != other.offentligIdType -> false
+            norskKontonr != other.norskKontonr -> false
+            iban != other.iban -> false
+            swift != other.swift -> false
+            bankNavn != other.bankNavn -> false
+            bankLandkode != other.bankLandkode -> false
+            bankCode != other.bankCode -> false
+            valutaKode != other.valutaKode -> false
+            fornavn != other.fornavn -> false
+            etternavn != other.etternavn -> false
+            fødtDato != other.fødtDato -> false
+            dødDato != other.dødDato -> false
+            gradering != other.gradering -> false
+            språkkode != other.språkkode -> false
+            adresselinje1 != other.adresselinje1 -> false
+            adresselinje2 != other.adresselinje2 -> false
+            adresselinje3 != other.adresselinje3 -> false
+            leilighetsnummer != other.leilighetsnummer -> false
+            postnr != other.postnr -> false
+            poststed != other.poststed -> false
+            land != other.land -> false
+            erDødsboUlikt(other) -> false
+            erTidligereIdenterUlike(other) -> false
+            else -> true
+        }
     }
 
-    fun erTidligereIdenterLike(other: Aktør): Boolean {
-        return tidligereIdenter.size == other.tidligereIdenter.size &&
+    private fun erDødsboUlikt(other: Aktør): Boolean {
+        return when {
+            dødsbo?.kontaktperson != other.dødsbo?.kontaktperson -> true
+            dødsbo?.adresselinje1 != other.dødsbo?.adresselinje1 -> true
+            dødsbo?.adresselinje2 != other.dødsbo?.adresselinje2 -> true
+            dødsbo?.adresselinje3 != other.dødsbo?.adresselinje3 -> true
+            dødsbo?.leilighetsnummer != other.dødsbo?.leilighetsnummer -> true
+            dødsbo?.postnr != other.dødsbo?.postnr -> true
+            dødsbo?.poststed != other.dødsbo?.poststed -> true
+            dødsbo?.land != other.dødsbo?.land -> true
+            else -> false
+        }
+    }
+
+    fun erTidligereIdenterUlike(other: Aktør): Boolean {
+        return !(tidligereIdenter.size == other.tidligereIdenter.size &&
             tidligereIdenter.all { a1 ->
                 other.tidligereIdenter.any { a2 -> a1.tidligereAktoerIdent == a2.tidligereAktoerIdent } &&
                     other.tidligereIdenter.all { a2 ->
                         tidligereIdenter.any { a1 -> a2.tidligereAktoerIdent == a1.tidligereAktoerIdent }
                     }
-            }
+            })
     }
 
     override fun hashCode(): Int {
@@ -245,3 +261,4 @@ data class Aktør(
             "sistEndret=$sistEndret)"
     }
 }
+
