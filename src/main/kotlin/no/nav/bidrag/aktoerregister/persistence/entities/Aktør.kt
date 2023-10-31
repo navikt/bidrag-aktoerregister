@@ -193,13 +193,15 @@ data class Aktør(
     }
 
     fun erTidligereIdenterUlike(other: Aktør): Boolean {
-        return !(tidligereIdenter.size == other.tidligereIdenter.size &&
-            tidligereIdenter.all { a1 ->
-                other.tidligereIdenter.any { a2 -> a1.tidligereAktoerIdent == a2.tidligereAktoerIdent } &&
-                    other.tidligereIdenter.all { a2 ->
-                        tidligereIdenter.any { a1 -> a2.tidligereAktoerIdent == a1.tidligereAktoerIdent }
-                    }
-            })
+        return !(
+            tidligereIdenter.size == other.tidligereIdenter.size &&
+                tidligereIdenter.all { a1 ->
+                    other.tidligereIdenter.any { a2 -> a1.tidligereAktoerIdent == a2.tidligereAktoerIdent } &&
+                        other.tidligereIdenter.all { a2 ->
+                            tidligereIdenter.any { a1 -> a2.tidligereAktoerIdent == a1.tidligereAktoerIdent }
+                        }
+                }
+            )
     }
 
     override fun hashCode(): Int {
@@ -261,4 +263,3 @@ data class Aktør(
             "sistEndret=$sistEndret)"
     }
 }
-

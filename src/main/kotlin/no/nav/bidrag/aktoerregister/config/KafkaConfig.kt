@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.config
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -20,11 +20,7 @@ class KafkaConfig {
         val backoffPolicy = if (maxRetry == -1) ExponentialBackOff() else ExponentialBackOffWithMaxRetries(maxRetry)
         backoffPolicy.multiplier = 2.0
         backoffPolicy.maxInterval = 1800000L // 30 mins
-        LOGGER.info(
-            "Initializing Kafka errorhandler with backoffpolicy {}, maxRetry={}",
-            backoffPolicy,
-            maxRetry
-        )
+        LOGGER.info { "Initializing Kafka errorhandler with backoffpolicy={$backoffPolicy}, maxRetry={$maxRetry}" }
         val errorHandler = DefaultErrorHandler({ rec, e ->
             val key = rec.key()
             val value = rec.value()
