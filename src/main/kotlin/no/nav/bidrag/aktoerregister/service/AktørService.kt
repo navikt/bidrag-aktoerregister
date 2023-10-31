@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.service
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.EntityManager
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.consumer.PersonConsumer
@@ -60,7 +60,7 @@ class AktørService(
         }
 
     private fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
-        LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler")
+        LOGGER.debug { "Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler" }
         hentAktørFraSamhandler(aktørIdent).let {
             lagreNyAktør(it)
             return it
@@ -75,7 +75,7 @@ class AktørService(
     }
 
     private fun hentAktørFraPersonOgLagreTilDatabase(personIdent: Ident): Aktør {
-        LOGGER.debug("Aktør ikke funnet i databasen. Henter aktør fra bidrag-person")
+        LOGGER.debug { "Aktør ikke funnet i databasen. Henter aktør fra bidrag-person" }
         hentAktørFraPerson(personIdent).let {
             // Om det finnes tidligere identer må vi sjekke om disse eksisterer i databasen fra før av.
             // Om de gjør det skal vi oppdatere og ikke opprette ny ident.
@@ -117,7 +117,7 @@ class AktørService(
             // blitt opprettet som en ny aktør.
             if (originalIdent != null && originalIdent != nyAktør.aktørIdent) {
                 aktørRepository.findByAktørIdent(nyAktør.aktørIdent)?.let {
-                    LOGGER.info("Sletter aktør: ${it.aktørIdent}")
+                    LOGGER.info { "Sletter aktør: ${it.aktørIdent}" }
                     slettetAktørIdent = it.aktørIdent
                     it.hendelser.forEach { hendelse ->
                         hendelseRepository.delete(hendelse)

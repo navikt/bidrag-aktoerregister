@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.batch.samhandler
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
 import no.nav.bidrag.aktoerregister.batch.AktørStatus

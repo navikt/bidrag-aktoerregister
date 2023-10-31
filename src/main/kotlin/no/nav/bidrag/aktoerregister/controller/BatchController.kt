@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.controller
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import no.nav.bidrag.aktoerregister.batch.person.PersonBatch

@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.consumer
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri

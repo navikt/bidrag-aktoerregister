@@ -1,6 +1,6 @@
 package no.nav.bidrag.aktoerregister.hendelse
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.aktoerregister.service.PersonHendelseService
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.KafkaHeaders
