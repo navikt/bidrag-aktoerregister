@@ -36,6 +36,7 @@ class PersonHendelseService(
                     } else {
                         SECURE_LOGGER.info("Lagret aktør $it er ikke ulik ny aktør fra hendelse. Går til neste hendelse.")
                     }
+                    return
                 } catch (e: AktørNotFoundException) {
                     LOGGER.error("Aktør ikke funnet i bidrag-person! Se sikker logg for mer info.")
                     SECURE_LOGGER.error("Aktør ikke funnet i bidrag-person! Fant ikke person for hendelse: $hendelse")
