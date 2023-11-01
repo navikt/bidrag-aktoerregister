@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.0.6</version>
+    <version>3.1.5</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>no.nav</groupId>
@@ -27,8 +27,8 @@
     <sprinmockk.version>4.0.2</sprinmockk.version>
     <kotlin-logging-jvm.version>5.1.0</kotlin-logging-jvm.version>
     <shedlock.version>5.6.0</shedlock.version>
-    <testcontainers.version>1.18.3</testcontainers.version>
-    <spring-kafka.version>3.0.11</spring-kafka.version>
+    <testcontainers.version>1.19.1</testcontainers.version>
+    <spring-kafka.version>3.0.12</spring-kafka.version>
   </properties>
 
   <repositories>
@@ -54,7 +54,7 @@
       <dependency>
         <groupId>org.scala-lang</groupId>
         <artifactId>scala-library</artifactId>
-        <version>2.13.11</version>
+        <version>2.13.12</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -380,7 +380,7 @@
           <dependency>
             <groupId>com.pinterest</groupId>
             <artifactId>ktlint</artifactId>
-            <version>0.47.1</version>
+            <version>0.50.0</version>
           </dependency>
           <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>
