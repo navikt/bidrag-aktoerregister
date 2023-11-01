@@ -33,6 +33,7 @@ class PersonHendelseServiceTest {
         val personIdent1 = PersonidentGenerator.genererFødselsnummer(LocalDate.now().minusYears(30), Kjonn.MANN)
         val personIdent2 = PersonidentGenerator.genererFødselsnummer(LocalDate.now().minusYears(30), Kjonn.KVINNE)
         val aktør = Aktør(id = 0, aktørIdent = personIdent2, aktørType = Identtype.PERSONNUMMER.name)
+        val aktørMedNyId = Aktør(id = 0, aktørIdent = personIdent1, aktørType = Identtype.PERSONNUMMER.name)
         val hendelse = "{" +
             "\"aktørid\":\"123456\"," +
             "\"personidenter\":[" +
@@ -45,11 +46,12 @@ class PersonHendelseServiceTest {
     fun `skal behandle hendelse med ny ident`() {
         every { aktørService.hentAktørFraDatabase(Ident(personIdent1)) } returns null
         every { aktørService.hentAktørFraDatabase(Ident(personIdent2)) } returns aktør
-        every { aktørService.hentAktørFraPerson(Ident(personIdent2)) } returns aktør
+        every { aktørService.hentAktørFraPerson(Ident(personIdent1)) } returns aktørMedNyId
+        every { aktørService.hentAktørFraPerson(Ident(personIdent2)) } returns aktørMedNyId
 
         personHendelseService.behandleHendelse(hendelse)
 
-        verify(exactly = 1) { aktørService.oppdaterAktør(aktør, aktør, aktør.aktørIdent) }
+        verify(exactly = 1) { aktørService.oppdaterAktør(aktør, aktørMedNyId, aktør.aktørIdent) }
     }
 
     @Test
