@@ -27,11 +27,15 @@ class PersonHendelseService(
         endringsmelding.personidenter.forEach { ident ->
             val aktør = aktørService.hentAktørFraDatabase(Ident(ident))
             aktør?.let {
-                SECURE_LOGGER.info("Fant lagret aktør $it. Oppdaterer med nye verdier.")
+                SECURE_LOGGER.info("Fant lagret aktør $it.")
                 try {
                     val aktørFraPerson = aktørService.hentAktørFraPerson(Ident(ident))
-                    aktørService.oppdaterAktør(aktør, aktørFraPerson, ident)
-                    return
+                    if (aktør != aktørFraPerson) {
+                        SECURE_LOGGER.info("Lagret aktør $it er ulik ny aktør fra hendelse. Oppdaterer med nye verdier.")
+                        aktørService.oppdaterAktør(aktør, aktørFraPerson, ident)
+                    } else {
+                        SECURE_LOGGER.info("Lagret aktør $it er ikke ulik ny aktør fra hendelse. Går til neste hendelse.")
+                    }
                 } catch (e: AktørNotFoundException) {
                     LOGGER.error("Aktør ikke funnet i bidrag-person! Se sikker logg for mer info.")
                     SECURE_LOGGER.error("Aktør ikke funnet i bidrag-person! Fant ikke person for hendelse: $hendelse")
