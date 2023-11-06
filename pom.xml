@@ -15,7 +15,7 @@
   <description>Aktoerregister for Bidragsområdet</description>
   <properties>
     <java.version>17</java.version>
-    <kotlin.version>1.9.0</kotlin.version>
+    <kotlin.version>1.9.20</kotlin.version>
     <bidrag-commons.version>20230607123814_b41a5f7</bidrag-commons.version>
     <bidrag-transport.version>20230602161105_1eea030</bidrag-transport.version>
     <logback-encoder.version>7.4</logback-encoder.version>
