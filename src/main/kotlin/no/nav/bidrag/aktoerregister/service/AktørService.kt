@@ -158,7 +158,7 @@ class AktørService(
                 it.aktør = aktør
             }
             aktør.dødsbo?.aktør = aktør
-            hendelseService.opprettHendelserPåAktør(aktør, null)
+            hendelseService.opprettHendelserPåAktør(aktør, null, finnFelterPåNyAktør(aktør))
         } catch (e: DataIntegrityViolationException) {
             SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Aktør: $aktør \nFeil: $e ")
             throw e
@@ -168,6 +168,61 @@ class AktørService(
     @Transactional
     fun slettAktoer(aktoerIdDTO: AktoerIdDTO) {
         aktørRepository.deleteAktørByAktørIdent(aktoerIdDTO.aktoerId)
+    }
+
+    private fun finnFelterPåNyAktør(aktør: Aktør): List<String> {
+        val oppdaterteFelterPåAktør = mutableListOf<String>()
+
+        oppdaterteFelterPåAktør.add("identOppdatering")
+
+        if (aktør.fornavn != null) {
+            oppdaterteFelterPåAktør.add("navnOppdatering")
+        }
+        if (aktør.norskKontonr != null ||
+            aktør.iban != null ||
+            aktør.swift != null ||
+            aktør.bankNavn != null ||
+            aktør.bankLandkode != null ||
+            aktør.bankCode != null ||
+            aktør.valutaKode != null
+        ) {
+            oppdaterteFelterPåAktør.add("kontonummerOppdatering")
+        }
+        if (aktør.adresselinje1 != null ||
+            aktør.adresselinje2 != null ||
+            aktør.adresselinje3 != null ||
+            aktør.leilighetsnummer != null ||
+            aktør.postnr != null ||
+            aktør.poststed != null ||
+            aktør.land != null
+        ) {
+            oppdaterteFelterPåAktør.add("adresseOppdatering")
+        }
+        if (aktør.fødtDato != null) {
+            oppdaterteFelterPåAktør.add("fødtDatoOppdatering")
+        }
+        if (aktør.dødDato != null) {
+            oppdaterteFelterPåAktør.add("dødDatoOppdatering")
+        }
+        if (aktør.gradering != null) {
+            oppdaterteFelterPåAktør.add("graderingOppdatering")
+        }
+        if (aktør.dødsbo?.kontaktperson != null ||
+            aktør.dødsbo?.adresselinje1 != null ||
+            aktør.dødsbo?.adresselinje2 != null ||
+            aktør.dødsbo?.adresselinje3 != null ||
+            aktør.dødsbo?.leilighetsnummer != null ||
+            aktør.dødsbo?.postnr != null ||
+            aktør.dødsbo?.poststed != null ||
+            aktør.dødsbo?.land != null
+        ) {
+            oppdaterteFelterPåAktør.add("dødsboOppdatering")
+        }
+        if (aktør.språkkode != null) {
+            oppdaterteFelterPåAktør.add("språkOppdatering")
+        }
+
+        return oppdaterteFelterPåAktør
     }
 
     fun finnOppdaterteFelterPåAktør(aktør: Aktør, nyAktør: Aktør): List<String> {
