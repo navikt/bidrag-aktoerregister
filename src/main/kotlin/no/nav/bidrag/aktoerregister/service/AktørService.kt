@@ -146,7 +146,7 @@ class AktørService(
             aktørRepository.save(aktør)
             return slettetAktørIdent
         } catch (e: Exception) {
-            SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. Aktør: $aktør \nFeil: ${e.message} ")
+            SECURE_LOGGER.error("Ukjent feil for ident: ${aktør.aktørIdent}. Original ident: $originalIdent. \nFeil: ${e.message} ")
             throw e
         }
     }
@@ -160,7 +160,7 @@ class AktørService(
             aktør.dødsbo?.aktør = aktør
             hendelseService.opprettHendelserPåAktør(aktør, null, finnFelterPåNyAktør(aktør))
         } catch (e: DataIntegrityViolationException) {
-            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. Aktør: $aktør \nFeil: $e ")
+            SECURE_LOGGER.error("DataIntegrityViolationException for ident: ${aktør.aktørIdent}. \nFeil: $e ")
             throw e
         }
     }
