@@ -31,7 +31,7 @@ spring:
           location: ${KAFKA_TRUSTSTORE_PATH}
           password: ${KAFKA_CREDSTORE_PASSWORD}
     consumer:
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       max-poll-records: 10
       enable-auto-commit: false
     listener:
