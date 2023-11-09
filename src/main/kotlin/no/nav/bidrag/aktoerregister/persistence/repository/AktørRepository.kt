@@ -11,11 +11,14 @@ interface AktørRepository : JpaRepository<Aktør, String> {
 
     // Brukes av batchReader
     @Suppress("unused")
+    fun findAllByAktørType(aktørType: String, pageable: Pageable): Page<Aktør>
+
+    @Suppress("unused")
     @Query(
         nativeQuery = true,
-        value = "SELECT * FROM aktoerregister.aktoer WHERE aktoertype = ?1 AND sist_endret < ?2"
+        value = "SELECT * FROM aktoerregister.aktoer WHERE aktoertype = ?1 AND sist_endret < ?2 ORDER BY aktoer_ident"
     )
-    fun findAllByAktørType(aktørType: String, sistEndret: Timestamp, pageable: Pageable): Page<Aktør>
+    fun finnAlleIkkeKjørte(aktørType: String, sistEndret: Timestamp, pageable: Pageable): Page<Aktør>
 
     fun findByAktørIdent(aktørIdent: String): Aktør?
 
