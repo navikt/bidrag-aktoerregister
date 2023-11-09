@@ -1,6 +1,5 @@
 package no.nav.bidrag.aktoerregister.batch.person
 
-import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import org.springframework.batch.item.ItemReader
@@ -15,8 +14,8 @@ import java.util.Collections
 class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemReader<Aktør>(), ItemReader<Aktør> {
     init {
         this.setRepository(aktoerRepository)
-        this.setMethodName("findAllByAktørIdentAndSistEndretLessThan")
-        this.setArguments(listOf(Identtype.PERSONNUMMER.name, Timestamp.valueOf(LocalDateTime.of(2023, 11, 8, 13, 20, 0))))
+        this.setMethodName("findAllBySistEndretLessThan")
+        this.setArguments(listOf(Timestamp.valueOf(LocalDateTime.of(2023, 11, 8, 13, 20, 0))))
         this.setPageSize(100)
         this.setSort(Collections.singletonMap("aktørIdent", Sort.Direction.ASC))
     }

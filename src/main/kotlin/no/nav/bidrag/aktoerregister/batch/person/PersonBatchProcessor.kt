@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.batch.AktørBatchProcessorResult
 import no.nav.bidrag.aktoerregister.batch.AktørStatus
+import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.service.AktørService
 import no.nav.bidrag.domain.ident.Ident
@@ -19,12 +20,15 @@ class PersonBatchProcessor(
 
     override fun process(aktør: Aktør): AktørBatchProcessorResult? {
         return try {
-            aktørService.hentAktørFraPerson(Ident(aktør.aktørIdent))
-                .takeIf { it != aktør }
-                ?.let {
-                    val originalIdent = if (it.aktørIdent != aktør.aktørIdent) aktør.aktørIdent else null
-                    AktørBatchProcessorResult(aktør, it, AktørStatus.UPDATED, originalIdent)
-                }
+            if (aktør.aktørType == Identtype.PERSONNUMMER.name) {
+                aktørService.hentAktørFraPerson(Ident(aktør.aktørIdent))
+                    .takeIf { it != aktør }
+                    ?.let {
+                        val originalIdent = if (it.aktørIdent != aktør.aktørIdent) aktør.aktørIdent else null
+                        AktørBatchProcessorResult(aktør, it, AktørStatus.UPDATED, originalIdent)
+                    }
+            }
+            null
         } catch (e: Exception) {
             SECURE_LOGGER.error("Person: ${aktør.aktørIdent} feilet i PersonBatchProcessor. Feilmelding: ${e.message}")
             LOGGER.error(e) { e.message }
