@@ -14,7 +14,7 @@ private val LOGGER = KotlinLogging.logger { }
 
 @Component
 class PersonBatchProcessor(
-    private val aktørService: AktørService
+    private val aktørService: AktørService,
 ) : ItemProcessor<Aktør, AktørBatchProcessorResult?> {
 
     override fun process(aktør: Aktør): AktørBatchProcessorResult? {

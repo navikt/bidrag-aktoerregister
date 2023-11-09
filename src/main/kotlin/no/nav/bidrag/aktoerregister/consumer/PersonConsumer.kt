@@ -19,7 +19,7 @@ private val LOGGER = KotlinLogging.logger {}
 @Service
 class PersonConsumer(
     @Value("\${BIDRAG_PERSON_URL}") val url: URI,
-    @Qualifier("azure") private val restTemplate: RestOperations
+    @Qualifier("azure") private val restTemplate: RestOperations,
 ) : AbstractRestClient(restTemplate, "bidrag-aktoerregister-aktoerregister") {
 
     companion object {

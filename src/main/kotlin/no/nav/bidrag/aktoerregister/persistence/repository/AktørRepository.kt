@@ -14,11 +14,7 @@ interface AktørRepository : JpaRepository<Aktør, String> {
     fun findAllByAktørType(aktørType: String, pageable: Pageable): Page<Aktør>
 
     @Suppress("unused")
-    @Query(
-        nativeQuery = true,
-        value = "SELECT * FROM aktoerregister.aktoer WHERE aktoertype = ?1 AND sist_endret < ?2 ORDER BY aktoer_ident, aktoer_ident ASC"
-    )
-    fun finnAlleIkkeKjørte(aktørType: String, sistEndret: Timestamp, pageable: Pageable): Page<Aktør>
+    fun findAllByAktørIdentAndSistEndretLessThan(aktørIdent: String, sistEndret: Timestamp, pageable: Pageable): Page<Aktør>
 
     fun findByAktørIdent(aktørIdent: String): Aktør?
 

@@ -21,7 +21,7 @@ class SamhandlerBatchConfig(
     private val transactionManager: PlatformTransactionManager,
     private val samhandlerBatchReader: SamhandlerBatchReader,
     private val aktørBatchWriter: AktørBatchWriter,
-    private val samhandlerBatchProcessor: SamhandlerBatchProcessor
+    private val samhandlerBatchProcessor: SamhandlerBatchProcessor,
 ) {
 
     companion object {

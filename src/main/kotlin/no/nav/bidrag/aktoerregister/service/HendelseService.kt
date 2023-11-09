@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class HendelseService(
-    private val hendelseRepository: HendelseRepository
+    private val hendelseRepository: HendelseRepository,
 ) {
 
     fun hentHendelser(sekvensunummer: Int, antallHendelser: Int): List<HendelseDTO> {
@@ -24,8 +24,8 @@ class HendelseService(
                     sekvensnummer = it.sekvensnummer,
                     aktoerId = AktoerIdDTO(
                         aktoerId = it.aktørIdent,
-                        identtype = Identtype.valueOf(it.aktør.aktørType)
-                    )
+                        identtype = Identtype.valueOf(it.aktør.aktørType),
+                    ),
                 )
             }
             .sortedBy { it.sekvensnummer }
@@ -44,7 +44,7 @@ class HendelseService(
                 dødDatoOppdatering = oppdaterteFelter.contains("dødDatoOppdatering"),
                 graderingOppdatering = oppdaterteFelter.contains("graderingOppdatering"),
                 dødsboOppdatering = oppdaterteFelter.contains("dødsboOppdatering"),
-                språkOppdatering = oppdaterteFelter.contains("språkOppdatering")
+                språkOppdatering = oppdaterteFelter.contains("språkOppdatering"),
             )
             aktør.addHendelse(hendelse)
         }
@@ -60,8 +60,8 @@ class HendelseService(
                 dødDatoOppdatering = oppdaterteFelter.contains("dødDatoOppdatering"),
                 graderingOppdatering = oppdaterteFelter.contains("graderingOppdatering"),
                 dødsboOppdatering = oppdaterteFelter.contains("dødsboOppdatering"),
-                språkOppdatering = oppdaterteFelter.contains("språkOppdatering")
-            )
+                språkOppdatering = oppdaterteFelter.contains("språkOppdatering"),
+            ),
         )
     }
 }

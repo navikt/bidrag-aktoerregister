@@ -15,7 +15,7 @@ import java.util.Calendar
 @EnableScheduling
 class SamhandlerBatchScheduler(
     private val jobLauncher: JobLauncher,
-    @Qualifier("samhandlerJob") private val job: Job
+    @Qualifier("samhandlerJob") private val job: Job,
 ) {
 
     @Scheduled(cron = "0 0 20 * * *")

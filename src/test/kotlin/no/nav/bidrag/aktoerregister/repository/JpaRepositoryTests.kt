@@ -67,7 +67,7 @@ class JpaRepositoryTests {
                 postnr = "0682",
                 poststed = "Oslo",
                 adresselinje1 = "Testgate $i",
-                norskKontonr = i.toString()
+                norskKontonr = i.toString(),
             )
             opprettHendelser(antallHendelser, aktør)
             aktørListe.add(aktør)

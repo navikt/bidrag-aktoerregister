@@ -29,21 +29,21 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
             fodtDato = Objects.toString(aktør.fødtDato, null),
             dodDato = Objects.toString(aktør.dødDato, null),
             dodsbo = convertDodsbo(aktør),
-            kontonummer = convertKontonummer(aktør)
+            kontonummer = convertKontonummer(aktør),
         )
     }
 
     private fun convertAktoerId(aktør: Aktør): AktoerIdDTO {
         return AktoerIdDTO(
             aktoerId = aktør.aktørIdent,
-            identtype = Identtype.valueOf(aktør.aktørType)
+            identtype = Identtype.valueOf(aktør.aktørType),
         )
     }
 
     private fun convertNavn(aktør: Aktør): NavnDTO {
         return NavnDTO(
             fornavn = aktør.fornavn,
-            etternavn = aktør.etternavn
+            etternavn = aktør.etternavn,
         )
     }
 
@@ -60,7 +60,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
             leilighetsnummer = aktør.leilighetsnummer,
             postnr = aktør.postnr,
             poststed = aktør.poststed,
-            land = aktør.land
+            land = aktør.land,
         )
     }
 
@@ -68,7 +68,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
         return aktør.tidligereIdenter.map {
             AktoerIdDTO(
                 aktoerId = it.tidligereAktoerIdent,
-                identtype = Identtype.valueOf(it.identtype)
+                identtype = Identtype.valueOf(it.identtype),
             )
         }
     }
@@ -84,8 +84,8 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
                     leilighetsnummer = aktør.dødsbo?.leilighetsnummer,
                     postnr = aktør.dødsbo?.postnr,
                     poststed = aktør.dødsbo?.poststed,
-                    land = aktør.dødsbo?.land
-                )
+                    land = aktør.dødsbo?.land,
+                ),
             )
         }
     }
@@ -98,7 +98,7 @@ class AktørTilAktoerDTOConverter : Converter<Aktør, AktoerDTO> {
             bankCode = aktør.bankCode,
             bankNavn = aktør.bankNavn,
             bankLandkode = aktør.bankLandkode,
-            valutaKode = aktør.valutaKode
+            valutaKode = aktør.valutaKode,
         )
     }
 }

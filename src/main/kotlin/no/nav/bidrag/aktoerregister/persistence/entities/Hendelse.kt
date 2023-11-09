@@ -54,7 +54,7 @@ data class Hendelse(
     val dødsboOppdatering: Boolean? = null,
 
     @Column(name = "sprak_oppdatering")
-    val språkOppdatering: Boolean? = null
+    val språkOppdatering: Boolean? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

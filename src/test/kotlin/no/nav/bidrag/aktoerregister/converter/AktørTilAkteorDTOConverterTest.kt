@@ -74,7 +74,7 @@ internal class AktørTilAkteorDTOConverterTest {
             adresselinje3 = adresselinje3,
             leilighetsnummer = leilighetsnummer,
             postnr = postnr,
-            poststed = poststed
+            poststed = poststed,
         )
 
         val aktoerDTO = aktoerTilAktoerDTOConverter.convert(aktør)

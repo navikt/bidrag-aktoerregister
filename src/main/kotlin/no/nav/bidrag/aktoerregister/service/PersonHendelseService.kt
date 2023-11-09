@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 @Service
 class PersonHendelseService(
     private val objectMapper: ObjectMapper,
-    private val aktørService: AktørService
+    private val aktørService: AktørService,
 ) {
 
     companion object {

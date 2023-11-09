@@ -15,7 +15,7 @@ import java.util.Collections
 class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemReader<Aktør>(), ItemReader<Aktør> {
     init {
         this.setRepository(aktoerRepository)
-        this.setMethodName("finnAlleIkkeKjørte")
+        this.setMethodName("findAllByAktørIdentAndSistEndretLessThan")
         this.setArguments(listOf(Identtype.PERSONNUMMER.name, Timestamp.valueOf(LocalDateTime.of(2023, 11, 8, 13, 20, 0))))
         this.setPageSize(100)
         this.setSort(Collections.singletonMap("aktørIdent", Sort.Direction.ASC))
