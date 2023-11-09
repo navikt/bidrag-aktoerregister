@@ -14,7 +14,7 @@ class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemRead
     init {
         this.setRepository(aktoerRepository)
         this.setMethodName("findAllByAktørType")
-        this.setArguments(listOf(Identtype.PERSONNUMMER.name))
+        this.setArguments(listOf(Identtype.PERSONNUMMER.name, "2023-11-08 13:20:00.00000"))
         this.setPageSize(100)
         this.setSort(Collections.singletonMap("aktørIdent", Sort.Direction.ASC))
     }
