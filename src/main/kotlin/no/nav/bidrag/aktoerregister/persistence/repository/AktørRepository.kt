@@ -20,6 +20,10 @@ interface AktørRepository : JpaRepository<Aktør, String> {
     )
     fun finnAlleIkkeKjørte(aktørType: String, sistEndret: Timestamp, pageable: Pageable): Page<Aktør>
 
+    @Suppress("unused")
+    fun findAllByAktørIdentAndSistEndretLessThan(aktørIdent: String, sistEndretTimestamp: Timestamp, pageable: Pageable): List<Aktør>
+
+
     fun findByAktørIdent(aktørIdent: String): Aktør?
 
     fun deleteAktørByAktørIdent(aktørIdent: String)
