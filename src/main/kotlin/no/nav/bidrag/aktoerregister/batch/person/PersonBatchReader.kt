@@ -18,6 +18,6 @@ class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemRead
         this.setMethodName("finnAlleIkkeKjørte")
         this.setArguments(listOf(Identtype.PERSONNUMMER.name, Timestamp.valueOf(LocalDateTime.of(2023, 11, 8, 13, 20, 0))))
         this.setPageSize(100)
-        this.setSort(Collections.singletonMap("aktor_ident", Sort.Direction.ASC))
+        this.setSort(Collections.singletonMap("aktoer.aktoer_ident", Sort.Direction.ASC))
     }
 }
