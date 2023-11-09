@@ -8,5 +8,5 @@ data class NavnDTO(
     val fornavn: String? = null,
 
     @Schema(description = "Personens etternavn eller samhandlerens fulle navn.")
-    val etternavn: String? = null
+    val etternavn: String? = null,
 )

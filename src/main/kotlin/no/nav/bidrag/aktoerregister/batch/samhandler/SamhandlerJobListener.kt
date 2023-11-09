@@ -15,7 +15,7 @@ class SamhandlerJobListener {
             .let { stepExecution ->
                 LOGGER.info {
                     "Av totalt ${stepExecution.readCount} samhandler-aktører var ${stepExecution.writeCount} blitt endret siden forrige kjøring. " +
-                            "${stepExecution.writeCount} aktører ble dermed oppdatert i databasen."
+                        "${stepExecution.writeCount} aktører ble dermed oppdatert i databasen."
                 }
             }
     }

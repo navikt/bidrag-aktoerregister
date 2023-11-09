@@ -28,7 +28,7 @@ class SamhandlerDtoTilAktoerConverter : Converter<SamhandlerDto, Aktør> {
             iban = samhandler.kontonummer?.iban?.verdi,
             bankLandkode = samhandler.kontonummer?.landkodeBank?.verdi,
             swift = samhandler.kontonummer?.swift?.verdi,
-            valutaKode = samhandler.kontonummer?.valutakode?.verdi
+            valutaKode = samhandler.kontonummer?.valutakode?.verdi,
         )
     }
 }

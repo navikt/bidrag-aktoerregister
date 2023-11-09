@@ -17,12 +17,12 @@ private val LOGGER = KotlinLogging.logger {}
 @Protected
 class BatchController(
     private val samhandlerBatchScheduler: SamhandlerBatchScheduler,
-    private val personBatch: PersonBatch
+    private val personBatch: PersonBatch,
 ) {
 
     @Operation(
         summary = "Start kjøring av Samhandler batch.",
-        description = "Samhandler batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
+        description = "Samhandler batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer.",
     )
     @ApiResponse(responseCode = "200", description = "Samhandler batchen ble startet.")
     @PostMapping("/samhandlerBatch")
@@ -39,7 +39,7 @@ class BatchController(
 
     @Operation(
         summary = "Start kjøring av Person batch.",
-        description = "Person batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer."
+        description = "Person batchen startes asynkront. Dette vil medføre at feil under kjøring av batchen ikke vil reflekteres i responskoden dette endepunktet returnerer.",
     )
     @ApiResponse(responseCode = "200", description = "Person batchen ble startet.")
     @PostMapping("/personBatch")

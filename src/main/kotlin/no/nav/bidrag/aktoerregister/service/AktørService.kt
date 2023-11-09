@@ -30,7 +30,7 @@ class AktørService(
     private val samhandlerConsumer: SamhandlerConsumer,
     private val personConsumer: PersonConsumer,
     private val conversionService: ConversionService,
-    private val entityManager: EntityManager
+    private val entityManager: EntityManager,
 ) {
 
     @Transactional
@@ -55,7 +55,7 @@ class AktørService(
             hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent)
         } else {
             hentAktørFraPersonOgLagreTilDatabase(
-                aktørIdent
+                aktørIdent,
             )
         }
 

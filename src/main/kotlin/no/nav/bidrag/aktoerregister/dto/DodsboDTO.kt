@@ -8,5 +8,5 @@ data class DodsboDTO(
     @Schema(description = "Navn på kontaktperson for dødsboet.")
     val kontaktperson: String? = null,
 
-    val adresse: AdresseDTO? = null
+    val adresse: AdresseDTO? = null,
 )

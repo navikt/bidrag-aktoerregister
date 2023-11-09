@@ -31,17 +31,17 @@ private val LOGGER = KotlinLogging.logger {}
 @ProtectedWithClaims(issuer = "maskinporten", claimMap = ["scope=nav:bidrag:aktoerregister.read"])
 class AktoerregisterController(
     private val aktørService: AktørService,
-    private val hendelseService: HendelseService
+    private val hendelseService: HendelseService,
 ) {
 
     @Operation(
         summary = "Hent informasjon om gitt aktør.",
-        description = "For personer returneres kun kontonummer. For andre typer aktører leveres også navn og adresse."
+        description = "For personer returneres kun kontonummer. For andre typer aktører leveres også navn og adresse.",
     )
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "Aktøren ble funnet."),
         ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = [Content()]),
-        ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content = [Content()])
+        ApiResponse(responseCode = "404", description = "Ingen aktør med gitt identtype og ident ble funnet.", content = [Content()]),
     )
     @PostMapping(path = ["/aktoer"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentAktoer(@RequestBody request: AktoerIdDTO, @RequestParam(required = false) tvingOppdatering: Boolean = false): ResponseEntity<AktoerDTO> {
@@ -65,7 +65,7 @@ class AktoerregisterController(
             "Dersom det ikke returneres noen hendelser er ingen av aktørene endret siden siste kall. Samme sekvensnummer må da benyttes i neste kall.\n\n" +
             "Nye hendelser vil alltid ha høyere sekvensnummer enn tidligere hendelser.\n" +
             "Det kan forekomme hull i sekvensnummer-rekken.\n" +
-            "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres."
+            "Dersom det kommer en hendelse for en aktør med tidligere hendelser (lavere sekvensnummer) er det ikke garantert at de tidligere hendelsene ikke returneres.",
     )
     @GetMapping(path = ["/hendelser"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentHendelser(
@@ -74,7 +74,7 @@ class AktoerregisterController(
         fraSekvensnummer: Int = 0,
         @Parameter(description = "Maksimalt antall hendelser som ønskes hentet. Default-verdi er 1000.")
         @RequestParam(name = "antall", defaultValue = "1000")
-        antall: Int = 1000
+        antall: Int = 1000,
     ): ResponseEntity<List<HendelseDTO>> {
         return try {
             ResponseEntity.ok(hendelseService.hentHendelser(fraSekvensnummer, antall))
@@ -86,12 +86,12 @@ class AktoerregisterController(
 
     @Operation(
         summary = "Avmelder gitt aktør.",
-        description = "Avmelder aktøren fra aktørregisteret. Hendelser vil ikke lenger bli opprettet på denne aktøren."
+        description = "Avmelder aktøren fra aktørregisteret. Hendelser vil ikke lenger bli opprettet på denne aktøren.",
     )
     @PostMapping(path = ["/avmelding"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "Aktøren ble avmeldt."),
-        ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = [Content()])
+        ApiResponse(responseCode = "400", description = "Gitt identtype eller ident er ugyldig.", content = [Content()]),
     )
     fun avmeldAktør(@RequestBody request: AktoerIdDTO): ResponseEntity<Any> {
         return try {

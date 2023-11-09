@@ -9,7 +9,7 @@ class KafkaRetryListener : RetryListener {
     override fun failedDelivery(
         record: ConsumerRecord<*, *>,
         exception: Exception,
-        deliveryAttempt: Int
+        deliveryAttempt: Int,
     ) {
         SECURE_LOGGER.error("Håndtering av kafka melding ${record.value()} feilet. Dette er $deliveryAttempt. forsøk", exception)
     }
@@ -21,7 +21,7 @@ class KafkaRetryListener : RetryListener {
     override fun recoveryFailed(
         record: ConsumerRecord<*, *>,
         original: java.lang.Exception,
-        failure: java.lang.Exception
+        failure: java.lang.Exception,
     ) {
     }
 }

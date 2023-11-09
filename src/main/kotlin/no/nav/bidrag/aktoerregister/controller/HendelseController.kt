@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Protected
 class HendelseController(
-    private val personHendelseService: PersonHendelseService
+    private val personHendelseService: PersonHendelseService,
 ) {
     @Operation(
         summary = "Start manuell innlesing av en hendelse.",
-        description = "Hendelser skal automatisk behandles. Dette endepunktet er ment for testtilfeller."
+        description = "Hendelser skal automatisk behandles. Dette endepunktet er ment for testtilfeller.",
     )
     @ApiResponse(responseCode = "200", description = "Hendelse har blitt behandlet.")
     @PostMapping("/hendelse")

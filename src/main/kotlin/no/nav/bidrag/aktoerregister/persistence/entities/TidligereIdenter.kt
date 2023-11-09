@@ -24,7 +24,7 @@ data class TidligereIdenter(
 
     @ManyToOne
     @JoinColumn(name = "aktoer_id")
-    var aktør: Aktør? = null
+    var aktør: Aktør? = null,
 
 ) {
     override fun equals(other: Any?): Boolean {

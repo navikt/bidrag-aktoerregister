@@ -102,7 +102,7 @@ data class Aktør(
 
     @Version
     @Column(name = "sist_endret")
-    val sistEndret: Timestamp? = null
+    val sistEndret: Timestamp? = null,
 
 ) {
 

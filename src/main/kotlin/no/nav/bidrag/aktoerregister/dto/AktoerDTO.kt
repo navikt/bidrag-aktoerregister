@@ -41,5 +41,5 @@ data class AktoerDTO(
     val dodsbo: DodsboDTO? = null,
 
     @Schema(description = "Aktørens kontonummer.")
-    val kontonummer: KontonummerDTO? = null
+    val kontonummer: KontonummerDTO? = null,
 )

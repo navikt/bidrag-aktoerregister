@@ -8,7 +8,9 @@ enum class Identtype {
     PERSONNUMMER,
 
     @Schema(description = "AKTOERNUMMER angir at identitetsnummeret er en TSS-ident. A.k.a. en samhandler-id.")
-    AKTOERNUMMER;
+    AKTOERNUMMER,
+
+    ;
 
     companion object {
         fun valueOf(type: String?): Identtype? = Identtype.values().find { it.name == type }

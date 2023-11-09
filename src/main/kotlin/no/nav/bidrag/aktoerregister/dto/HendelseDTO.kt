@@ -9,5 +9,5 @@ data class HendelseDTO(
     val sekvensnummer: Int = 0,
 
     @Schema(description = "Aktøren som er oppdatert.")
-    val aktoerId: AktoerIdDTO
+    val aktoerId: AktoerIdDTO,
 )

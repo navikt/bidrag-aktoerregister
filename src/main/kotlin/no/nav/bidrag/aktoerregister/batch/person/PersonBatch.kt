@@ -11,7 +11,7 @@ import java.util.Calendar
 @Component
 class PersonBatch(
     private val jobLauncher: JobLauncher,
-    @Qualifier("personJob") private val job: Job
+    @Qualifier("personJob") private val job: Job,
 ) {
 
     fun startPersonBatch() {

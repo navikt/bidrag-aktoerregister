@@ -29,7 +29,7 @@ class KafkaConfig {
             val partition = rec.partition()
             SECURE_LOGGER.error(
                 "Kafka melding med nøkkel $key, partition $partition og topic $topic feilet på offset $offset. Melding som feilet: $value",
-                e
+                e,
             )
         }, backoffPolicy)
         errorHandler.setRetryListeners(KafkaRetryListener())

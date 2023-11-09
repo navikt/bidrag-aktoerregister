@@ -30,5 +30,5 @@ data class AdresseDTO(
     val poststed: String? = null,
 
     @Schema(description = "Land som 3-bokstavs land-kode.")
-    val land: String? = null
+    val land: String? = null,
 )

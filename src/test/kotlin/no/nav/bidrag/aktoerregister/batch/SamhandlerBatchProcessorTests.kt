@@ -34,7 +34,7 @@ class SamhandlerBatchProcessorTests {
         aktørFraTss = Aktør(
             aktørIdent = ident,
             aktørType = Identtype.PERSONNUMMER.name,
-            adresselinje1 = adresse
+            adresselinje1 = adresse,
         )
     }
 

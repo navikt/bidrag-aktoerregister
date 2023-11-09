@@ -11,7 +11,7 @@ private val LOGGER = KotlinLogging.logger { }
 
 @Component
 class PersonHendelseListener(
-    private val personHendelseService: PersonHendelseService
+    private val personHendelseService: PersonHendelseService,
 ) {
 
     @KafkaListener(groupId = "\${KAFKA_GROUP_ID}", topics = ["\${TOPIC_PERSONHENDELSE}"])
@@ -20,7 +20,7 @@ class PersonHendelseListener(
         @Header(KafkaHeaders.OFFSET) offset: Long,
         @Header(KafkaHeaders.RECEIVED_TOPIC) topic: String,
         @Header(KafkaHeaders.RECEIVED_PARTITION) partition: Int,
-        @Header(KafkaHeaders.GROUP_ID) groupId: String
+        @Header(KafkaHeaders.GROUP_ID) groupId: String,
     ) {
         LOGGER.info { "Leser hendelse fra topic: $topic, offset: $offset, partition: $partition, groupId: $groupId" }
         personHendelseService.behandleHendelse(hendelse)

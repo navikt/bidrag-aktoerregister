@@ -15,7 +15,7 @@ private val LOGGER = KotlinLogging.logger { }
 
 @Component
 class SamhandlerBatchProcessor(
-    private val aktørService: AktørService
+    private val aktørService: AktørService,
 ) :
     ItemProcessor<Aktør, AktørBatchProcessorResult?> {
 

@@ -21,7 +21,7 @@ class PersonBatchConfig(
     private val transactionManager: PlatformTransactionManager,
     private val personBatchReader: PersonBatchReader,
     private val aktørBatchWriter: AktørBatchWriter,
-    private val personBatchProcessor: PersonBatchProcessor
+    private val personBatchProcessor: PersonBatchProcessor,
 ) {
 
     companion object {

@@ -38,7 +38,7 @@ class PersonDetaljerDtoTilAktoerConverter : Converter<PersondetaljerDto, Aktør>
             dødDato = personDetaljer.person.dødsdato?.verdi,
             gradering = finnGradering(personDetaljer),
             tidligereIdenter = opprettTidligereIndenter(personDetaljer),
-            dødsbo = opprettDodsbo(personDetaljer)
+            dødsbo = opprettDodsbo(personDetaljer),
         )
     }
 
@@ -50,7 +50,7 @@ class PersonDetaljerDtoTilAktoerConverter : Converter<PersondetaljerDto, Aktør>
                 adresselinje2 = it.kontaktadresse.adresselinje2?.verdi,
                 postnr = it.kontaktadresse.postnummer.verdi,
                 poststed = it.kontaktadresse.poststed.verdi,
-                land = it.kontaktadresse.land3?.verdi
+                land = it.kontaktadresse.land3?.verdi,
             )
         }
     }
@@ -59,7 +59,7 @@ class PersonDetaljerDtoTilAktoerConverter : Converter<PersondetaljerDto, Aktør>
         return personDetaljer.tidligereIdenter?.map {
             TidligereIdenter(
                 tidligereAktoerIdent = it.verdi,
-                identtype = Identtype.PERSONNUMMER.name
+                identtype = Identtype.PERSONNUMMER.name,
             )
         }?.toMutableSet() ?: mutableSetOf()
     }
