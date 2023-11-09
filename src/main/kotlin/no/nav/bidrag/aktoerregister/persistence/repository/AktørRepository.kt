@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import java.sql.Timestamp
 
 interface AktørRepository : JpaRepository<Aktør, String> {
 
@@ -14,7 +15,7 @@ interface AktørRepository : JpaRepository<Aktør, String> {
         nativeQuery = true,
         value = "SELECT * FROM aktoerregister.aktoer WHERE aktoertype = ?1 AND sist_endret < ?2"
     )
-    fun findAllByAktørType(aktørType: String, sistEndret: String, pageable: Pageable): Page<Aktør>
+    fun findAllByAktørType(aktørType: String, sistEndret: Timestamp, pageable: Pageable): Page<Aktør>
 
     fun findByAktørIdent(aktørIdent: String): Aktør?
 

@@ -7,6 +7,8 @@ import org.springframework.batch.item.ItemReader
 import org.springframework.batch.item.data.RepositoryItemReader
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
+import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.Collections
 
 @Component
@@ -14,7 +16,7 @@ class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemRead
     init {
         this.setRepository(aktoerRepository)
         this.setMethodName("findAllByAktørType")
-        this.setArguments(listOf(Identtype.PERSONNUMMER.name, "2023-11-08 13:20:00.00000"))
+        this.setArguments(listOf(Identtype.PERSONNUMMER.name, Timestamp.valueOf(LocalDateTime.of(2023, 11, 8, 13, 20, 0))))
         this.setPageSize(100)
         this.setSort(Collections.singletonMap("aktørIdent", Sort.Direction.ASC))
     }
