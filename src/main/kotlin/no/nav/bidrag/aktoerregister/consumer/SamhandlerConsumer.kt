@@ -39,7 +39,9 @@ class SamhandlerConsumer(
             }
             throw e
         } catch (e: Exception) {
-            SECURE_LOGGER.error("Noe gikk galt i kallet mot bidrag-samhandler for ident: ${aktørIdent.verdi}. Svaret fra bidrag-samhandler var: ${e.message}")
+            SECURE_LOGGER.error(
+                "Noe gikk galt i kallet mot bidrag-samhandler for ident: ${aktørIdent.verdi}. Svaret fra bidrag-samhandler var: ${e.message}",
+            )
             throw e
         }
     }
