@@ -50,14 +50,13 @@ class AktørService(
             ?: error("Konvertering av aktør til AktoerDTO feilet!")
     }
 
-    private fun hentNyAktør(aktørId: AktoerIdDTO, aktørIdent: Ident) =
-        if (aktørId.identtype == Identtype.AKTOERNUMMER) {
-            hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent)
-        } else {
-            hentAktørFraPersonOgLagreTilDatabase(
-                aktørIdent,
-            )
-        }
+    private fun hentNyAktør(aktørId: AktoerIdDTO, aktørIdent: Ident) = if (aktørId.identtype == Identtype.AKTOERNUMMER) {
+        hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent)
+    } else {
+        hentAktørFraPersonOgLagreTilDatabase(
+            aktørIdent,
+        )
+    }
 
     private fun hentAktørFraSamhandlerOgLagreTilDatabase(aktørIdent: Ident): Aktør {
         LOGGER.debug { "Aktør ikke funnet i databasen. Henter aktør fra bidrag-samhandler" }

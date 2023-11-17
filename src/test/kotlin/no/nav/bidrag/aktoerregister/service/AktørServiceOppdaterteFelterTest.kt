@@ -385,8 +385,18 @@ class AktørServiceOppdaterteFelterTest {
 
         @Test
         fun `skal sette dødsboOppdatering ingen endring`() {
-            val aktør = Aktør(aktørIdent = "123", aktørType = Identtype.PERSONNUMMER.name, dødsbo = Dødsbo(kontaktperson = "Person", adresselinje1 = "Adresse", poststed = "Poststed", postnr = "Postnr", land = "Person"))
-            val nyAktør = Aktør(aktørIdent = "123", aktørType = Identtype.PERSONNUMMER.name, dødsbo = Dødsbo(kontaktperson = "Person", adresselinje1 = "Adresse", poststed = "Poststed", postnr = "Postnr", land = "Person"))
+            val aktør =
+                Aktør(
+                    aktørIdent = "123",
+                    aktørType = Identtype.PERSONNUMMER.name,
+                    dødsbo = Dødsbo(kontaktperson = "Person", adresselinje1 = "Adresse", poststed = "Poststed", postnr = "Postnr", land = "Person"),
+                )
+            val nyAktør =
+                Aktør(
+                    aktørIdent = "123",
+                    aktørType = Identtype.PERSONNUMMER.name,
+                    dødsbo = Dødsbo(kontaktperson = "Person", adresselinje1 = "Adresse", poststed = "Poststed", postnr = "Postnr", land = "Person"),
+                )
 
             val oppdaterteFelter = aktørService.finnOppdaterteFelterPåAktør(aktør, nyAktør)
 
