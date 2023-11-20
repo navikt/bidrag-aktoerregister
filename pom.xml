@@ -27,7 +27,7 @@
     <sprinmockk.version>4.0.2</sprinmockk.version>
     <kotlin-logging-jvm.version>5.1.0</kotlin-logging-jvm.version>
     <shedlock.version>5.9.1</shedlock.version>
-    <testcontainers.version>1.19.1</testcontainers.version>
+    <testcontainers.version>1.19.2</testcontainers.version>
     <spring-kafka.version>3.0.12</spring-kafka.version>
   </properties>
 
