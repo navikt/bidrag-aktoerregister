@@ -34,9 +34,6 @@ class AktørServiceTest {
     private lateinit var aktørRepository: AktørRepository
 
     @Autowired
-    private lateinit var hendelseService: HendelseService
-
-    @Autowired
     private lateinit var hendelseRepository: HendelseRepository
 
     companion object {
@@ -55,7 +52,7 @@ class AktørServiceTest {
     }
 
     @BeforeEach
-    fun Setup() {
+    fun setup() {
         aktørRepository.deleteAll()
     }
 

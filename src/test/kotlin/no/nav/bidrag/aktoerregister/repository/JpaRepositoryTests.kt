@@ -33,13 +33,13 @@ class JpaRepositoryTests {
     private lateinit var aktørRepository: AktørRepository
 
     @BeforeEach
-    fun Setup() {
+    fun setup() {
         aktørRepository.deleteAll()
     }
 
     @Test
     fun `Skal lagre og slette aktør med hendelser`() {
-        val aktoerer = generateAktørListe(2)
+        val aktoerer = generateAktørListe()
         aktørRepository.saveAll(aktoerer)
 
         var hendelser = hendelseRepository.findAll()
@@ -57,7 +57,7 @@ class JpaRepositoryTests {
         lagdredeAktoerer.size shouldBe 19
     }
 
-    private fun generateAktørListe(antallHendelser: Int): List<Aktør> {
+    private fun generateAktørListe(): List<Aktør> {
         val aktørListe: MutableList<Aktør> = ArrayList()
         for (i in 0..19) {
             val aktør = Aktør(
@@ -69,16 +69,11 @@ class JpaRepositoryTests {
                 adresselinje1 = "Testgate $i",
                 norskKontonr = i.toString(),
             )
-            opprettHendelser(antallHendelser, aktør)
+            aktør.addHendelse(Hendelse(aktør = aktør, aktørIdent = aktør.aktørIdent))
+            aktør.addHendelse(Hendelse(aktør = aktør, aktørIdent = aktør.aktørIdent))
             aktørListe.add(aktør)
         }
         return aktørListe
-    }
-
-    private fun opprettHendelser(numberOfHendelser: Int, aktør: Aktør) {
-        for (j in 0 until numberOfHendelser) {
-            aktør.addHendelse(Hendelse(aktør = aktør, aktørIdent = aktør.aktørIdent))
-        }
     }
 
     companion object {
