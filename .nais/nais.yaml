@@ -33,10 +33,10 @@ spec:
     failureThreshold: 10
   resources:
     limits:
-      cpu: 250m
+      cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 25m
+      cpu: 500m
       memory: 1024Mi
   replicas:
     cpuThresholdPercentage: 50
