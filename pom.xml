@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.5</version>
+    <version>3.2.0</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>no.nav</groupId>
@@ -15,20 +15,21 @@
   <description>Aktoerregister for Bidragsområdet</description>
   <properties>
     <java.version>21</java.version>
-    <kotlin.version>1.9.20</kotlin.version>
+    <kotlin.version>1.9.21</kotlin.version>
     <bidrag-commons.version>20230607123814_b41a5f7</bidrag-commons.version>
     <bidrag-transport.version>20230602161105_1eea030</bidrag-transport.version>
     <logback-encoder.version>7.4</logback-encoder.version>
     <springdoc-openapi-ui.version>2.2.0</springdoc-openapi-ui.version>
     <springframework-cloud.version>4.0.4</springframework-cloud.version>
-    <token-support.version>3.1.8</token-support.version>
+    <token-support.version>3.2.0</token-support.version>
     <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
     <kotest.version>5.8.0</kotest.version>
-    <sprinmockk.version>4.0.2</sprinmockk.version>
+    <springmockk.version>4.0.2</springmockk.version>
     <kotlin-logging-jvm.version>5.1.0</kotlin-logging-jvm.version>
     <shedlock.version>5.10.0</shedlock.version>
-    <testcontainers.version>1.19.2</testcontainers.version>
-    <spring-kafka.version>3.0.12</spring-kafka.version>
+    <testcontainers.version>1.19.3</testcontainers.version>
+    <spring-kafka.version>3.1.0</spring-kafka.version>
+    <scala.version>2.13.12</scala.version>
   </properties>
 
   <repositories>
@@ -47,14 +48,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.yaml</groupId>
-        <artifactId>snakeyaml</artifactId>
-        <version>2.2</version>
-      </dependency>
-      <dependency>
         <groupId>org.scala-lang</groupId>
         <artifactId>scala-library</artifactId>
-        <version>2.13.12</version>
+        <version>${scala.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -134,6 +130,11 @@
     <dependency>
       <groupId>no.nav.security</groupId>
       <artifactId>token-validation-spring</artifactId>
+      <version>${token-support.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>no.nav.security</groupId>
+      <artifactId>token-client-spring</artifactId>
       <version>${token-support.version}</version>
     </dependency>
 
@@ -245,7 +246,7 @@
     <dependency>
       <groupId>com.ninja-squad</groupId>
       <artifactId>springmockk</artifactId>
-      <version>${sprinmockk.version}</version>
+      <version>${springmockk.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

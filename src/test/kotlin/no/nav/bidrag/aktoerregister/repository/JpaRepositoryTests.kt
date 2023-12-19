@@ -78,11 +78,13 @@ class JpaRepositoryTests {
 
     companion object {
         @Container
-        var database: PostgreSQLContainer<*> = PostgreSQLContainer("postgres")
-            .withDatabaseName("test_db")
-            .withUsername("root")
-            .withPassword("root")
-            .withInitScript("db-setup.sql")
+        var database: PostgreSQLContainer<*> = PostgreSQLContainer("postgres").apply {
+            withDatabaseName("test_db")
+            withUsername("root")
+            withPassword("root")
+            withInitScript("db-setup.sql")
+            start()
+        }
 
         @JvmStatic
         @DynamicPropertySource
