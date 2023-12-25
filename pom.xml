@@ -25,7 +25,7 @@
     <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
     <kotest.version>5.8.0</kotest.version>
     <springmockk.version>4.0.2</springmockk.version>
-    <kotlin-logging-jvm.version>5.1.0</kotlin-logging-jvm.version>
+    <kotlin-logging-jvm.version>6.0.1</kotlin-logging-jvm.version>
     <shedlock.version>5.10.0</shedlock.version>
     <testcontainers.version>1.19.3</testcontainers.version>
     <spring-kafka.version>3.1.0</spring-kafka.version>
