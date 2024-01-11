@@ -72,10 +72,6 @@ spec:
   accessPolicy:
     outbound:
       rules:
-      {{#each azureAccessOutbound}}
-         - application: {{this.application}}
-           namespace: {{this.namespace}}
-           cluster: {{this.cluster}}
-      {{/each}}
+        - application: {{ env.BIDRAG_SAMHANDLER }}
       external:
         - host: {{ env.BIDRAG_PERSON_HOST }}
