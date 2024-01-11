@@ -1,6 +1,10 @@
 name: bidrag-aktoerregister
 dbinstancename: bidrag-aktoerregister
 dbname: bidrag-aktoerregister
+azureAccessOutbound:
+  - application: bidrag-samhandler
+    namespace: bidrag
+    cluster: dev-gcp
 ingresses:
   - https://bidrag-aktoerregister.intern.dev.nav.no/
   - https://bidrag-aktoerregister.ekstern.dev.nav.no/
@@ -13,7 +17,6 @@ env:
   BIDRAG_PERSON_SCOPE: dev-fss.bidrag.bidrag-person-feature
   BIDRAG_PERSON_HOST: bidrag-person-feature.dev-fss-pub.nais.io
   BIDRAG_SAMHANDLER_URL: https://bidrag-samhandler.intern.dev.nav.no
-  BIDRAG_SAMHANDLER: bidrag-samhandler
   BIDRAG_SAMHANDLER_SCOPE: dev-gcp.bidrag.bidrag-samhandler
   TOPIC_PERSONHENDELSE: bidrag.personhendelse.v1
   KAFKA_GROUP_ID: bidrag-aktoerregister-main
