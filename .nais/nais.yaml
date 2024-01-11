@@ -71,7 +71,6 @@ spec:
   {{/each}}
   accessPolicy:
     outbound:
-      rules:
-        - application: {{ env.BIDRAG_SAMHANDLER }}
       external:
         - host: {{ env.BIDRAG_PERSON_HOST }}
+        - host: {{ env.BIDRAG_SAMHANDLER_HOST }}
