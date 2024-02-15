@@ -7,7 +7,7 @@ import no.nav.bidrag.aktoerregister.batch.AktørStatus
 import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.service.AktørService
-import no.nav.bidrag.domain.ident.Ident
+import no.nav.bidrag.domene.ident.Ident
 import org.springframework.batch.item.ItemProcessor
 import org.springframework.stereotype.Component
 
