@@ -5,7 +5,7 @@ import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
 import no.nav.bidrag.aktoerregister.util.ConsumerUtils.leggTilPathPåUri
 import no.nav.bidrag.commons.web.client.AbstractRestClient
-import no.nav.bidrag.domain.ident.Ident
+import no.nav.bidrag.domene.ident.Ident
 import no.nav.bidrag.transport.samhandler.SamhandlerDto
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value

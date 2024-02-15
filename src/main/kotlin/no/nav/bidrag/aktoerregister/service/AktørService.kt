@@ -13,7 +13,7 @@ import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.aktoerregister.persistence.repository.AktørRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.HendelseRepository
 import no.nav.bidrag.aktoerregister.persistence.repository.TidligereIdenterRepository
-import no.nav.bidrag.domain.ident.Ident
+import no.nav.bidrag.domene.ident.Ident
 import org.springframework.core.convert.ConversionService
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service

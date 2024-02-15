@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional
 import no.nav.bidrag.aktoerregister.SECURE_LOGGER
 import no.nav.bidrag.aktoerregister.dto.Endringsmelding
 import no.nav.bidrag.aktoerregister.exception.AktørNotFoundException
-import no.nav.bidrag.domain.ident.Ident
+import no.nav.bidrag.domene.ident.Ident
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

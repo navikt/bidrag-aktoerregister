@@ -12,7 +12,7 @@ import no.nav.bidrag.aktoerregister.dto.enumer.Identtype
 import no.nav.bidrag.aktoerregister.persistence.entities.Aktør
 import no.nav.bidrag.commons.util.Kjonn
 import no.nav.bidrag.commons.util.PersonidentGenerator
-import no.nav.bidrag.domain.ident.Ident
+import no.nav.bidrag.domene.ident.Ident
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDate

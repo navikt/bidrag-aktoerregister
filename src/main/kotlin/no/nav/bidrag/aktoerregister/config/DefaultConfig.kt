@@ -10,8 +10,11 @@ import no.nav.bidrag.commons.web.CorrelationIdFilter
 import no.nav.bidrag.commons.web.DefaultCorsFilter
 import no.nav.bidrag.commons.web.UserMdcFilter
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.http.client.observation.ClientRequestObservationConvention
+import org.springframework.http.client.observation.DefaultClientRequestObservationConvention
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 
@@ -30,4 +33,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @ConfigurationPropertiesScan
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
 @Import(CorrelationIdFilter::class, DefaultCorsFilter::class, UserMdcFilter::class)
-class DefaultConfig
+class DefaultConfig {
+
+    @Bean
+    fun clientRequestObservationConvention(): ClientRequestObservationConvention = DefaultClientRequestObservationConvention()
+}
