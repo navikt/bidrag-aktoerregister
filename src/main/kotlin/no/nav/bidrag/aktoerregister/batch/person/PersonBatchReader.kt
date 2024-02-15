@@ -7,14 +7,16 @@ import org.springframework.batch.item.ItemReader
 import org.springframework.batch.item.data.RepositoryItemReader
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
+import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.Collections
 
 @Component
 class PersonBatchReader(aktoerRepository: AktørRepository) : RepositoryItemReader<Aktør>(), ItemReader<Aktør> {
     init {
         this.setRepository(aktoerRepository)
-        this.setMethodName("findAllByAktørType")
-        this.setArguments(listOf(Identtype.PERSONNUMMER.name))
+        this.setMethodName("findAllByAktørTypeAndSistEndretIsLessThan")
+        this.setArguments(listOf(Identtype.PERSONNUMMER.name, Timestamp.valueOf(LocalDateTime.now().minusMonths(6))))
         this.setPageSize(100)
         this.setSort(Collections.singletonMap("aktørIdent", Sort.Direction.ASC))
     }
